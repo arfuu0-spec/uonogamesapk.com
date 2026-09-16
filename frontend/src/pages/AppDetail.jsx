@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-import { Star, BadgeCheck, Download, Gift, ArrowLeft, ShieldCheck, Zap, Wifi, RefreshCw, Trophy, Cpu, Smartphone } from "lucide-react";
+import { Star, BadgeCheck, Download, Gift, ArrowLeft, ShieldCheck, Zap, Wifi, RefreshCw, Trophy, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import api, { API, resolveUrl } from "@/lib/api";
 import SEOHead from "@/components/SEOHead";
@@ -33,7 +33,6 @@ export default function AppDetail() {
           if (res.data.similar) setSimilarApps(res.data.similar);
         }
       } catch (e) {
-        // Fallback if direct fetch fails, fetch list and find
         try {
           const listRes = await api.get("/apps?limit=100");
           const all = [...(listRes.data.featured || []), ...(listRes.data.apps || []), ...(listRes.data.trending || [])];
@@ -53,7 +52,6 @@ export default function AppDetail() {
     if (!app || String(app.id) !== String(identifier) && app.slug !== identifier) {
       fetchAppData();
     } else {
-      // Fetch similar apps
       api.get("/apps?limit=10").then(res => {
         const all = [...(res.data.featured || []), ...(res.data.apps || [])];
         setSimilarApps(all.filter(a => a.id !== app.id).slice(0, 6));
@@ -97,7 +95,6 @@ export default function AppDetail() {
 
   return (
     <div className="app-shell pb-10">
-      {/* DYNAMIC SEO HEAD WITH GAME NAME FOR GOOGLE INDEXING */}
       <SEOHead
         title={`${app.name} Apk Download Latest Version 2026 New Yono`}
         description={app.description || `Download ${app.name} APK latest version for Android free. Fast, safe & verified download with sign-up bonuses at YONO GAMES — uonogamesapk.com`}
@@ -218,7 +215,27 @@ export default function AppDetail() {
           </p>
         </div>
 
-        {/* Game Features */}
+        {/* 1. "YOU MAY ALSO LIKE" SECTION MOVED TO TOP PROFESSIONALLY */}
+        {similarApps.length > 0 && (
+          <div className="rounded-[24px] border border-[#E5E7EB] bg-white p-5 shadow-[0_6px_20px_rgba(0,0,0,0.02)] space-y-3">
+            <div className="flex items-center gap-2">
+              <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-[#FFF8E1] text-[#FFC107]">
+                <Sparkles className="h-4 w-4 fill-[#FFC107]" />
+              </span>
+              <div>
+                <h2 className="font-display text-sm font-bold text-[#111111]">You May Also Like</h2>
+                <p className="text-[10px] text-[#888888]">Explore similar top trending gaming apps</p>
+              </div>
+            </div>
+            <div className="space-y-2.5 pt-1">
+              {similarApps.map((simApp, idx) => (
+                <AppCard key={simApp.id} app={simApp} index={idx} onDownload={handleDownload} />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* 2. "ABOUT THE GAME" SECTION PLACED BELOW */}
         <div className="rounded-[24px] border border-[#E5E7EB] bg-white p-5 shadow-[0_6px_20px_rgba(0,0,0,0.02)] space-y-4">
           <h2 className="font-display text-base font-bold text-[#111111]">About the Game</h2>
           <p className="text-xs leading-relaxed text-[#555555]">
@@ -264,18 +281,6 @@ export default function AppDetail() {
             {app.name} APK Download 2026 New Yono Games is sabse trusted rummy aur gaming platform hai. Agar aapko real cash games, teen patti, aur slot games pasand hain, toh {app.name} aapke liye best option hai. Is app mein instant UPI withdrawal, 24/7 customer support, aur daily login bonus milta hai. Aaj hi {app.name} download karein aur khelein!
           </p>
         </div>
-
-        {/* You may also like */}
-        {similarApps.length > 0 && (
-          <div className="space-y-3 pt-2">
-            <h2 className="font-display text-sm font-bold text-[#111111]">✨ You may also like</h2>
-            <div className="space-y-2.5">
-              {similarApps.map((simApp, idx) => (
-                <AppCard key={simApp.id} app={simApp} index={idx} onDownload={handleDownload} />
-              ))}
-            </div>
-          </div>
-        )}
 
         <FaqSection />
       </main>

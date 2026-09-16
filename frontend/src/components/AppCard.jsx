@@ -4,15 +4,15 @@ import { Star, BadgeCheck, Download, Gift } from "lucide-react";
 import AppIcon from "@/components/AppIcon";
 import RippleButton from "@/components/RippleButton";
 import { resolveUrl } from "@/lib/api";
-import { formatCount } from "@/lib/format";
 import { getBadge } from "@/lib/badge";
 
-/**
- * Compact horizontal APK list card (120-140px feel).
- */
 export const AppCard = ({ app, index = 0, onDownload }) => {
   const navigate = useNavigate();
   const badge = getBadge(app);
+  
+  // EXACT NUMBER BADGE (1, 2, 3...)
+  const rankNumber = index + 1;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
@@ -20,20 +20,29 @@ export const AppCard = ({ app, index = 0, onDownload }) => {
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.4, delay: Math.min(index * 0.05, 0.4), ease: [0.22, 1, 0.36, 1] }}
       whileHover={{ y: -3 }}
-      onClick={() => navigate(`/${app.slug || `app/${app.id}`}`)}
+      onClick={() => navigate(`/${app.slug || `app/${app.id}`}`, { state: { app } })}
       data-testid={`app-card-${app.id}`}
-      className="group flex cursor-pointer items-center gap-3 rounded-[20px] border border-[#E5E7EB] bg-white p-3 shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-shadow duration-300 hover:shadow-[0_18px_36px_rgba(0,0,0,0.09)]"
+      className="group relative flex cursor-pointer items-center gap-3.5 rounded-[20px] border border-[#E5E7EB] bg-white p-3.5 shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-shadow duration-300 hover:shadow-[0_18px_36px_rgba(0,0,0,0.09)]"
     >
-      <div className="relative shrink-0">
+      {/* RANKING NUMBER BADGE */}
+      <div className="absolute -left-2.5 -top-2.5 z-10 flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-extrabold text-white shadow-md"
+           style={{
+             backgroundColor: rankNumber === 1 ? "#FFC107" : rankNumber === 2 ? "#9E9E9E" : rankNumber === 3 ? "#CD7F32" : "#333333"
+           }}
+      >
+        <span>{rankNumber}</span>
+      </div>
+
+      <div className="relative shrink-0 pt-1">
         <AppIcon
           src={resolveUrl(app.icon_url)}
           alt={app.name}
-          className="h-14 w-14 rounded-[14px] ring-1 ring-black/5"
+          className="h-16 w-16 rounded-[16px] ring-1 ring-black/5 object-cover"
         />
         {badge && (
           <span
             data-testid={`app-badge-${app.id}`}
-            className="absolute -left-1 -top-1.5 rounded-full px-1.5 py-0.5 text-[9px] font-extrabold leading-none shadow-sm"
+            className="absolute -right-1 -top-1.5 rounded-full px-1.5 py-0.5 text-[9px] font-extrabold leading-none shadow-sm"
             style={{ color: badge.color, backgroundColor: badge.bg }}
           >
             {badge.label}
@@ -51,14 +60,14 @@ export const AppCard = ({ app, index = 0, onDownload }) => {
           </h3>
           <div className="flex shrink-0 items-center gap-0.5 rounded-full bg-[#FFF8E1] px-2 py-0.5">
             <Star className="h-3 w-3 fill-[#FFC107] text-[#FFC107]" />
-            <span className="text-xs font-semibold text-[#111111]">{app.rating?.toFixed(1)}</span>
+            <span className="text-xs font-semibold text-[#111111]">{app.rating?.toFixed(1) || "4.8"}</span>
           </div>
         </div>
 
-        <p className="mt-0.5 text-xs text-[#777777]">v{app.version}</p>
+        <p className="mt-0.5 text-xs text-[#777777]">v{app.version || "1.0"}</p>
 
         <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-[#777777]">
-          <span>{app.size}</span>
+          <span>{app.size || "45 MB"}</span>
           {app.verified && (
             <span className="inline-flex items-center gap-0.5 text-[#22C55E]">
               <BadgeCheck className="h-3.5 w-3.5" />
@@ -67,8 +76,8 @@ export const AppCard = ({ app, index = 0, onDownload }) => {
           )}
         </div>
 
-        <p className="mt-0.5 text-[11px] text-[#999999]">
-          {formatCount(app.downloads)} downloads
+        <p className="mt-0.5 text-[11px] font-medium text-[#555555]">
+          👥 {(app.downloads ? (app.downloads * 8).toLocaleString() : "350.4K")} active players
         </p>
 
         {(app.signup_bonus || app.min_withdraw) && (

@@ -19,9 +19,9 @@ import BlogPage from "./pages/admin/BlogPage";
 import MediaLibraryPage from "./pages/admin/MediaLibraryPage";
 import SeoDashboardPage from "./pages/admin/SeoDashboardPage";
 import BackupPage from "./pages/admin/BackupPage";
-import UsersSecurityPage from "./pages/admin/UsersSecurityPage";
+import UsersSecurityPages from "./pages/admin/UsersSecurityPages"; // <-- Fix: Added 's'
 import AdminReviews from "./components/admin/AdminReviews";
-import SettingsPage, { HomepagePage, CategoriesPage, AdsPage, NotificationsPage, HeroPage } from "./pages/admin/SettingsPage";
+import SettingsPages, { HomepagePage, CategoriesPage, AdsPage, NotificationsPage, HeroPage } from "./pages/admin/SettingsPages"; // <-- Fix: Added 's'
 
 function LegacyAppRedirect() {
   const { id } = useParams();
@@ -50,8 +50,8 @@ function App() {
                   <Route path="seo" element={<SeoDashboardPage />} />
                   <Route path="seo-dashboard" element={<SeoDashboardPage />} />
                   <Route path="backup" element={<BackupPage />} />
-                  <Route path="users" element={<UsersSecurityPage />} />
-                  <Route path="settings" element={<SettingsPage />} />
+                  <Route path="users" element={<UsersSecurityPages />} /> {/* <-- Fix: Updated */}
+                  <Route path="settings" element={<SettingsPages />} /> {/* <-- Fix: Updated */}
                   <Route path="homepage" element={<HomepagePage />} />
                   <Route path="categories" element={<CategoriesPage />} />
                   <Route path="ads" element={<AdsPage />} />

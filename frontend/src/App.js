@@ -19,9 +19,9 @@ import BlogPage from "./pages/admin/BlogPage";
 import MediaLibraryPage from "./pages/admin/MediaLibraryPage";
 import SeoDashboardPage from "./pages/admin/SeoDashboardPage";
 import BackupPage from "./pages/admin/BackupPage";
-import UsersSecurityPages from "./pages/admin/UsersSecurityPages"; // <-- Fix: Added 's'
+import UsersSecurityPages from "./pages/admin/UsersSecurityPages";
 import AdminReviews from "./components/admin/AdminReviews";
-import SettingsPages, { HomepagePage, CategoriesPage, AdsPage, NotificationsPage, HeroPage } from "./pages/admin/SettingsPages"; // <-- Fix: Added 's'
+import SettingsPages, { HomepagePage, CategoriesPage, AdsPage, NotificationsPage, HeroPage } from "./pages/admin/SettingsPages";
 
 function LegacyAppRedirect() {
   const { id } = useParams();
@@ -50,8 +50,11 @@ function App() {
                   <Route path="seo" element={<SeoDashboardPage />} />
                   <Route path="seo-dashboard" element={<SeoDashboardPage />} />
                   <Route path="backup" element={<BackupPage />} />
-                  <Route path="users" element={<UsersSecurityPages />} /> {/* <-- Fix: Updated */}
-                  <Route path="settings" element={<SettingsPages />} /> {/* <-- Fix: Updated */}
+                  
+                  {/* Yeh rahi wo line jahan typo theek kiya gaya hai */}
+                  <Route path="users" element={<UsersSecurityPages />} /> 
+                  
+                  <Route path="settings" element={<SettingsPages />} />
                   <Route path="homepage" element={<HomepagePage />} />
                   <Route path="categories" element={<CategoriesPage />} />
                   <Route path="ads" element={<AdsPage />} />

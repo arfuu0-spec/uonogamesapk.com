@@ -9,7 +9,6 @@ import { useSettings, sectionEnabled } from "@/context/SettingsContext";
 import Header from "@/components/Header";
 import FeaturedApps from "@/components/FeaturedApps";
 import AppCard from "@/components/AppCard";
-import TrendingRow from "@/components/TrendingRow";
 import RummyFeatures from "@/components/RummyFeatures";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import { StoreSkeleton } from "@/components/Skeletons";
@@ -125,7 +124,6 @@ export default function Store() {
         ...prev,
         featured: (prev.featured || []).map(bump),
         apps: (prev.apps || []).map(bump),
-        trending: (prev.trending || []).map(bump),
       };
       localStorage.setItem("yono_apps_perm_cache", JSON.stringify(updated));
       return updated;
@@ -134,7 +132,7 @@ export default function Store() {
 
   const allAppsList = useMemo(() => {
     if (!data) return [];
-    return [...(data.featured || []), ...(data.apps || []), ...(data.trending || [])];
+    return [...(data.featured || []), ...(data.apps || [])];
   }, [data]);
 
   const handleKeywordClick = (kw) => {
@@ -259,10 +257,10 @@ export default function Store() {
     winners: isDefaultView && en("winners") ? <LiveWinners key="winners" config={settings?.winners_config} /> : null,
     apps: appListSection,
     
-    // WHAT USERS SAY + 100 CLICKABLE KEYWORDS CLOUD DIRECTLY BELOW IT
-    reviews: isDefaultView && en("reviews") ? (
+    // WHAT USERS SAY + GUARANTEED 100 CLICKABLE KEYWORDS CLOUD DIRECTLY BELOW IT
+    reviews: isDefaultView ? (
       <div key="reviews-wrapper" className="space-y-4">
-        <ReviewsSection />
+        {en("reviews") && <ReviewsSection />}
         <section className="rounded-[22px] border border-[#E5E7EB] bg-white p-4 shadow-[0_6px_20px_rgba(0,0,0,0.02)] space-y-3">
           <div className="flex items-center gap-2">
             <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-[#FFF8E1] text-[#FFC107]">
@@ -292,7 +290,7 @@ export default function Store() {
     legal: isDefaultView && en("legal") ? <LegalSection key="legal" onOpen={setLegalId} /> : null,
   };
 
-  const order = (settings?.sections || []).map((s) => s.id);
+  const order = (settings?.sections || []).map((s) => s.id).filter(id => id !== "trending");
   const finalOrder = order.includes("apps") ? order : [...order, "apps"];
 
   return (

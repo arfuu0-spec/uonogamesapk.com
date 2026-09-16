@@ -10,6 +10,7 @@ export const AppCard = ({ app, index = 0, onDownload }) => {
   const navigate = useNavigate();
   const badge = getBadge(app);
   
+  // EXACT NUMBER BADGE (1, 2, 3...)
   const rankNumber = index + 1;
 
   return (
@@ -23,7 +24,7 @@ export const AppCard = ({ app, index = 0, onDownload }) => {
       data-testid={`app-card-${app.id}`}
       className="group relative flex cursor-pointer items-center gap-3.5 rounded-[20px] border border-[#E5E7EB] bg-white p-3.5 shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-shadow duration-300 hover:shadow-[0_18px_36px_rgba(0,0,0,0.09)] overflow-visible"
     >
-      {/* RANKING NUMBER BADGE - Fixed positioning so it won't cut */}
+      {/* RANKING NUMBER BADGE - Fixed with overflow-visible so it never cuts */}
       <div className="absolute -left-2 -top-2 z-20 flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-extrabold text-white shadow-md border-2 border-white"
            style={{
              backgroundColor: rankNumber === 1 ? "#FFC107" : rankNumber === 2 ? "#9E9E9E" : rankNumber === 3 ? "#CD7F32" : "#333333"

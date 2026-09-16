@@ -45,4 +45,4 @@ export function UsersPage() {
 }
 
 // Yeh aakhiri line add karna zaroori tha Cloudflare error hatane ke liye
-export default UsersPage;
+export default UsersPages;

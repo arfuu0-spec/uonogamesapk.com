@@ -10,7 +10,7 @@ export const AppCard = ({ app, index = 0, onDownload }) => {
   const navigate = useNavigate();
   const badge = getBadge(app);
   
-  // EXACT NUMBER BADGE (1, 2, 3...)
+  // RANKING NUMBER (1, 2, 3...) FOR EVERY CARD
   const rankNumber = index + 1;
 
   return (
@@ -22,9 +22,9 @@ export const AppCard = ({ app, index = 0, onDownload }) => {
       whileHover={{ y: -3 }}
       onClick={() => navigate(`/${app.slug || `app/${app.id}`}`, { state: { app } })}
       data-testid={`app-card-${app.id}`}
-      className="group relative flex cursor-pointer items-center gap-3.5 rounded-[20px] border border-[#E5E7EB] bg-white p-3.5 shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-shadow duration-300 hover:shadow-[0_18px_36px_rgba(0,0,0,0.09)] overflow-visible"
+      className="group relative flex cursor-pointer items-center gap-4 rounded-[22px] border border-[#E5E7EB] bg-white p-4 shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-shadow duration-300 hover:shadow-[0_18px_36px_rgba(0,0,0,0.09)] overflow-visible"
     >
-      {/* RANKING NUMBER BADGE - Fixed with overflow-visible so it never cuts */}
+      {/* RANKING NUMBER BADGE ON EVERY CARD */}
       <div className="absolute -left-2 -top-2 z-20 flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-extrabold text-white shadow-md border-2 border-white"
            style={{
              backgroundColor: rankNumber === 1 ? "#FFC107" : rankNumber === 2 ? "#9E9E9E" : rankNumber === 3 ? "#CD7F32" : "#333333"
@@ -33,11 +33,12 @@ export const AppCard = ({ app, index = 0, onDownload }) => {
         <span>{rankNumber}</span>
       </div>
 
+      {/* BIGGER APP ICON SIZE (h-20 w-20) */}
       <div className="relative shrink-0 pt-1">
         <AppIcon
           src={resolveUrl(app.icon_url)}
           alt={app.name}
-          className="h-16 w-16 rounded-[16px] ring-1 ring-black/5 object-cover"
+          className="h-20 w-20 rounded-[18px] ring-1 ring-black/5 object-cover shadow-sm"
         />
         {badge && (
           <span
@@ -53,7 +54,7 @@ export const AppCard = ({ app, index = 0, onDownload }) => {
       <div className="min-w-0 flex-1">
         <div className="flex items-start justify-between gap-2">
           <h3
-            className="line-clamp-2 font-display text-[15px] font-semibold leading-tight text-[#111111]"
+            className="line-clamp-2 font-display text-base font-bold leading-tight text-[#111111]"
             data-testid={`app-name-${app.id}`}
           >
             {app.name}
@@ -76,7 +77,7 @@ export const AppCard = ({ app, index = 0, onDownload }) => {
           )}
         </div>
 
-        <p className="mt-0.5 text-[11px] font-medium text-[#555555]">
+        <p className="mt-1 text-[11px] font-medium text-[#555555]">
           👥 {(app.downloads ? (app.downloads * 8).toLocaleString() : "350.4K")} active players
         </p>
 

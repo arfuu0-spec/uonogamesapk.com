@@ -256,40 +256,12 @@ export default function Store() {
     ) : null,
     winners: isDefaultView && en("winners") ? <LiveWinners key="winners" config={settings?.winners_config} /> : null,
     apps: appListSection,
-    
-    // WHAT USERS SAY + GUARANTEED 100 CLICKABLE KEYWORDS CLOUD DIRECTLY BELOW IT
-    reviews: isDefaultView ? (
-      <div key="reviews-wrapper" className="space-y-4">
-        {en("reviews") && <ReviewsSection />}
-        <section className="rounded-[22px] border border-[#E5E7EB] bg-white p-4 shadow-[0_6px_20px_rgba(0,0,0,0.02)] space-y-3">
-          <div className="flex items-center gap-2">
-            <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-[#FFF8E1] text-[#FFC107]">
-              <Flame className="h-4 w-4 fill-[#FFC107]" />
-            </span>
-            <div>
-              <h3 className="font-display text-sm font-bold text-[#111111]">Top 100 Yono Games, Rummy &amp; Money Game Keywords</h3>
-              <p className="text-[10px] text-[#888888]">Click any keyword to explore games and instant download links</p>
-            </div>
-          </div>
-          <div className="flex flex-wrap gap-1.5 pt-1">
-            {LANDING_100_KEYWORDS.map((kw, i) => (
-              <button
-                key={i}
-                onClick={() => handleKeywordClick(kw)}
-                className="rounded-full border border-[#E5E7EB] bg-[#FAFAFA] px-3 py-1 text-[11px] font-medium text-[#555555] hover:bg-[#FFF8E1] hover:border-[#FFE082] hover:text-[#B45309] transition-colors text-left cursor-pointer"
-              >
-                #{kw}
-              </button>
-            ))}
-          </div>
-        </section>
-      </div>
-    ) : null,
-
+    reviews: isDefaultView && en("reviews") ? <ReviewsSection key="reviews" /> : null,
     faq: isDefaultView && en("faq") ? <FaqSection key="faq" /> : null,
     legal: isDefaultView && en("legal") ? <LegalSection key="legal" onOpen={setLegalId} /> : null,
   };
 
+  // EXPLICITLY FILTER OUT "trending" SO IT NEVER SHOWS UP
   const order = (settings?.sections || []).map((s) => s.id).filter(id => id !== "trending");
   const finalOrder = order.includes("apps") ? order : [...order, "apps"];
 
@@ -395,6 +367,33 @@ export default function Store() {
         ) : (
           <>
             {finalOrder.map((id) => renderers[id]).filter(Boolean)}
+
+            {/* GUARANTEED 100 CLICKABLE KEYWORDS CLOUD PLACED DIRECTLY BELOW WHAT USERS SAY / REVIEWS */}
+            {isDefaultView && (
+              <section className="rounded-[22px] border border-[#E5E7EB] bg-white p-4 shadow-[0_6px_20px_rgba(0,0,0,0.02)] space-y-3 my-4">
+                <div className="flex items-center gap-2">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-[#FFF8E1] text-[#FFC107]">
+                    <Flame className="h-4 w-4 fill-[#FFC107]" />
+                  </span>
+                  <div>
+                    <h3 className="font-display text-sm font-bold text-[#111111]">Top 100 Yono Games, Rummy &amp; Money Game Keywords</h3>
+                    <p className="text-[10px] text-[#888888]">Click any keyword to explore games and instant download links</p>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-1.5 pt-1">
+                  {LANDING_100_KEYWORDS.map((kw, i) => (
+                    <button
+                      key={i}
+                      onClick={() => handleKeywordClick(kw)}
+                      className="rounded-full border border-[#E5E7EB] bg-[#FAFAFA] px-3 py-1 text-[11px] font-medium text-[#555555] hover:bg-[#FFF8E1] hover:border-[#FFE082] hover:text-[#B45309] transition-colors text-left cursor-pointer"
+                    >
+                      #{kw}
+                    </button>
+                  ))}
+                </div>
+              </section>
+            )}
+
             {isDefaultView && en("winners") && <RedeemBox />}
             {isDefaultView && AdSlot && <AdSlot ads={settings?.ads} />}
           </>

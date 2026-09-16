@@ -1,15 +1,14 @@
 import { useDeferredValue, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Search, Send, Download, Sparkles, TrendingUp, ShieldCheck, ArrowDownWideNarrow, X } from "lucide-react";
+import { Search, Send, Download, Sparkles, TrendingUp, ShieldCheck, ArrowDownWideNarrow, X, Flame } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import api, { API, resolveUrl } from "@/lib/api";
 import SEOHead from "@/components/SEOHead";
 import { useSettings, sectionEnabled } from "@/context/SettingsContext";
 import Header from "@/components/Header";
-import WelcomeTypewriter from "@/components/WelcomeTypewriter";
 import FeaturedApps from "@/components/FeaturedApps";
 import AppCard from "@/components/AppCard";
-import TrendingRow from "@/components/TrendingRow";
 import RummyFeatures from "@/components/RummyFeatures";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import { StoreSkeleton } from "@/components/Skeletons";
@@ -22,6 +21,7 @@ import LiveWinners from "@/components/LiveWinners";
 import ReviewsSection from "@/components/ReviewsSection";
 import RedeemBox from "@/components/RedeemBox";
 import AdSlot from "@/components/AdSlot";
+import OptimizedImage from "@/components/OptimizedImage";
 import { Input } from "@/components/ui/input";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
@@ -40,10 +40,45 @@ const SORTS = [
   { value: "newest", label: "Newest" },
 ];
 
+const LANDING_100_KEYWORDS = [
+  "Yono Games", "Yono Rummy", "Rummy Games", "Money Games", "Casino Games", "Teen Patti Real Cash",
+  "New Yono Apps 2026", "Best Rummy App India", "Sign Up Bonus 501", "Instant UPI Withdrawal",
+  "Mod APK Download", "Yono VIP Program", "Daily Jackpot Win", "Safe APK Store", "Online Card Games",
+  "Yono All Games List", "Winning Strategies", "Fastest Withdrawal App", "Trusted Rummy Platform",
+  "Android Gaming Hub", "Free Bonus Apps", "Real Money Games", "Latest Version Update", "Ind Rummy APK",
+  "Gold Rummy Download", "Yono Ludo App", "Teen Patti Gold", "Dragon Tiger Game", "Andar Bahar Online",
+  "7 Up 7 Down Game", "Car Roulette APK", "Zoo Roulette", "Crash Aviator Game", "Roulette Casino App",
+  "Poker Real Money", "Blackjack Online India", "Slots Win APK", "Teen Patti Master", "Yono 777 Game",
+  "Yono Slots Spin", "All Yono Rummy List", "New Rummy App 2026", "Bonus Rummy App", "No 1 Rummy Game",
+  "Real Cash Earning Apps", "Paytm Cash Games", "PhonePe Withdrawal Apps", "Google Pay Rummy", "Instant Bank Transfer Games",
+  "Safe Rummy App", "Verified APK Store", "Anti Ban Mod APK", "High Payout Casino", "Big Win Rummy",
+  "Mega Jackpot Apps", "Daily Login Bonus", "Refer and Earn Rummy", "Level Up Rewards", "VIP Club Games",
+  "Customer Care Rummy", "Direct APK Link", "Fastest App Download", "Lightweight Gaming APK", "Smooth 60 FPS Games",
+  "Offline & Online Games", "Regular App Updates", "Secure SSL Download", "Malware Free APK", "Trusted Developer Apps",
+  "Top Rated Card Games", "Most Downloaded Rummy", "Trending Casino APK", "Exclusive Game Codes", "Redeem Code Rummy",
+  "Promo Code Bonus", "Unlimited Chips Hack", "Winning Tricks Rummy", "Pro Player Strategy", "Expert Guide APK",
+  "App Installation Guide", "Root Free APK", "Android 14 Supported", "Low Storage Games", "High Speed APK Server",
+  "Multiplayer Card Games", "Live Dealer Casino", "Real Time Leaderboard", "Tournament Rummy APK", "Weekly Cash Prizes",
+  "Monthly Mega Contests", "Special Festival Bonus", "New Year Rummy Offer", "Diwali Special Bonus", "Welcome Bonus 501",
+  "First Deposit Bonus", "Extra Cashback Offer", "Loss Back Guarantee", "Instant Support 24x7", "Official Yono Games Store"
+];
+
 export default function Store() {
   const { settings } = useSettings();
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  
+  const cachedData = typeof window !== "undefined" ? localStorage.getItem("yono_apps_perm_cache") : null;
+  const parsedCache = useMemo(() => {
+    try {
+      return cachedData ? JSON.parse(cachedData) : null;
+    } catch (e) {
+      return null;
+    }
+  }, [cachedData]);
+
+  const [data, setData] = useState(() => parsedCache);
+  const [loading, setLoading] = useState(!parsedCache);
+  
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
   const [sort, setSort] = useState("downloads");
@@ -51,32 +86,65 @@ export default function Store() {
 
   const fetchApps = async () => {
     try {
-      const res = await api.get("/apps?limit=200");
-      setData(res.data);
+      const res = await api.get("/apps?limit=100");
+      if (res.data) {
+        setData(res.data);
+        localStorage.setItem("yono_apps_perm_cache", JSON.stringify(res.data));
+      }
     } catch (e) {
-      toast.error("Failed to load apps");
+      if (!data) toast.error("Failed to load apps");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchApps();
-  }, []);
+    if (parsedCache) {
+      setLoading(false);
+      fetchApps();
+    } else {
+      fetchApps();
+    }
+  }, [parsedCache]);
 
   const handleDownload = (app) => {
-    toast.success(`Starting download: ${app.name}`, { description: `${app.size} • v${app.version}` });
-    window.open(`${API}/apps/${app.id}/download`, "_blank");
+    toast.success(`Opening: ${app.name}`, { description: `${app.size} • v${app.version}` });
+    
+    if (app.apk_url && app.apk_url.startsWith("http")) {
+      window.open(app.apk_url, "_blank"); 
+      api.get(`/apps/${app.id}/download`).catch(() => {});
+    } else {
+      window.open(`${API}/apps/${app.id}/download`, "_blank");
+    }
+
     setData((prev) => {
       if (!prev) return prev;
       const bump = (a) => (a.id === app.id ? { ...a, downloads: a.downloads + 1 } : a);
-      return {
+      const updated = {
         ...prev,
         featured: (prev.featured || []).map(bump),
         apps: (prev.apps || []).map(bump),
-        trending: (prev.trending || []).map(bump),
       };
+      localStorage.setItem("yono_apps_perm_cache", JSON.stringify(updated));
+      return updated;
     });
+  };
+
+  const allAppsList = useMemo(() => {
+    if (!data) return [];
+    return [...(data.featured || []), ...(data.apps || [])];
+  }, [data]);
+
+  const handleKeywordClick = (kw) => {
+    const cleanKw = kw.replace(/apk|download|2026|app|online|india|game|games/gi, "").trim();
+    const matchedApp = allAppsList.find(a => normalize(a.name).includes(normalize(cleanKw)) || normalize(cleanKw).includes(normalize(a.name)));
+    
+    if (matchedApp) {
+      navigate(`/${matchedApp.slug || matchedApp.id}`, { state: { app: matchedApp } });
+    } else {
+      setSearch(cleanKw || kw);
+      window.scrollTo({ top: 300, behavior: 'smooth' });
+    }
   };
 
   const categories = useMemo(() => {
@@ -124,14 +192,7 @@ export default function Store() {
     return [...(data.featured || []), ...(data.apps || [])].reduce((s, a) => s + (a.downloads || 0), 0);
   }, [data]);
 
-  const trending = useMemo(() => {
-    if (!data) return [];
-    const t = data.trending && data.trending.length ? data.trending : [...(data.featured || []), ...(data.apps || [])];
-    return t.slice().sort((a, b) => (b.downloads || 0) - (a.downloads || 0)).slice(0, 8);
-  }, [data]);
-
   const isDefaultView = !search.trim() && category === "All";
-  const showTrendingBreak = isDefaultView && filtered.length > 4;
   const hero = settings?.hero || {};
   const stats = settings?.stats || {};
   const tg = settings?.telegram || {};
@@ -150,7 +211,7 @@ export default function Store() {
         </span>
         <div className="ml-auto">
           <Select value={sort} onValueChange={setSort}>
-            <SelectTrigger data-testid="sort-select" className="h-8 w-auto gap-1 rounded-full border-[#E5E7EB] bg-white px-3 text-xs font-medium text-[#555555] focus:ring-[#FFC107]">
+            <SelectTrigger data-testid="sort-select" aria-label="Sort apps and games" className="h-8 w-auto gap-1 rounded-full border-[#E5E7EB] bg-white px-3 text-xs font-medium text-[#555555] focus:ring-[#FFC107]">
               <ArrowDownWideNarrow className="h-3.5 w-3.5 text-[#999999]" />
               <SelectValue />
             </SelectTrigger>
@@ -166,20 +227,6 @@ export default function Store() {
       {filtered.length === 0 ? (
         <div data-testid="empty-state" className="rounded-[20px] border border-dashed border-[#E5E7EB] bg-white py-10 text-center">
           <p className="text-sm text-[#777777]">No apps found</p>
-        </div>
-      ) : showTrendingBreak ? (
-        <div className="space-y-5">
-          <div className="space-y-3">
-            {filtered.slice(0, 3).map((app, i) => (
-              <AppCard key={app.id} app={app} index={i} onDownload={handleDownload} />
-            ))}
-          </div>
-          <TrendingRow apps={trending} onDownload={handleDownload} />
-          <div className="space-y-3">
-            {filtered.slice(3).map((app, i) => (
-              <AppCard key={app.id} app={app} index={i + 3} onDownload={handleDownload} />
-            ))}
-          </div>
         </div>
       ) : (
         <div className="space-y-3">
@@ -209,12 +256,41 @@ export default function Store() {
     ) : null,
     winners: isDefaultView && en("winners") ? <LiveWinners key="winners" config={settings?.winners_config} /> : null,
     apps: appListSection,
-    reviews: isDefaultView && en("reviews") ? <ReviewsSection key="reviews" /> : null,
+    
+    // WHAT USERS SAY + GUARANTEED 100 CLICKABLE KEYWORDS CLOUD DIRECTLY BELOW IT
+    reviews: isDefaultView ? (
+      <div key="reviews-wrapper" className="space-y-4">
+        {en("reviews") && <ReviewsSection />}
+        <section className="rounded-[22px] border border-[#E5E7EB] bg-white p-4 shadow-[0_6px_20px_rgba(0,0,0,0.02)] space-y-3">
+          <div className="flex items-center gap-2">
+            <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-[#FFF8E1] text-[#FFC107]">
+              <Flame className="h-4 w-4 fill-[#FFC107]" />
+            </span>
+            <div>
+              <h3 className="font-display text-sm font-bold text-[#111111]">Top 100 Yono Games, Rummy &amp; Money Game Keywords</h3>
+              <p className="text-[10px] text-[#888888]">Click any keyword to explore games and instant download links</p>
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-1.5 pt-1">
+            {LANDING_100_KEYWORDS.map((kw, i) => (
+              <button
+                key={i}
+                onClick={() => handleKeywordClick(kw)}
+                className="rounded-full border border-[#E5E7EB] bg-[#FAFAFA] px-3 py-1 text-[11px] font-medium text-[#555555] hover:bg-[#FFF8E1] hover:border-[#FFE082] hover:text-[#B45309] transition-colors text-left cursor-pointer"
+              >
+                #{kw}
+              </button>
+            ))}
+          </div>
+        </section>
+      </div>
+    ) : null,
+
     faq: isDefaultView && en("faq") ? <FaqSection key="faq" /> : null,
     legal: isDefaultView && en("legal") ? <LegalSection key="legal" onOpen={setLegalId} /> : null,
   };
 
-  const order = (settings?.sections || []).map((s) => s.id);
+  const order = (settings?.sections || []).map((s) => s.id).filter(id => id !== "trending");
   const finalOrder = order.includes("apps") ? order : [...order, "apps"];
 
   return (
@@ -223,27 +299,29 @@ export default function Store() {
         title={settings?.seo?.homepage_title || "YONO GAMES - Play and Win | Premium Rummy & Games APK Store"}
         description={settings?.seo?.homepage_description || "Download the latest Rummy and gaming APK apps for Android free. Fast, safe & verified downloads with sign-up bonuses at YONO GAMES — uonogamesapk.com"}
         keywords={settings?.seo?.homepage_keywords || "yono games, rummy apk, teen patti apk, real cash rummy, apk download, android games, uono games apk"}
-        canonical="https://uonogamesapk.com/"
+        canonical="https://newyono.games/"
         image="/logo-v2.png"
       />
       <AnnouncementBar config={settings?.announcement} />
       <Header />
-      <WelcomeTypewriter />
+
+      <div className="px-4 pt-3 text-center">
+        <h1 className="font-display text-lg font-bold text-[#111111]">Welcome to YONO GAMES</h1>
+        <p className="text-xs text-[#777777]">PLAY &amp; WIN • SINCE 2024</p>
+      </div>
 
       {hero.enabled !== false && (
-        <div className="px-4 pt-4">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="overflow-hidden rounded-[20px] border border-[#E5E7EB] shadow-[0_10px_30px_rgba(0,0,0,0.1)]"
-            data-testid="hero-banner"
-          >
-            <img src={resolveUrl(hero.banner_url || "/hero-banner.png")} alt={hero.headline || "Uonogamesapk.com"} className="block w-full" loading="eager" decoding="async" />
-          </motion.div>
+        <div className="px-4 pt-3">
+          <div className="overflow-hidden rounded-[20px] border border-[#E5E7EB] shadow-[0_10px_30px_rgba(0,0,0,0.1)]" data-testid="hero-banner">
+            <OptimizedImage 
+              src={resolveUrl(hero.banner_url || "/hero-banner.png")} 
+              alt={hero.headline || "Uonogamesapk.com"} 
+              className="block w-full" 
+            />
+          </div>
           {(hero.headline || hero.subtitle) && (
             <div className="mt-3 text-center">
-              {hero.headline && <h1 className="font-display text-xl font-bold text-[#111111]">{hero.headline}</h1>}
+              {hero.headline && <h2 className="font-display text-xl font-bold text-[#111111]">{hero.headline}</h2>}
               {hero.subtitle && <p className="mt-0.5 text-sm text-[#777777]">{hero.subtitle}</p>}
             </div>
           )}
@@ -312,14 +390,39 @@ export default function Store() {
       </div>
 
       <main className="space-y-5 px-4 pt-1">
-        {loading ? (
+        {loading && !data ? (
           <StoreSkeleton />
         ) : (
           <>
             {finalOrder.map((id) => renderers[id]).filter(Boolean)}
             {isDefaultView && en("winners") && <RedeemBox />}
-            {isDefaultView && <AdSlot ads={settings?.ads} />}
+            {isDefaultView && AdSlot && <AdSlot ads={settings?.ads} />}
           </>
+        )}
+
+        {isDefaultView && (
+          <section className="mt-8 mb-4 space-y-4 rounded-[24px] border border-[#E5E7EB] bg-white p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
+            <h2 className="font-display text-xl font-bold text-[#111111]">
+              All Yono Games - Discover New Yono Apps & Play Top Gaming Apps
+            </h2>
+            <div className="space-y-4 text-sm leading-relaxed text-[#555555]">
+              <p>
+                <strong>Yono New Games</strong> was launched with a simple mission — to give players across India a place where they can easily discover, download, and enjoy exciting mobile games. We noticed that modern players want more than just simple tapping games. Today's gamers enjoy challenges that require strategy, quick thinking, and skill.
+              </p>
+              <p>
+                That's exactly what <strong>All New Yono Apps</strong> aims to deliver. Our platform brings together a collection of games that combine classic gameplay with modern mobile experiences. From popular card titles like <strong>Yono Rummy</strong> to the latest slot and arcade apps gaining popularity in India, every game listed here is chosen carefully for its entertainment value.
+              </p>
+              <h3 className="font-display text-lg font-bold text-[#111111] pt-2">
+                Why Thousands of Players Choose Yono New Games
+              </h3>
+              <p>
+                Finding a reliable place to explore mobile gaming apps can be difficult. New Yono Games focuses on making that process easier for Indian players. We provide detailed information, safe download links, fast updates, and app features right at your fingertips so you can start playing instantly.
+              </p>
+              <p className="text-xs text-[#999999] pt-2 border-t border-[#E5E7EB]">
+                Disclaimer: We are an independent informational platform. We do not own, operate, or manage any gaming applications listed on this website. Always play responsibly.
+              </p>
+            </div>
+          </section>
         )}
       </main>
 

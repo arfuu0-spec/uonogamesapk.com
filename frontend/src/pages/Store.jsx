@@ -7,7 +7,6 @@ import api, { API, resolveUrl } from "@/lib/api";
 import SEOHead from "@/components/SEOHead";
 import { useSettings, sectionEnabled } from "@/context/SettingsContext";
 import Header from "@/components/Header";
-import FeaturedApps from "@/components/FeaturedApps";
 import AppCard from "@/components/AppCard";
 import RummyFeatures from "@/components/RummyFeatures";
 import AnimatedCounter from "@/components/AnimatedCounter";
@@ -122,7 +121,6 @@ export default function Store() {
       const bump = (a) => (a.id === app.id ? { ...a, downloads: a.downloads + 1 } : a);
       const updated = {
         ...prev,
-        featured: (prev.featured || []).map(bump),
         apps: (prev.apps || []).map(bump),
       };
       localStorage.setItem("yono_apps_perm_cache", JSON.stringify(updated));
@@ -132,7 +130,7 @@ export default function Store() {
 
   const allAppsList = useMemo(() => {
     if (!data) return [];
-    return [...(data.featured || []), ...(data.apps || [])];
+    return [...(data.apps || [])];
   }, [data]);
 
   const handleKeywordClick = (kw) => {
@@ -150,7 +148,7 @@ export default function Store() {
   const categories = useMemo(() => {
     if (!data) return ["All"];
     const set = new Set();
-    [...(data.featured || []), ...(data.apps || [])].forEach((a) => a.category && set.add(a.category));
+    [...(data.apps || [])].forEach((a) => a.category && set.add(a.category));
     return ["All", ...Array.from(set)];
   }, [data]);
 
@@ -160,7 +158,7 @@ export default function Store() {
     if (!data) return [];
     const q = normalize(deferredSearch);
     const hasFilter = category !== "All" || q;
-    let list = hasFilter ? [...(data.featured || []), ...(data.apps || [])] : [...(data.apps || [])];
+    let list = hasFilter ? [...(data.apps || [])] : [...(data.apps || [])];
     if (category !== "All") list = list.filter((a) => a.category === category);
 
     if (q) {
@@ -189,7 +187,7 @@ export default function Store() {
 
   const totalDownloads = useMemo(() => {
     if (!data) return 0;
-    return [...(data.featured || []), ...(data.apps || [])].reduce((s, a) => s + (a.downloads || 0), 0);
+    return [...(data.apps || [])].reduce((s, a) => s + (a.downloads || 0), 0);
   }, [data]);
 
   const isDefaultView = !search.trim() && category === "All";
@@ -239,7 +237,6 @@ export default function Store() {
   );
 
   const renderers = {
-    featured: isDefaultView && en("featured") ? <FeaturedApps key="featured" apps={data?.featured || []} onDownload={handleDownload} /> : null,
     rummy: isDefaultView && en("rummy") ? <RummyFeatures key="rummy" /> : null,
     telegram: isDefaultView && en("telegram") && tg.enabled !== false ? (
       <a key="telegram" href={tg.link || "https://t.me/"} target="_blank" rel="noopener noreferrer" data-testid="telegram-cta"
@@ -261,8 +258,8 @@ export default function Store() {
     legal: isDefaultView && en("legal") ? <LegalSection key="legal" onOpen={setLegalId} /> : null,
   };
 
-  // EXPLICITLY FILTER OUT "trending" SO IT NEVER SHOWS UP
-  const order = (settings?.sections || []).map((s) => s.id).filter(id => id !== "trending");
+  // EXPLICITLY FILTER OUT "trending" AND "featured" SO IT NEVER SHOWS UP
+  const order = (settings?.sections || []).map((s) => s.id).filter(id => id !== "trending" && id !== "featured");
   const finalOrder = order.includes("apps") ? order : [...order, "apps"];
 
   return (
@@ -305,7 +302,7 @@ export default function Store() {
           {(stats.items || []).slice(0, 3).map((s, i) => {
             const Icon = [Download, ShieldCheck, TrendingUp][i] || Sparkles;
             const color = ["#FFC107", "#22C55E", "#FFB300"][i] || "#FFC107";
-            const autoVal = i === 0 ? totalDownloads : (data ? [...(data.featured || []), ...(data.apps || [])].length : 0);
+            const autoVal = i === 0 ? totalDownloads : (data ? [...(data.apps || [])].length : 0);
             const isAuto = s.value === "auto";
             return (
               <div key={i} className="rounded-[16px] border border-[#E5E7EB] bg-white p-3 text-center shadow-[0_6px_20px_rgba(0,0,0,0.03)]">

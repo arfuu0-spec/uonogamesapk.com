@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-import { Star, BadgeCheck, Download, Gift, ArrowLeft, ShieldCheck, Zap, Wifi, RefreshCw, Trophy, Sparkles, CheckCircle2, AlertCircle } from "lucide-react";
+import { Star, BadgeCheck, Download, Gift, ArrowLeft, ShieldCheck, Zap, Wifi, Sparkles, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import api, { API, resolveUrl } from "@/lib/api";
 import SEOHead from "@/components/SEOHead";
@@ -48,7 +48,7 @@ export default function AppDetail() {
       }
     };
 
-    if (!app || String(app.id) !== String(identifier) && app.slug !== identifier) {
+    if (!app || (String(app.id) !== String(identifier) && app.slug !== identifier)) {
       fetchAppData();
     } else {
       api.get("/apps?limit=10").then(res => {
@@ -56,7 +56,7 @@ export default function AppDetail() {
         setSimilarApps(all.filter(a => a.id !== app.id).slice(0, 6));
       }).catch(() => {});
     }
-  }, [identifier]);
+  }, [identifier, app]);
 
   const handleDownload = (targetApp) => {
     const currentApp = targetApp || app;
@@ -172,7 +172,7 @@ export default function AppDetail() {
           <p className="mt-2 text-center text-[11px] text-[#777777]">🔒 Safe & virus-scanned • 500,013 downloads</p>
         </div>
 
-        {/* 1. NEW POSITION: YOU MAY ALSO LIKE (Professional Card format) */}
+        {/* 1. NEW POSITION: YOU MAY ALSO LIKE */}
         {similarApps.length > 0 && (
           <div className="rounded-[24px] border border-[#E5E7EB] bg-white p-5 shadow-sm space-y-4">
             <div className="flex items-center gap-2">

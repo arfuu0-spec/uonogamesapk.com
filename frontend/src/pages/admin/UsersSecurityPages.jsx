@@ -3,7 +3,7 @@ import { User } from "lucide-react";
 import { PageHeader, Card, Spinner } from "@/components/admin/adminUI";
 import api from "@/lib/api";
 
-export function UsersPage() {
+export default function UsersSecurityPages() {
   const [users, setUsers] = useState(null);
 
   useEffect(() => {
@@ -43,6 +43,3 @@ export function UsersPage() {
     </div>
   );
 }
-
-// Yeh aakhiri line add karna zaroori tha Cloudflare error hatane ke liye
-export default UsersPages;

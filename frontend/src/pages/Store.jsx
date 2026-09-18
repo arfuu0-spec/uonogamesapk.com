@@ -200,19 +200,19 @@ export default function Store() {
   const en = (id) => sectionEnabled(settings, id);
 
   const appListSection = (
-    <section key="apps" id="apps" className="space-y-3" data-testid="apps-section">
+    <section key="apps" id="apps" className="space-y-2.5" data-testid="apps-section">
       <div className="flex items-center gap-2">
         <Sparkles className="h-4 w-4 text-[#FFC107]" />
-        <h2 className="font-display text-sm sm:text-base font-bold text-[#111111]">
+        <h2 className="font-display text-sm font-bold text-[#111111]">
           {isDefaultView ? "All Apps" : "Results"}
         </h2>
-        <span className="text-[11px] sm:text-xs text-[#999999]" aria-live="polite">
+        <span className="text-[11px] text-[#999999]" aria-live="polite">
           ({filtered.length}{isDefaultView ? "" : filtered.length === 1 ? " match" : " matches"})
         </span>
         <div className="ml-auto">
           <Select value={sort} onValueChange={setSort}>
-            <SelectTrigger data-testid="sort-select" aria-label="Sort apps and games" className="h-7 sm:h-8 w-auto gap-1 rounded-full border-[#E5E7EB] bg-white px-2.5 sm:px-3 text-[11px] sm:text-xs font-medium text-[#555555] focus:ring-[#FFC107]">
-              <ArrowDownWideNarrow className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-[#999999]" />
+            <SelectTrigger data-testid="sort-select" aria-label="Sort apps and games" className="h-7 w-auto gap-1 rounded-full border-[#E5E7EB] bg-white px-2.5 text-[11px] font-medium text-[#555555] focus:ring-[#FFC107]">
+              <ArrowDownWideNarrow className="h-3 w-3 text-[#999999]" />
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -225,11 +225,11 @@ export default function Store() {
       </div>
 
       {filtered.length === 0 ? (
-        <div data-testid="empty-state" className="rounded-[16px] sm:rounded-[20px] border border-dashed border-[#E5E7EB] bg-white py-8 sm:py-10 text-center">
-          <p className="text-xs sm:text-sm text-[#777777]">No apps found</p>
+        <div data-testid="empty-state" className="rounded-[16px] border border-dashed border-[#E5E7EB] bg-white py-8 text-center">
+          <p className="text-xs text-[#777777]">No apps found</p>
         </div>
       ) : (
-        <div className="space-y-2.5 sm:space-y-3">
+        <div className="space-y-2.5">
           {filtered.map((app, i) => (
             <AppCard key={app.id} app={app} index={i} onDownload={handleDownload} />
           ))}
@@ -242,15 +242,15 @@ export default function Store() {
     rummy: isDefaultView && en("rummy") ? <RummyFeatures key="rummy" /> : null,
     telegram: isDefaultView && en("telegram") && tg.enabled !== false ? (
       <a key="telegram" href={tg.link || "https://t.me/"} target="_blank" rel="noopener noreferrer" data-testid="telegram-cta"
-        className="flex items-center gap-2.5 sm:gap-3 rounded-[16px] sm:rounded-[20px] border border-[#229ED9]/20 bg-gradient-to-r from-[#229ED9]/10 to-[#229ED9]/5 p-3 sm:p-3.5 transition-transform duration-200 active:scale-[0.98]">
-        <div className="flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-[#229ED9] shadow-[0_4px_12px_rgba(34,158,217,0.4)] shrink-0">
-          <Send className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
+        className="flex items-center gap-2.5 rounded-[16px] border border-[#229ED9]/20 bg-gradient-to-r from-[#229ED9]/10 to-[#229ED9]/5 p-3 transition-transform duration-200 active:scale-[0.98]">
+        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#229ED9] shadow-[0_4px_12px_rgba(34,158,217,0.4)] shrink-0">
+          <Send className="h-4 w-4 text-white" />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="font-display text-xs sm:text-sm font-bold text-[#111111] truncate">{tg.cta_text || "Join our Telegram"}</p>
-          <p className="text-[11px] sm:text-xs text-[#777777] truncate">{tg.sub_text || "Get instant updates & new APK releases"}</p>
+          <p className="font-display text-xs font-bold text-[#111111] truncate">{tg.cta_text || "Join our Telegram"}</p>
+          <p className="text-[11px] text-[#777777] truncate">{tg.sub_text || "Get instant updates & new APK releases"}</p>
         </div>
-        <span className="rounded-full bg-[#229ED9] px-2.5 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs font-semibold text-white shrink-0">Join</span>
+        <span className="rounded-full bg-[#229ED9] px-2.5 py-1 text-[11px] font-semibold text-white shrink-0">Join</span>
       </a>
     ) : null,
     winners: isDefaultView && en("winners") ? <LiveWinners key="winners" config={settings?.winners_config} /> : null,
@@ -275,14 +275,14 @@ export default function Store() {
       <AnnouncementBar config={settings?.announcement} />
       <Header />
 
-      <div className="px-4 pt-2.5 sm:pt-3 text-center">
-        <h1 className="font-display text-base sm:text-lg font-bold text-[#111111]">Welcome to YONO GAMES</h1>
-        <p className="text-[11px] sm:text-xs text-[#777777]">PLAY &amp; WIN • SINCE 2024</p>
+      <div className="px-4 pt-2.5 text-center">
+        <h1 className="font-display text-base font-bold text-[#111111]">Welcome to YONO GAMES</h1>
+        <p className="text-[11px] text-[#777777]">PLAY &amp; WIN • SINCE 2024</p>
       </div>
 
       {hero.enabled !== false && (
-        <div className="px-4 pt-2.5 sm:pt-3">
-          <div className="overflow-hidden rounded-[16px] sm:rounded-[20px] border border-[#E5E7EB] shadow-[0_8px_24px_rgba(0,0,0,0.08)]" data-testid="hero-banner">
+        <div className="px-4 pt-2.5">
+          <div className="overflow-hidden rounded-[16px] border border-[#E5E7EB] shadow-[0_6px_20px_rgba(0,0,0,0.06)]" data-testid="hero-banner">
             <OptimizedImage 
               src={resolveUrl(hero.banner_url || "/hero-banner.png")} 
               alt={hero.headline || "newyono.games"} 
@@ -291,38 +291,38 @@ export default function Store() {
             />
           </div>
           {(hero.headline || hero.subtitle) && (
-            <div className="mt-2.5 sm:mt-3 text-center">
-              {hero.headline && <h2 className="font-display text-base sm:text-xl font-bold text-[#111111]">{hero.headline}</h2>}
-              {hero.subtitle && <p className="mt-0.5 text-xs sm:text-sm text-[#777777]">{hero.subtitle}</p>}
+            <div className="mt-2.5 text-center">
+              {hero.headline && <h2 className="font-display text-base font-bold text-[#111111]">{hero.headline}</h2>}
+              {hero.subtitle && <p className="mt-0.5 text-xs text-[#777777]">{hero.subtitle}</p>}
             </div>
           )}
         </div>
       )}
 
       {stats.enabled !== false && (
-        <div className="grid grid-cols-3 gap-2 px-4 pt-3 sm:pt-4">
+        <div className="grid grid-cols-3 gap-2 px-4 pt-3">
           {(stats.items || []).slice(0, 3).map((s, i) => {
             const Icon = [Download, ShieldCheck, TrendingUp][i] || Sparkles;
             const color = ["#FFC107", "#22C55E", "#FFB300"][i] || "#FFC107";
             const autoVal = i === 0 ? totalDownloads : (data ? [...(data.apps || [])].length : 0);
             const isAuto = s.value === "auto";
             return (
-              <div key={i} className="rounded-[14px] sm:rounded-[16px] border border-[#E5E7EB] bg-white p-2.5 sm:p-3 text-center shadow-[0_4px_16px_rgba(0,0,0,0.03)]">
-                <Icon className="mx-auto h-3.5 w-3.5 sm:h-4 sm:w-4" style={{ color }} />
-                <p className="mt-1 font-display text-sm sm:text-base font-bold text-[#111111]">
+              <div key={i} className="rounded-[14px] border border-[#E5E7EB] bg-white p-2.5 text-center shadow-[0_4px_12px_rgba(0,0,0,0.03)]">
+                <Icon className="mx-auto h-3.5 w-3.5" style={{ color }} />
+                <p className="mt-1 font-display text-sm font-bold text-[#111111]">
                   {isAuto ? <AnimatedCounter value={autoVal} /> : s.value}
                   {s.suffix || ""}
                 </p>
-                <p className="text-[9px] sm:text-[10px] text-[#777777]">{s.label}</p>
+                <p className="text-[9px] text-[#777777]">{s.label}</p>
               </div>
             );
           })}
         </div>
       )}
 
-      <div className="sticky top-[52px] sm:top-[57px] z-30 bg-[#F8F9FA]/95 px-4 py-2.5 sm:py-3 backdrop-blur-md">
+      <div className="sticky top-[52px] z-30 bg-[#F8F9FA]/95 px-4 py-2.5 backdrop-blur-md">
         <div className="relative">
-          <Search className="pointer-events-none absolute left-3.5 top-1/2 h-3.5 w-3.5 sm:h-4 sm:w-4 -translate-y-1/2 text-[#777777]" />
+          <Search className="pointer-events-none absolute left-3.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#777777]" />
           <Input
             data-testid="search-input"
             type="search"
@@ -334,7 +334,7 @@ export default function Store() {
             onChange={(e) => setSearch(e.target.value)}
             onKeyDown={(e) => e.key === "Escape" && setSearch("")}
             placeholder="Search apps & games..."
-            className="h-10 sm:h-11 rounded-full border-[#E5E7EB] bg-white pl-9 sm:pl-10 pr-9 sm:pr-10 text-sm sm:text-base shadow-[0_4px_12px_rgba(0,0,0,0.03)] focus-visible:ring-[#FFC107]"
+            className="h-10 rounded-full border-[#E5E7EB] bg-white pl-9 pr-9 text-sm shadow-[0_4px_12px_rgba(0,0,0,0.03)] focus-visible:ring-[#FFC107]"
           />
           {search && (
             <button
@@ -342,16 +342,16 @@ export default function Store() {
               onClick={() => setSearch("")}
               aria-label="Clear search"
               data-testid="search-clear"
-              className="absolute right-3 top-1/2 flex h-5 w-5 sm:h-6 sm:w-6 -translate-y-1/2 items-center justify-center rounded-full bg-[#F1F1F1] text-[#777777] hover:bg-[#E5E7EB]"
+              className="absolute right-3 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full bg-[#F1F1F1] text-[#777777] hover:bg-[#E5E7EB]"
             >
-              <X className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+              <X className="h-3 w-3" />
             </button>
           )}
         </div>
-        <div className="no-scrollbar mt-2.5 sm:mt-3 flex gap-2 overflow-x-auto">
+        <div className="no-scrollbar mt-2.5 flex gap-2 overflow-x-auto">
           {categories.map((c) => (
             <button key={c} data-testid={`category-${c}`} onClick={() => setCategory(c)}
-              className={`shrink-0 rounded-full px-3.5 sm:px-4 py-1 sm:py-1.5 text-[11px] sm:text-xs font-semibold transition-colors duration-200 ${
+              className={`shrink-0 rounded-full px-3.5 py-1 text-[11px] font-semibold transition-colors duration-200 ${
                 category === c ? "bg-[#FFC107] text-[#111111] shadow-[0_4px_10px_rgba(255,193,7,0.35)]" : "border border-[#E5E7EB] bg-white text-[#555555]"
               }`}>
               {c}
@@ -360,17 +360,17 @@ export default function Store() {
         </div>
       </div>
 
-      <main className="space-y-4 sm:space-y-5 px-4 pt-1">
+      <main className="space-y-4 px-4 pt-1">
         {loading && !data ? (
           <StoreSkeleton />
         ) : (
           <>
-            {/* RESPONSIVE TOP 3 GAMES PODIUM DESIGN */}
+            {/* TOP 3 GAMES PODIUM DESIGN (COMPACT MOBILE VIEW) */}
             {isDefaultView && (
-              <section className="space-y-2.5 sm:space-y-3 mb-2">
+              <section className="space-y-2.5 mb-2">
                 <div className="flex items-center gap-2">
                   <Sparkles className="h-4 w-4 text-[#FFC107]" />
-                  <h2 className="font-display text-sm sm:text-base font-bold text-[#111111]">Top 3 Games</h2>
+                  <h2 className="font-display text-sm font-bold text-[#111111]">Top 3 Games</h2>
                 </div>
                 {(() => {
                   const top3 = (data?.featured || data?.apps || []).slice(0, 3);
@@ -379,47 +379,47 @@ export default function Store() {
                   const second = top3[1];
                   const third = top3[2];
                   return (
-                    <div className="space-y-2.5 sm:space-y-3">
+                    <div className="space-y-2.5">
                       {/* #1 Game Card */}
                       {first && (
                         <div
                           onClick={() => navigate(`/${first.slug || first.id}`, { state: { app: first } })}
-                          className="group relative flex cursor-pointer items-center gap-3 sm:gap-4 rounded-[18px] sm:rounded-[22px] border-2 border-[#FFC107] bg-gradient-to-r from-[#FFFDE7] via-white to-white p-3 sm:p-4 shadow-[0_8px_24px_rgba(255,193,7,0.12)] transition-all hover:shadow-[0_14px_30px_rgba(255,193,7,0.2)]"
+                          className="group relative flex cursor-pointer items-center gap-3 rounded-[18px] border-2 border-[#FFC107] bg-gradient-to-r from-[#FFFDE7] via-white to-white p-3 shadow-[0_6px_20px_rgba(255,193,7,0.12)] transition-all hover:shadow-[0_12px_28px_rgba(255,193,7,0.2)]"
                         >
-                          <div className="absolute -left-1.5 sm:-left-2 -top-1.5 sm:-top-2 z-20 flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-full text-[10px] sm:text-xs font-extrabold text-white shadow-md bg-gradient-to-r from-[#FFC107] to-[#FFA000] border-2 border-white">
+                          <div className="absolute -left-1.5 -top-1.5 z-20 flex h-6 w-6 items-center justify-center rounded-full text-[10px] font-extrabold text-white shadow-md bg-gradient-to-r from-[#FFC107] to-[#FFA000] border-2 border-white">
                             <span>👑 1</span>
                           </div>
-                          <AppIcon src={resolveUrl(first.icon_url)} alt={first.name} className="h-16 w-16 sm:h-20 sm:w-20 rounded-[14px] sm:rounded-[18px] object-cover shadow-sm ring-1 ring-black/5 shrink-0" />
+                          <AppIcon src={resolveUrl(first.icon_url)} alt={first.name} className="h-16 w-16 rounded-[14px] object-cover shadow-sm ring-1 ring-black/5 shrink-0" />
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center justify-between gap-2">
-                              <h3 className="font-display text-xs sm:text-base font-bold text-[#111111] truncate">{first.name}</h3>
+                              <h3 className="font-display text-xs font-bold text-[#111111] truncate">{first.name}</h3>
                               <div className="flex shrink-0 items-center gap-0.5 rounded-full bg-[#FFF8E1] px-2 py-0.5">
-                                <span className="text-[11px] sm:text-xs font-semibold text-[#111111]">⭐ {first.rating?.toFixed(1) || "4.9"}</span>
+                                <span className="text-[11px] font-semibold text-[#111111]">⭐ {first.rating?.toFixed(1) || "4.9"}</span>
                               </div>
                             </div>
-                            <p className="mt-0.5 text-[11px] sm:text-xs text-[#777777]">v{first.version || "1.0"} • {first.size || "45 MB"}</p>
-                            <p className="mt-0.5 sm:mt-1 text-[10px] sm:text-[11px] font-medium text-[#555555] truncate">
+                            <p className="mt-0.5 text-[11px] text-[#777777]">v{first.version || "1.0"} • {first.size || "45 MB"}</p>
+                            <p className="mt-0.5 text-[10px] font-medium text-[#555555] truncate">
                               👥 {(first.downloads ? (first.downloads * 8).toLocaleString() : "4.2M")} active players
                             </p>
                             {first.signup_bonus && (
-                              <div className="mt-1 sm:mt-1.5 flex items-center gap-1">
-                                <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-[#FFC107] to-[#FF9800] px-2 py-0.5 text-[9px] sm:text-[10px] font-extrabold text-white shadow-sm">
-                                  <Gift className="h-2.5 w-2.5 sm:h-3 sm:w-3" /> Bonus {first.signup_bonus}
+                              <div className="mt-1 flex items-center gap-1">
+                                <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-[#FFC107] to-[#FF9800] px-2 py-0.5 text-[9px] font-extrabold text-white shadow-sm">
+                                  <Gift className="h-2.5 w-2.5" /> Bonus {first.signup_bonus}
                                 </span>
                               </div>
                             )}
                           </div>
                           <RippleButton
                             onClick={(e) => { e.stopPropagation(); handleDownload(first); }}
-                            className="flex shrink-0 items-center gap-1 rounded-full bg-[#FFC107] px-3 sm:px-3.5 py-2 sm:py-2.5 text-[11px] sm:text-[13px] font-semibold text-[#111111] shadow-[0_4px_12px_rgba(255,193,7,0.35)] hover:bg-[#FFB300]"
+                            className="flex shrink-0 items-center gap-1 rounded-full bg-[#FFC107] px-3 py-2 text-[11px] font-semibold text-[#111111] shadow-[0_4px_12px_rgba(255,193,7,0.35)] hover:bg-[#FFB300]"
                           >
-                            <Download className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> Download
+                            <Download className="h-3.5 w-3.5" /> Download
                           </RippleButton>
                         </div>
                       )}
 
                       {/* #2 and #3 Game Cards */}
-                      <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
+                      <div className="grid grid-cols-2 gap-2.5">
                         {[second, third].map((app, idx) => {
                           if (!app) return null;
                           const rank = idx + 2;
@@ -427,18 +427,18 @@ export default function Store() {
                             <div
                               key={app.id}
                               onClick={() => navigate(`/${app.slug || app.id}`, { state: { app } })}
-                              className="relative flex flex-col cursor-pointer rounded-[16px] sm:rounded-[20px] border border-[#E5E7EB] bg-white p-3 sm:p-3.5 shadow-sm hover:shadow-md transition-all"
+                              className="relative flex flex-col cursor-pointer rounded-[16px] border border-[#E5E7EB] bg-white p-3 shadow-sm hover:shadow-md transition-all"
                             >
                               <div
-                                className="absolute -left-1.5 sm:-left-2 -top-1.5 sm:-top-2 z-20 flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-full text-[10px] sm:text-[11px] font-extrabold text-white shadow-md border-2 border-white"
+                                className="absolute -left-1.5 -top-1.5 z-20 flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-extrabold text-white shadow-md border-2 border-white"
                                 style={{ backgroundColor: rank === 2 ? "#64748B" : "#D97706" }}
                               >
                                 <span>{rank}</span>
                               </div>
                               <div className="flex items-start gap-2 mb-2">
-                                <AppIcon src={resolveUrl(app.icon_url)} alt={app.name} className="h-12 w-12 sm:h-14 sm:w-14 rounded-[12px] sm:rounded-[14px] object-cover shadow-sm shrink-0 ring-1 ring-black/5" />
+                                <AppIcon src={resolveUrl(app.icon_url)} alt={app.name} className="h-12 w-12 rounded-[12px] object-cover shadow-sm shrink-0 ring-1 ring-black/5" />
                                 <div className="min-w-0 flex-1">
-                                  <h4 className="font-display text-[11px] sm:text-xs font-bold text-[#111111] truncate">{app.name}</h4>
+                                  <h4 className="font-display text-[11px] font-bold text-[#111111] truncate">{app.name}</h4>
                                   <div className="flex items-center gap-0.5 mt-0.5">
                                     <span className="text-[10px] font-semibold text-[#111111]">⭐ {app.rating?.toFixed(1) || "4.8"}</span>
                                   </div>
@@ -454,9 +454,9 @@ export default function Store() {
                               )}
                               <RippleButton
                                 onClick={(e) => { e.stopPropagation(); handleDownload(app); }}
-                                className="w-full mt-auto flex items-center justify-center gap-1 rounded-full bg-[#FFC107] py-1.5 sm:py-2 text-[11px] sm:text-[12px] font-semibold text-[#111111] shadow-sm hover:bg-[#FFB300]"
+                                className="w-full mt-auto flex items-center justify-center gap-1 rounded-full bg-[#FFC107] py-1.5 text-[11px] font-semibold text-[#111111] shadow-sm hover:bg-[#FFB300]"
                               >
-                                <Download className="h-3 w-3 sm:h-3.5 sm:w-3.5" /> Download
+                                <Download className="h-3 w-3" /> Download
                               </RippleButton>
                             </div>
                           );
@@ -476,11 +476,11 @@ export default function Store() {
 
             {/* SEO DESCRIPTION */}
             {isDefaultView && (
-              <section className="space-y-3 sm:space-y-4 rounded-[20px] sm:rounded-[24px] border border-[#E5E7EB] bg-white p-4 sm:p-6 shadow-[0_6px_24px_rgba(0,0,0,0.03)]">
-                <h2 className="font-display text-base sm:text-xl font-bold text-[#111111]">
+              <section className="space-y-3 rounded-[20px] border border-[#E5E7EB] bg-white p-4 shadow-[0_6px_20px_rgba(0,0,0,0.03)]">
+                <h2 className="font-display text-base font-bold text-[#111111]">
                   All Yono Games - Discover New Yono Apps & Play Top Gaming Apps
                 </h2>
-                <div className="space-y-3 sm:space-y-4 text-xs sm:text-sm leading-relaxed text-[#555555]">
+                <div className="space-y-3 text-xs leading-relaxed text-[#555555]">
                   <p>
                     Welcome to <strong>newyono.games</strong> - India's most trusted gaming platform in 2026. Get up to ₹501 sign-up bonus instantly, enjoy smooth 60 FPS gameplay, secure withdrawals, and access the latest 2026 Yono APK versions safely.
                   </p>
@@ -493,14 +493,14 @@ export default function Store() {
 
             {/* KEYWORDS CLOUD */}
             {isDefaultView && (
-              <section className="rounded-[18px] sm:rounded-[22px] border border-[#E5E7EB] bg-white p-3.5 sm:p-4 shadow-[0_4px_16px_rgba(0,0,0,0.02)] space-y-2.5 sm:space-y-3">
+              <section className="rounded-[18px] border border-[#E5E7EB] bg-white p-3.5 shadow-[0_4px_14px_rgba(0,0,0,0.02)] space-y-2.5">
                 <div className="flex items-center gap-2">
-                  <span className="flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-xl bg-[#FFF8E1] text-[#FFC107]">
-                    <Flame className="h-3.5 w-3.5 sm:h-4 sm:w-4 fill-[#FFC107]" />
+                  <span className="flex h-6 w-6 items-center justify-center rounded-xl bg-[#FFF8E1] text-[#FFC107]">
+                    <Flame className="h-3.5 w-3.5 fill-[#FFC107]" />
                   </span>
                   <div>
-                    <h3 className="font-display text-xs sm:text-sm font-bold text-[#111111]">Top 100 Yono Games, Rummy &amp; Money Game Keywords</h3>
-                    <p className="text-[9px] sm:text-[10px] text-[#888888]">Click any keyword to explore games and instant download links</p>
+                    <h3 className="font-display text-xs font-bold text-[#111111]">Top 100 Yono Games, Rummy &amp; Money Game Keywords</h3>
+                    <p className="text-[9px] text-[#888888]">Click any keyword to explore games and instant download links</p>
                   </div>
                 </div>
                 <div className="flex flex-wrap gap-1.5 pt-1">
@@ -508,7 +508,7 @@ export default function Store() {
                     <button
                       key={i}
                       onClick={() => handleKeywordClick(kw)}
-                      className="rounded-full border border-[#E5E7EB] bg-[#FAFAFA] px-2.5 sm:px-3 py-1 text-[10px] sm:text-[11px] font-medium text-[#555555] hover:bg-[#FFF8E1] hover:border-[#FFE082] hover:text-[#B45309] transition-colors text-left cursor-pointer"
+                      className="rounded-full border border-[#E5E7EB] bg-[#FAFAFA] px-2.5 py-1 text-[10px] font-medium text-[#555555] hover:bg-[#FFF8E1] hover:border-[#FFE082] hover:text-[#B45309] transition-colors text-left cursor-pointer"
                     >
                       #{kw}
                     </button>

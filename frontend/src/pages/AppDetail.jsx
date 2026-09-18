@@ -1,6 +1,6 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-import { Star, BadgeCheck, Download, Gift, ArrowLeft, ShieldCheck, Zap, Wifi, Sparkles, CheckCircle2, Search, X } from "lucide-react";
+import { Star, BadgeCheck, Download, Gift, ArrowLeft, ShieldCheck, Zap, Wifi, Sparkles, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import api, { API, resolveUrl } from "@/lib/api";
 import SEOHead from "@/components/SEOHead";
@@ -10,82 +10,53 @@ import Header from "@/components/Header";
 import SiteFooter from "@/components/SiteFooter";
 import FaqSection from "@/components/FaqSection";
 import AppCard from "@/components/AppCard";
-import { Input } from "@/components/ui/input";
 
 export default function AppDetail() {
   const { id, slug } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
   
+  const [app, setApp] = useState(location.state?.app || null);
+  const [similarApps, setSimilarApps] = useState([]);
+  const [loading, setLoading] = useState(!app);
+
   const identifier = slug || id;
-
-  const cachedData = typeof window !== "undefined" ? localStorage.getItem("yono_apps_perm_cache") : null;
-  const parsedCache = useMemo(() => {
-    try {
-      return cachedData ? JSON.parse(cachedData) : null;
-    } catch (e) {
-      return null;
-    }
-  }, [cachedData]);
-
-  const initialApp = useMemo(() => {
-    if (location.state?.app) return location.state.app;
-    if (parsedCache && parsedCache.apps && identifier && identifier !== "undefined") {
-      return parsedCache.apps.find(a => String(a.id) === String(identifier) || a.slug === identifier);
-    }
-    return parsedCache?.apps?.[0] || null;
-  }, [location.state, parsedCache, identifier]);
-
-  const [app, setApp] = useState(initialApp);
-  const [similarApps, setSimilarApps] = useState(() => {
-    if (parsedCache && parsedCache.apps && initialApp) {
-      return parsedCache.apps.filter(a => String(a.id) !== String(initialApp.id) && a.slug !== initialApp.slug).slice(0, 20);
-    }
-    return parsedCache?.apps ? parsedCache.apps.slice(0, 20) : [];
-  });
-  const [loading, setLoading] = useState(!initialApp);
-  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (!identifier || identifier === "undefined" || identifier === "null") return;
-
-    let isMounted = true;
-    setLoading(true);
-
     const fetchAppData = async () => {
       try {
         const res = await api.get(`/apps/${identifier}`);
-        if (res.data && isMounted) {
-          const fetchedApp = res.data.app || res.data;
-          setApp(fetchedApp);
-          
-          const allApps = res.data.similar || (parsedCache ? parsedCache.apps : []);
-          const filteredSimilar = allApps.filter(a => String(a.id) !== String(fetchedApp.id) && a.slug !== fetchedApp.slug);
-          setSimilarApps(filteredSimilar.slice(0, 20));
+        if (res.data) {
+          setApp(res.data.app || res.data);
+          if (res.data.similar) setSimilarApps(res.data.similar);
         }
       } catch (e) {
         try {
           const listRes = await api.get("/apps?limit=100");
           const all = [...(listRes.data.featured || []), ...(listRes.data.apps || []), ...(listRes.data.trending || [])];
           const found = all.find(a => String(a.id) === String(identifier) || a.slug === identifier);
-          if (found && isMounted) {
+          if (found) {
             setApp(found);
-            setSimilarApps(all.filter(a => String(a.id) !== String(found.id) && a.slug !== identifier).slice(0, 20));
+            setSimilarApps(all.filter(a => a.id !== found.id).slice(0, 6));
           }
         } catch (err) {
-          if (!app && isMounted) {
-            toast.error("Failed to load app details");
-          }
+          toast.error("Failed to load app details");
         }
       } finally {
-        if (isMounted) setLoading(false);
+        setLoading(false);
       }
     };
 
-    fetchAppData();
-    return () => { isMounted = false; };
-  }, [identifier]);
+    if (!app || (String(app.id) !== String(identifier) && app.slug !== identifier)) {
+      fetchAppData();
+    } else {
+      api.get("/apps?limit=10").then(res => {
+        const all = [...(res.data.featured || []), ...(res.data.apps || [])];
+        setSimilarApps(all.filter(a => a.id !== app.id).slice(0, 6));
+      }).catch(() => {});
+    }
+  }, [identifier, app]);
 
   const handleDownload = (targetApp) => {
     const currentApp = targetApp || app;
@@ -101,14 +72,7 @@ export default function AppDetail() {
     }
   };
 
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      navigate(`/?search=${encodeURIComponent(searchQuery)}`);
-    }
-  };
-
-  if (loading && !app) {
+  if (loading) {
     return (
       <div className="app-shell flex min-h-screen items-center justify-center bg-white">
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#FFC107] border-t-transparent"></div>
@@ -116,16 +80,7 @@ export default function AppDetail() {
     );
   }
 
-  if (!app) {
-    return (
-      <div className="app-shell flex min-h-screen flex-col items-center justify-center bg-white p-4 text-center">
-        <p className="text-base font-bold text-[#111111] mb-2">App not found</p>
-        <RippleButton onClick={() => navigate("/")} className="rounded-full bg-[#FFC107] px-6 py-2.5 text-xs font-semibold text-[#111111]">
-          Go to Home
-        </RippleButton>
-      </div>
-    );
-  }
+  if (!app) return null;
 
   return (
     <div className="app-shell pb-10 bg-[#FAFAFA]">
@@ -138,7 +93,6 @@ export default function AppDetail() {
 
       <Header />
 
-      {/* Sticky Top Bar with Back Button & Title */}
       <div className="sticky top-[57px] z-30 flex items-center gap-3 bg-white/90 px-4 py-2.5 backdrop-blur-md border-b border-[#E5E7EB]">
         <button onClick={() => navigate(-1)} className="flex h-8 w-8 items-center justify-center rounded-full bg-white border border-[#E5E7EB] text-[#111111] shadow-sm hover:bg-[#F1F1F1]">
           <ArrowLeft className="h-4 w-4" />
@@ -147,27 +101,6 @@ export default function AppDetail() {
       </div>
 
       <main className="space-y-4 px-4 pt-4">
-        {/* SEARCH BAR ABOVE GAME ON EVERY PAGE */}
-        <form onSubmit={handleSearchSubmit} className="relative">
-          <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#777777]" />
-          <Input
-            type="search"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search apps & games..."
-            className="h-11 rounded-full border-[#E5E7EB] bg-white pl-10 pr-10 text-base shadow-[0_4px_14px_rgba(0,0,0,0.03)] focus-visible:ring-[#FFC107] sm:text-sm"
-          />
-          {searchQuery && (
-            <button
-              type="button"
-              onClick={() => setSearchQuery("")}
-              className="absolute right-3 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full bg-[#F1F1F1] text-[#777777] hover:bg-[#E5E7EB]"
-            >
-              <X className="h-3.5 w-3.5" />
-            </button>
-          )}
-        </form>
-
         {/* App Hero Section */}
         <div className="flex items-start gap-4 rounded-[24px] border border-[#E5E7EB] bg-white p-5 shadow-sm">
           <div className="relative shrink-0">
@@ -175,7 +108,7 @@ export default function AppDetail() {
           </div>
           <div className="min-w-0 flex-1">
             <h1 className="font-display text-lg font-extrabold leading-tight text-[#111111]">{app.name}</h1>
-            <p className="mt-0.5 text-xs font-medium text-[#777777]">newyono.games</p>
+            <p className="mt-0.5 text-xs font-medium text-[#777777]">{app.developer || "Uonogamesapk"}</p>
             <div className="mt-2 flex items-center gap-2">
               <div className="flex items-center gap-0.5 rounded-full bg-[#FFF8E1] px-2 py-0.5">
                 <Star className="h-3.5 w-3.5 fill-[#FFC107] text-[#FFC107]" />
@@ -239,7 +172,7 @@ export default function AppDetail() {
           <p className="mt-2 text-center text-[11px] text-[#777777]">🔒 Safe & virus-scanned • 500,013 downloads</p>
         </div>
 
-        {/* PEOPLE ALSO LIKE SECTION */}
+        {/* 1. NEW POSITION: YOU MAY ALSO LIKE */}
         {similarApps.length > 0 && (
           <div className="rounded-[24px] border border-[#E5E7EB] bg-white p-5 shadow-sm space-y-4">
             <div className="flex items-center gap-2">
@@ -247,7 +180,7 @@ export default function AppDetail() {
                 <Sparkles className="h-4 w-4 fill-[#FFC107]" />
               </span>
               <div>
-                <h2 className="font-display text-sm font-bold text-[#111111]">People also like</h2>
+                <h2 className="font-display text-sm font-bold text-[#111111]">You may also like</h2>
                 <p className="text-[10px] text-[#888888]">Top trending gaming apps for you</p>
               </div>
             </div>
@@ -259,23 +192,7 @@ export default function AppDetail() {
           </div>
         )}
 
-        {/* GAME-SPECIFIC SEO SECTION */}
-        <div className="rounded-[24px] border border-[#E5E7EB] bg-white p-5 shadow-sm space-y-4">
-          <h2 className="font-display text-base font-bold text-[#111111] flex items-center gap-2">
-            <Zap className="h-5 w-5 text-[#FFC107] fill-[#FFC107]" /> About {app.name} on newyono.games
-          </h2>
-          <p className="text-xs leading-relaxed text-[#555555]">
-            Download {app.name} v{app.version || "1.0.0"} safely from newyono.games. Experience fast withdrawals, a massive ₹501 welcome bonus, and secure gaming in 2026. Get the latest updated APK version with optimized performance.
-          </p>
-          <div className="flex flex-wrap gap-1.5 pt-1">
-            <span className="rounded-full border border-[#E5E7EB] bg-[#FAFAFA] px-3 py-1 text-[11px] font-medium text-[#555555]">#{app.name} APK Download</span>
-            <span className="rounded-full border border-[#E5E7EB] bg-[#FAFAFA] px-3 py-1 text-[11px] font-medium text-[#555555]">#{app.name} ₹501 Bonus</span>
-            <span className="rounded-full border border-[#E5E7EB] bg-[#FAFAFA] px-3 py-1 text-[11px] font-medium text-[#555555]">#{app.name} 2026 Latest Version</span>
-            <span className="rounded-full border border-[#E5E7EB] bg-[#FAFAFA] px-3 py-1 text-[11px] font-medium text-[#555555]">Real Cash {app.name} App</span>
-          </div>
-        </div>
-
-        {/* ABOUT THE GAME */}
+        {/* 2. ABOUT THE GAME (Moved Below) */}
         <div className="rounded-[24px] border border-[#E5E7EB] bg-white p-5 shadow-sm space-y-4">
           <h2 className="font-display text-base font-bold text-[#111111] flex items-center gap-2">
             <Zap className="h-5 w-5 text-[#FFC107] fill-[#FFC107]" /> About the Game
@@ -320,7 +237,7 @@ export default function AppDetail() {
             <div className="flex justify-between border-b border-[#F1F1F1] pb-2"><span className="text-[#777777]">Size</span><span className="font-medium text-[#111111]">{app.size || "45 MB"}</span></div>
             <div className="flex justify-between border-b border-[#F1F1F1] pb-2"><span className="text-[#777777]">Category</span><span className="font-medium text-[#111111]">{app.category || "Games"}</span></div>
             <div className="flex justify-between border-b border-[#F1F1F1] pb-2"><span className="text-[#777777]">Requires</span><span className="font-medium text-[#111111]">Android 5.0+</span></div>
-            <div className="flex justify-between pb-1"><span className="text-[#777777]">Developer</span><span className="font-medium text-[#111111]">newyono.games</span></div>
+            <div className="flex justify-between pb-1"><span className="text-[#777777]">Developer</span><span className="font-medium text-[#111111]">{app.developer || "Uonogamesapk"}</span></div>
           </div>
         </div>
 

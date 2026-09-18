@@ -65,16 +65,16 @@ export default function AppDetail() {
   const [app, setApp] = useState(initialApp);
   const [allStoreApps, setAllStoreApps] = useState(allCachedApps);
   
-  // Instant initialization of 20 similar apps so "People also like" is never empty
+  // Instant initialization of 20 similar apps so "People also like" loads at the exact same time
   const [similarApps, setSimilarApps] = useState(() => {
-    if (allCachedApps.length > 0) {
+    const fallbackList = allCachedApps.length > 0 ? allCachedApps : (parsedCache?.apps || []);
+    if (fallbackList.length > 0) {
       const currentId = initialApp?.id;
-      return allCachedApps.filter(a => String(a.id) !== String(currentId)).slice(0, 20);
+      return fallbackList.filter(a => String(a.id) !== String(currentId)).slice(0, 20);
     }
     return [];
   });
 
-  // If we have initialApp from cache, never show loading spinner
   const [loading, setLoading] = useState(!initialApp && allCachedApps.length === 0);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -125,7 +125,6 @@ export default function AppDetail() {
       fetchAppData();
     } else {
       setLoading(false);
-      // Background sync
       fetchAppData();
     }
 
@@ -321,7 +320,7 @@ export default function AppDetail() {
           <p className="mt-2 text-center text-[10px] sm:text-[11px] text-[#777777]">🔒 Safe & virus-scanned • 500,013 downloads</p>
         </div>
 
-        {/* PEOPLE ALSO LIKE SECTION (20 GAMES) */}
+        {/* PEOPLE ALSO LIKE SECTION (20 GAMES) - LOADED INSTANTLY */}
         {similarApps.length > 0 && (
           <div className="rounded-[20px] sm:rounded-[24px] border border-[#E5E7EB] bg-white p-4 sm:p-5 shadow-sm space-y-3 sm:space-y-4">
             <div className="flex items-center gap-2">
@@ -445,9 +444,9 @@ export default function AppDetail() {
           <div className="border-t border-[#E5E7EB] pt-4">
             <h2 className="font-display text-xs sm:text-sm font-bold text-[#111111] mb-3">Permissions</h2>
             <ul className="space-y-2 text-[11px] text-[#555555]">
-              <li className="files-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-[#FFC107]"></span> Storage</li>
-              <li className="files-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-[#FFC107]"></span> Network access</li>
-              <li className="files-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-[#FFC107]"></span> Phone state</li>
+              <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-[#FFC107]"></span> Storage</li>
+              <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-[#FFC107]"></span> Network access</li>
+              <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-[#FFC107]"></span> Phone state</li>
             </ul>
           </div>
         </div>

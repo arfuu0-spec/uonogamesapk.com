@@ -12,6 +12,13 @@ import FaqSection from "@/components/FaqSection";
 import AppCard from "@/components/AppCard";
 import { Input } from "@/components/ui/input";
 
+function normalize(s) {
+  return String(s || "")
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[^a-z0-9]+/g, "");
+}
+
 const GAME_KEYWORDS = [
   "Yono Games", "Yono Rummy", "Rummy Games", "Slots Games", "Casino Games", "Teen Patti Real Cash",
   "New Yono Apps 2026", "Best Rummy App India", "Sign Up Bonus 501", "Instant UPI Withdrawal",
@@ -38,23 +45,37 @@ export default function AppDetail() {
     }
   }, [cachedData]);
 
+  const allCachedApps = useMemo(() => {
+    if (!parsedCache) return [];
+    return [...(parsedCache.apps || []), ...(parsedCache.featured || []), ...(parsedCache.trending || [])];
+  }, [parsedCache]);
+
   const initialApp = useMemo(() => {
     if (location.state?.app) return location.state.app;
-    if (parsedCache && parsedCache.apps && identifier && identifier !== "undefined") {
-      return parsedCache.apps.find(a => String(a.id) === String(identifier) || a.slug === identifier);
+    if (allCachedApps.length > 0 && identifier && identifier !== "undefined") {
+      return allCachedApps.find(a => 
+        String(a.id) === String(identifier) || 
+        a.slug === identifier || 
+        normalize(a.name) === normalize(identifier)
+      ) || allCachedApps[0];
     }
-    return parsedCache?.apps?.[0] || null;
-  }, [location.state, parsedCache, identifier]);
+    return allCachedApps[0] || null;
+  }, [location.state, allCachedApps, identifier]);
 
   const [app, setApp] = useState(initialApp);
-  const [allStoreApps, setAllStoreApps] = useState(parsedCache?.apps || []);
+  const [allStoreApps, setAllStoreApps] = useState(allCachedApps);
+  
+  // Instant initialization of 20 similar apps so "People also like" is never empty
   const [similarApps, setSimilarApps] = useState(() => {
-    if (parsedCache && parsedCache.apps && initialApp) {
-      return parsedCache.apps.filter(a => String(a.id) !== String(initialApp.id) && a.slug !== initialApp.slug).slice(0, 20);
+    if (allCachedApps.length > 0) {
+      const currentId = initialApp?.id;
+      return allCachedApps.filter(a => String(a.id) !== String(currentId)).slice(0, 20);
     }
-    return parsedCache?.apps ? parsedCache.apps.slice(0, 20) : [];
+    return [];
   });
-  const [loading, setLoading] = useState(!initialApp);
+
+  // If we have initialApp from cache, never show loading spinner
+  const [loading, setLoading] = useState(!initialApp && allCachedApps.length === 0);
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
@@ -65,10 +86,6 @@ export default function AppDetail() {
     }
 
     let isMounted = true;
-    const timer = setTimeout(() => {
-      if (isMounted) setLoading(false);
-    }, 4000);
-
     const fetchAppData = async () => {
       try {
         const res = await api.get(`/apps/${identifier}`);
@@ -80,40 +97,39 @@ export default function AppDetail() {
           const all = [...(listRes.data.featured || []), ...(listRes.data.apps || []), ...(listRes.data.trending || [])];
           if (all.length > 0) {
             setAllStoreApps(all);
+            const filteredSimilar = all.filter(a => String(a.id) !== String(fetchedApp.id) && a.slug !== fetchedApp.slug);
+            setSimilarApps(filteredSimilar.slice(0, 20));
           }
-
-          const allApps = res.data.similar || all;
-          const filteredSimilar = allApps.filter(a => String(a.id) !== String(fetchedApp.id) && a.slug !== fetchedApp.slug);
-          setSimilarApps(filteredSimilar.slice(0, 20));
         }
       } catch (e) {
         try {
           const listRes = await api.get("/apps?limit=100");
           const all = [...(listRes.data.featured || []), ...(listRes.data.apps || []), ...(listRes.data.trending || [])];
-          setAllStoreApps(all);
-          const found = all.find(a => String(a.id) === String(identifier) || a.slug === identifier);
-          if (found && isMounted) {
-            setApp(found);
-            setSimilarApps(all.filter(a => String(a.id) !== String(found.id) && a.slug !== identifier).slice(0, 20));
+          if (all.length > 0) {
+            setAllStoreApps(all);
+            const found = all.find(a => String(a.id) === String(identifier) || a.slug === identifier || normalize(a.name) === normalize(identifier));
+            if (found && isMounted) {
+              setApp(found);
+              setSimilarApps(all.filter(a => String(a.id) !== String(found.id) && a.slug !== identifier).slice(0, 20));
+            }
           }
         } catch (err) {
-          if (!app && isMounted) {
-            toast.error("Failed to load app details");
-          }
+          // Keep cached app if API fails
         }
       } finally {
-        if (isMounted) {
-          setLoading(false);
-          clearTimeout(timer);
-        }
+        if (isMounted) setLoading(false);
       }
     };
 
-    fetchAppData();
-    return () => { 
-      isMounted = false; 
-      clearTimeout(timer);
-    };
+    if (!initialApp) {
+      fetchAppData();
+    } else {
+      setLoading(false);
+      // Background sync
+      fetchAppData();
+    }
+
+    return () => { isMounted = false; };
   }, [identifier]);
 
   const handleDownload = (targetApp) => {
@@ -429,9 +445,9 @@ export default function AppDetail() {
           <div className="border-t border-[#E5E7EB] pt-4">
             <h2 className="font-display text-xs sm:text-sm font-bold text-[#111111] mb-3">Permissions</h2>
             <ul className="space-y-2 text-[11px] text-[#555555]">
-              <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-[#FFC107]"></span> Storage</li>
-              <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-[#FFC107]"></span> Network access</li>
-              <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-[#FFC107]"></span> Phone state</li>
+              <li className="files-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-[#FFC107]"></span> Storage</li>
+              <li className="files-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-[#FFC107]"></span> Network access</li>
+              <li className="files-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-[#FFC107]"></span> Phone state</li>
             </ul>
           </div>
         </div>

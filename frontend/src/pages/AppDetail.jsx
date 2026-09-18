@@ -65,7 +65,6 @@ export default function AppDetail() {
   const [app, setApp] = useState(initialApp);
   const [allStoreApps, setAllStoreApps] = useState(allCachedApps);
   
-  // Instant initialization of 20 similar apps so "People also like" loads at the exact same time
   const [similarApps, setSimilarApps] = useState(() => {
     const fallbackList = allCachedApps.length > 0 ? allCachedApps : (parsedCache?.apps || []);
     if (fallbackList.length > 0) {
@@ -159,7 +158,7 @@ export default function AppDetail() {
 
   if (loading && !app) {
     return (
-      <div className="app-shell flex min-h-screen items-center justify-center bg-white">
+      <div className="app-shell flex min-h-screen items-center justify-center bg-[#093527]">
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#FFC107] border-t-transparent"></div>
       </div>
     );
@@ -167,8 +166,8 @@ export default function AppDetail() {
 
   if (!app) {
     return (
-      <div className="app-shell flex min-h-screen flex-col items-center justify-center bg-white p-4 text-center">
-        <p className="text-base font-bold text-[#111111] mb-2">App not found</p>
+      <div className="app-shell flex min-h-screen flex-col items-center justify-center bg-[#093527] p-4 text-center text-white">
+        <p className="text-base font-bold mb-2">App not found</p>
         <RippleButton onClick={() => navigate("/")} className="rounded-full bg-[#FFC107] px-6 py-2.5 text-xs font-semibold text-[#111111]">
           Go to Home
         </RippleButton>
@@ -177,7 +176,7 @@ export default function AppDetail() {
   }
 
   return (
-    <div className="app-shell pb-10 bg-[#FAFAFA]">
+    <div className="app-shell pb-10 bg-gradient-to-b from-[#0F4C3A] via-[#093527] to-[#051F17] text-white min-h-screen relative">
       <SEOHead
         title={`${app.name} APK Download 2026 - 501 Bonus Latest Version`}
         description={`Download ${app.name} APK latest version. Play best Yono Games, Rummy Games & Slots Games with ₹501 sign-up bonus and instant UPI withdrawal on newyono.games.`}
@@ -185,48 +184,111 @@ export default function AppDetail() {
         image={app.icon_url || "/logo-v2.png"}
       />
 
-      <Header />
-
-      {/* Sticky Top Bar with Back Button & Title */}
-      <div className="sticky top-[52px] sm:top-[57px] z-30 flex items-center gap-3 bg-white/95 px-4 py-2.5 backdrop-blur-md border-b border-[#E5E7EB]">
-        <button onClick={() => navigate(-1)} className="flex h-8 w-8 items-center justify-center rounded-full bg-white border border-[#E5E7EB] text-[#111111] shadow-sm hover:bg-[#F1F1F1]">
-          <ArrowLeft className="h-4 w-4" />
-        </button>
-        <span className="truncate font-display text-xs sm:text-sm font-bold text-[#111111]">{app.name}</span>
+      {/* FLOATING SOCIAL SIDEBAR (Casino Reference Style) */}
+      <div className="fixed right-2 top-1/3 z-50 flex flex-col gap-2.5">
+        <a href="https://whatsapp.com" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-full bg-[#25D366] text-white shadow-xl hover:scale-110 transition-transform">
+          💬
+        </a>
+        <a href="https://t.me" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-full bg-[#229ED9] text-white shadow-xl hover:scale-110 transition-transform">
+          ✈️
+        </a>
+        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1877F2] text-white shadow-xl hover:scale-110 transition-transform">
+          📘
+        </a>
+        <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-full bg-[#FF0000] text-white shadow-xl hover:scale-110 transition-transform">
+          ▶️
+        </a>
       </div>
 
-      <main className="space-y-4 px-4 pt-4">
-        {/* SEARCH BAR WITH LIVE SUGGESTIONS DROPDOWN */}
+      {/* Top Header Bar */}
+      <div className="sticky top-0 z-40 flex items-center gap-3 bg-[#093527]/95 px-4 py-3 backdrop-blur-md border-b border-white/10">
+        <button onClick={() => navigate(-1)} className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white shadow-sm hover:bg-white/20">
+          <ArrowLeft className="h-4 w-4" />
+        </button>
+        <span className="truncate font-display text-sm font-bold text-[#FFC107]">{app.name} - Official Download</span>
+      </div>
+
+      <main className="space-y-5 px-4 pt-4">
+        {/* CASINO HERO BANNER SECTION */}
+        <div className="relative rounded-[24px] border border-[#FFC107]/40 bg-gradient-to-b from-[#0D5C45] to-[#072E22] p-5 text-center shadow-2xl overflow-hidden">
+          <div className="absolute top-2 right-2 rounded-full bg-[#FFC107] px-3 py-0.5 text-[10px] font-black text-[#093527]">
+            100% SECURED
+          </div>
+          <div className="flex justify-center mb-3">
+            <AppIcon src={resolveUrl(app.icon_url)} alt={app.name} className="h-24 w-24 rounded-[22px] object-cover shadow-2xl ring-2 ring-[#FFC107]" />
+          </div>
+          <h1 className="font-display text-2xl font-black text-white uppercase tracking-wider">{app.name}</h1>
+          <p className="mt-1 text-xs text-[#A7F3D0] font-medium">Play over 60+ Games and Win Cash Daily</p>
+
+          <div className="mt-4 grid grid-cols-3 gap-2 bg-black/20 rounded-xl p-3 border border-white/10 text-center">
+            <div>
+              <p className="text-[10px] text-gray-300">Downloads</p>
+              <p className="font-bold text-sm text-[#FFC107]">500K+</p>
+            </div>
+            <div>
+              <p className="text-[10px] text-gray-300">Version</p>
+              <p className="font-bold text-sm text-white">v{app.version || "1.0"}</p>
+            </div>
+            <div>
+              <p className="text-[10px] text-gray-300">Rating</p>
+              <p className="font-bold text-sm text-yellow-400">⭐ {app.rating?.toFixed(1) || "4.8"}</p>
+            </div>
+          </div>
+
+          {/* Bonuses Box */}
+          <div className="mt-4 flex gap-2 justify-center">
+            {app.signup_bonus && (
+              <span className="rounded-full bg-[#FFC107] px-3 py-1 text-xs font-black text-[#093527] shadow-md">
+                🎁 Bonus {app.signup_bonus}
+              </span>
+            )}
+            <span className="rounded-full bg-emerald-500 px-3 py-1 text-xs font-black text-white shadow-md">
+              ⚡ Instant UPI Withdrawal
+            </span>
+          </div>
+
+          {/* GRAND DOWNLOAD BUTTON (Casino Style) */}
+          <div className="mt-5">
+            <div className="mb-1 text-center text-xs font-bold text-red-400 animate-pulse">🔥 Get {app.signup_bonus || "₹501"} Bonus on Sign Up</div>
+            <RippleButton onClick={() => handleDownload(app)} className="w-full flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#00E676] to-[#00C853] py-4 text-base font-black text-[#093527] shadow-[0_8px_25px_rgba(0,230,118,0.5)] hover:scale-[1.02] transition-transform">
+              <Download className="h-5 w-5" />
+              <span>DOWNLOAD APP ({app.size || "45 MB"})</span>
+            </RippleButton>
+            <p className="mt-2 text-center text-[10px] text-gray-300">🔒 Safe & virus-scanned • Direct APK Server</p>
+          </div>
+        </div>
+
+        {/* SEARCH BAR */}
         <div className="relative">
           <form onSubmit={handleSearchSubmit} className="relative">
-            <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#777777]" />
+            <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
             <Input
               type="search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search apps & games..."
-              className="h-10 sm:h-11 rounded-full border-[#E5E7EB] bg-white pl-10 pr-10 text-sm sm:text-base shadow-[0_4px_14px_rgba(0,0,0,0.03)] focus-visible:ring-[#FFC107]"
+              placeholder="Search other games..."
+              className="h-11 rounded-full border-white/20 bg-[#072E22] pl-10 pr-10 text-sm text-white shadow-md focus-visible:ring-[#FFC107]"
             />
             {searchQuery && (
               <button
                 type="button"
                 onClick={() => setSearchQuery("")}
-                className="absolute right-3 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full bg-[#F1F1F1] text-[#777777] hover:bg-[#E5E7EB]"
+                className="absolute right-3 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20"
               >
-                <X className="h-3 w-3" />
+                <X className="h-3.5 w-3.5" />
               </button>
             )}
           </form>
 
           {/* Live Suggestions Dropdown */}
           {searchQuery.trim() && (
-            <div className="absolute left-0 right-0 top-full mt-2 z-50 max-h-60 overflow-y-auto rounded-2xl border border-[#E5E7EB] bg-white shadow-xl p-2 space-y-1">
+            <div className="absolute left-0 right-0 top-full mt-2 z-50 max-h-60 overflow-y-auto rounded-2xl border border-white/10 bg-[#072E22] shadow-2xl p-2 space-y-1 text-white">
               {(() => {
                 const q = searchQuery.toLowerCase();
                 const sourceList = allStoreApps.length > 0 ? allStoreApps : (parsedCache?.apps || similarApps);
                 const matched = sourceList.filter(a => a.name.toLowerCase().includes(q)).slice(0, 6);
                 if (matched.length === 0) {
-                  return <div className="p-3 text-center text-xs text-[#777777]">No games found</div>;
+                  return <div className="p-3 text-center text-xs text-gray-400">No games found</div>;
                 }
                 return matched.map(item => (
                   <div
@@ -235,12 +297,12 @@ export default function AppDetail() {
                       setSearchQuery("");
                       navigate(`/${item.slug || item.id}`, { state: { app: item } });
                     }}
-                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[#FFF8E1] cursor-pointer transition-colors"
+                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/10 cursor-pointer transition-colors"
                   >
                     <AppIcon src={resolveUrl(item.icon_url)} alt={item.name} className="h-10 w-10 rounded-xl object-cover shadow-sm" />
                     <div className="min-w-0 flex-1">
-                      <p className="font-display text-xs font-bold text-[#111111] truncate">{item.name}</p>
-                      <p className="text-[10px] text-[#777777]">⭐ {item.rating?.toFixed(1) || "4.8"} • {item.size || "45 MB"}</p>
+                      <p className="font-display text-xs font-bold text-white truncate">{item.name}</p>
+                      <p className="text-[10px] text-gray-300">⭐ {item.rating?.toFixed(1) || "4.8"} • {item.size || "45 MB"}</p>
                     </div>
                   </div>
                 ));
@@ -249,122 +311,59 @@ export default function AppDetail() {
           )}
         </div>
 
-        {/* App Hero Section */}
-        <div className="flex items-start gap-3 sm:gap-4 rounded-[20px] sm:rounded-[24px] border border-[#E5E7EB] bg-white p-4 sm:p-5 shadow-sm">
-          <div className="relative shrink-0">
-            <AppIcon src={resolveUrl(app.icon_url)} alt={app.name} className="h-20 w-20 sm:h-24 sm:w-24 rounded-[18px] sm:rounded-[22px] ring-1 ring-black/5 object-cover shadow-md" />
-          </div>
-          <div className="min-w-0 flex-1">
-            <h1 className="font-display text-base sm:text-lg font-extrabold leading-tight text-[#111111]">{app.name}</h1>
-            <p className="mt-0.5 text-[11px] sm:text-xs font-medium text-[#777777]">newyono.games</p>
-            <div className="mt-2 flex items-center gap-2">
-              <div className="flex items-center gap-0.5 rounded-full bg-[#FFF8E1] px-2 py-0.5">
-                <Star className="h-3 w-3 sm:h-3.5 sm:w-3.5 fill-[#FFC107] text-[#FFC107]" />
-                <span className="text-[11px] sm:text-xs font-bold text-[#111111]">{app.rating?.toFixed(1) || "4.8"}</span>
-              </div>
-              {app.verified && <span className="inline-flex items-center gap-1 text-[11px] sm:text-xs font-semibold text-[#22C55E]"><BadgeCheck className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> Verified</span>}
-            </div>
-          </div>
-        </div>
-
-        {/* Quick Stats Grid */}
-        <div className="grid grid-cols-4 gap-2 text-center">
-          <div className="rounded-[16px] sm:rounded-[18px] border border-[#E5E7EB] bg-white p-2.5 sm:p-3 shadow-sm">
-            <p className="text-[9px] sm:text-[10px] text-[#777777]">Downloads</p>
-            <p className="mt-0.5 font-display text-[11px] sm:text-xs font-bold text-[#111111]">{app.downloads ? `${(app.downloads / 1000).toFixed(1)}K+` : "500K+"}</p>
-          </div>
-          <div className="rounded-[16px] sm:rounded-[18px] border border-[#E5E7EB] bg-white p-2.5 sm:p-3 shadow-sm">
-            <p className="text-[9px] sm:text-[10px] text-[#777777]">Size</p>
-            <p className="mt-0.5 font-display text-[11px] sm:text-xs font-bold text-[#111111]">{app.size || "45 MB"}</p>
-          </div>
-          <div className="rounded-[16px] sm:rounded-[18px] border border-[#E5E7EB] bg-white p-2.5 sm:p-3 shadow-sm">
-            <p className="text-[9px] sm:text-[10px] text-[#777777]">Version</p>
-            <p className="mt-0.5 font-display text-[11px] sm:text-xs font-bold text-[#111111]">v{app.version || "1.0.0"}</p>
-          </div>
-          <div className="rounded-[16px] sm:rounded-[18px] border border-[#E5E7EB] bg-white p-2.5 sm:p-3 shadow-sm">
-            <p className="text-[9px] sm:text-[10px] text-[#777777]">Requires</p>
-            <p className="mt-0.5 font-display text-[11px] sm:text-xs font-bold text-[#111111]">5.0+</p>
-          </div>
-        </div>
-
-        {/* Bonuses Box */}
-        {(app.signup_bonus || app.min_withdraw) && (
-          <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
-            {app.signup_bonus && (
-              <div className="flex items-center gap-2.5 rounded-[18px] sm:rounded-[20px] bg-gradient-to-r from-[#FFF8E1] to-[#FFF3E0] p-3 sm:p-3.5 border border-[#FFE082]">
-                <div className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-[#FFC107] text-white shrink-0"><Gift className="h-3.5 w-3.5 sm:h-4 sm:w-4" /></div>
-                <div>
-                  <p className="text-[9px] sm:text-[10px] font-semibold text-[#B45309]">SIGN-UP BONUS</p>
-                  <p className="font-display text-xs sm:text-sm font-extrabold text-[#111111]">{app.signup_bonus}</p>
-                </div>
-              </div>
-            )}
-            {app.min_withdraw && (
-              <div className="flex items-center gap-2.5 rounded-[18px] sm:rounded-[20px] bg-[#F0FDF4] p-3 sm:p-3.5 border border-[#DCFCE7]">
-                <div className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-[#22C55E] text-white shrink-0"><ShieldCheck className="h-3.5 w-3.5 sm:h-4 sm:w-4" /></div>
-                <div>
-                  <p className="text-[9px] sm:text-[10px] font-semibold text-[#166534]">MIN. WITHDRAW</p>
-                  <p className="font-display text-xs sm:text-sm font-extrabold text-[#111111]">{app.min_withdraw}</p>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Download Button */}
-        <div className="pt-1">
-          <RippleButton onClick={() => handleDownload(app)} className="w-full flex items-center justify-center gap-2 rounded-[20px] sm:rounded-[22px] bg-[#FFC107] py-3.5 sm:py-4 text-sm sm:text-base font-extrabold text-[#111111] shadow-[0_8px_24px_rgba(255,193,7,0.4)] hover:bg-[#FFB300]">
-            <Download className="h-4 w-4 sm:h-5 sm:w-5" />
-            <span>Download APK ({app.size || "45 MB"})</span>
-          </RippleButton>
-          <p className="mt-2 text-center text-[10px] sm:text-[11px] text-[#777777]">🔒 Safe & virus-scanned • 500,013 downloads</p>
-        </div>
-
-        {/* PEOPLE ALSO LIKE SECTION (20 GAMES) - LOADED INSTANTLY */}
+        {/* PEOPLE ALSO LIKE SECTION */}
         {similarApps.length > 0 && (
-          <div className="rounded-[20px] sm:rounded-[24px] border border-[#E5E7EB] bg-white p-4 sm:p-5 shadow-sm space-y-3 sm:space-y-4">
+          <div className="rounded-[22px] border border-white/10 bg-[#072E22] p-4 shadow-xl space-y-3">
             <div className="flex items-center gap-2">
-              <span className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-xl bg-[#FFF8E1] text-[#FFC107]">
-                <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4 fill-[#FFC107]" />
+              <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-[#FFC107] text-[#093527]">
+                <Sparkles className="h-4 w-4 fill-[#093527]" />
               </span>
               <div>
-                <h2 className="font-display text-xs sm:text-sm font-bold text-[#111111]">People also like</h2>
-                <p className="text-[9px] sm:text-[10px] text-[#888888]">Top trending gaming apps for you</p>
+                <h2 className="font-display text-sm font-bold text-white">Top Games On {app.name}</h2>
+                <p className="text-[10px] text-gray-300">Play over 60+ Games and Win Cash</p>
               </div>
             </div>
-            <div className="space-y-2.5 sm:space-y-3 pt-1">
+            <div className="space-y-2.5 pt-1">
               {similarApps.map((simApp, idx) => (
-                <AppCard key={simApp.id} app={simApp} index={idx} onDownload={handleDownload} />
+                <div key={simApp.id} onClick={() => navigate(`/${simApp.slug || simApp.id}`, { state: { app: simApp } })} className="flex items-center gap-3 rounded-xl bg-white/5 p-2.5 border border-white/10 hover:bg-white/10 cursor-pointer transition-all">
+                  <AppIcon src={resolveUrl(simApp.icon_url)} alt={simApp.name} className="h-12 w-12 rounded-xl object-cover shadow-md shrink-0" />
+                  <div className="min-w-0 flex-1">
+                    <h3 className="font-display text-xs font-bold text-white truncate">{simApp.name}</h3>
+                    <p className="text-[10px] text-yellow-400">⭐ {simApp.rating?.toFixed(1) || "4.8"} • {simApp.size || "45 MB"}</p>
+                  </div>
+                  <RippleButton onClick={(e) => { e.stopPropagation(); handleDownload(simApp); }} className="rounded-full bg-[#FFC107] px-3 py-1.5 text-xs font-bold text-[#093527]">
+                    Download
+                  </RippleButton>
+                </div>
               ))}
             </div>
           </div>
         )}
 
         {/* STRONG GAME-SPECIFIC SEO DESCRIPTION */}
-        <div className="rounded-[20px] sm:rounded-[24px] border border-[#E5E7EB] bg-white p-4 sm:p-5 shadow-sm space-y-3 sm:space-y-4">
-          <h2 className="font-display text-sm sm:text-base font-bold text-[#111111] flex items-center gap-2">
-            <Zap className="h-4 w-4 sm:h-5 sm:w-5 text-[#FFC107] fill-[#FFC107]" /> About {app.name} on newyono.games
+        <div className="rounded-[22px] border border-white/10 bg-[#072E22] p-4 shadow-xl space-y-3 text-white">
+          <h2 className="font-display text-sm font-bold text-[#FFC107] flex items-center gap-2">
+            <Zap className="h-4 w-4 fill-[#FFC107]" /> About {app.name} on newyono.games
           </h2>
-          <p className="text-xs sm:text-sm leading-relaxed text-[#555555]">
+          <p className="text-xs leading-relaxed text-gray-300">
             Welcome to the official download page for <strong>{app.name}</strong> on newyono.games — India's premier Yono Games, Rummy Games &amp; Slots Games platform. Experience the thrill of real cash gaming with a massive <strong>₹501 sign-up bonus</strong>, instant UPI withdrawals, and buttery-smooth 60 FPS performance in 2026. Discover why millions of players trust {app.name} for secure card games, slots, and daily rewards.
           </p>
           <div className="flex flex-wrap gap-1.5 pt-1">
-            <span className="rounded-full border border-[#E5E7EB] bg-[#FAFAFA] px-2.5 py-1 text-[10px] sm:text-[11px] font-medium text-[#555555]">#{app.name} APK Download</span>
-            <span className="rounded-full border border-[#E5E7EB] bg-[#FAFAFA] px-2.5 py-1 text-[10px] sm:text-[11px] font-medium text-[#555555]">#{app.name} ₹501 Bonus</span>
-            <span className="rounded-full border border-[#E5E7EB] bg-[#FAFAFA] px-2.5 py-1 text-[10px] sm:text-[11px] font-medium text-[#555555]">Yono Rummy & Slots</span>
-            <span className="rounded-full border border-[#E5E7EB] bg-[#FAFAFA] px-2.5 py-1 text-[10px] sm:text-[11px] font-medium text-[#555555]">Instant Withdrawal App</span>
+            <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] font-medium text-gray-300">#{app.name} APK Download</span>
+            <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] font-medium text-gray-300">#{app.name} ₹501 Bonus</span>
+            <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] font-medium text-gray-300">Yono Rummy & Slots</span>
           </div>
         </div>
 
-        {/* KEYWORDS CLOUD BELOW SEO DESCRIPTION */}
-        <div className="rounded-[18px] sm:rounded-[22px] border border-[#E5E7EB] bg-white p-3.5 sm:p-4 shadow-sm space-y-2.5">
+        {/* KEYWORDS CLOUD */}
+        <div className="rounded-[20px] border border-white/10 bg-[#072E22] p-4 shadow-xl space-y-2.5 text-white">
           <div className="flex items-center gap-2">
-            <span className="flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-xl bg-[#FFF8E1] text-[#FFC107]">
-              <Flame className="h-3.5 w-3.5 sm:h-4 sm:w-4 fill-[#FFC107]" />
+            <span className="flex h-6 w-6 items-center justify-center rounded-xl bg-[#FFC107] text-[#093527]">
+              <Flame className="h-3.5 w-3.5 fill-[#093527]" />
             </span>
             <div>
-              <h3 className="font-display text-xs sm:text-sm font-bold text-[#111111]">Top Yono &amp; Rummy Game Keywords</h3>
-              <p className="text-[9px] sm:text-[10px] text-[#888888]">Click any keyword to search and explore</p>
+              <h3 className="font-display text-xs font-bold text-white">Top Yono &amp; Rummy Game Keywords</h3>
+              <p className="text-[9px] text-gray-300">Click any keyword to search and explore</p>
             </div>
           </div>
           <div className="flex flex-wrap gap-1.5 pt-1">
@@ -372,82 +371,11 @@ export default function AppDetail() {
               <button
                 key={i}
                 onClick={() => handleKeywordClick(kw)}
-                className="rounded-full border border-[#E5E7EB] bg-[#FAFAFA] px-2.5 py-1 text-[10px] sm:text-[11px] font-medium text-[#555555] hover:bg-[#FFF8E1] hover:border-[#FFE082] hover:text-[#B45309] transition-colors text-left cursor-pointer"
+                className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] font-medium text-gray-300 hover:bg-[#FFC107] hover:text-[#093527] transition-colors text-left cursor-pointer"
               >
                 #{kw}
               </button>
             ))}
-          </div>
-        </div>
-
-        {/* ABOUT THE GAME */}
-        <div className="rounded-[20px] sm:rounded-[24px] border border-[#E5E7EB] bg-white p-4 sm:p-5 shadow-sm space-y-3 sm:space-y-4">
-          <h2 className="font-display text-sm sm:text-base font-bold text-[#111111] flex items-center gap-2">
-            <Zap className="h-4 w-4 sm:h-5 sm:w-5 text-[#FFC107] fill-[#FFC107]" /> About the Game
-          </h2>
-          <p className="text-xs sm:text-sm leading-relaxed text-[#555555]">
-            {app.description || `${app.name} is a premium gaming experience built for smooth, lag-free play on Android. Enjoy stunning visuals, responsive controls, and hours of engaging gameplay — all in a lightweight package that installs in seconds.`}
-          </p>
-
-          <div className="grid grid-cols-2 gap-3 pt-2">
-            <div className="flex items-start gap-2.5 rounded-xl bg-[#F8F9FA] p-3">
-              <Zap className="h-4 w-4 text-[#FFC107] shrink-0 mt-0.5" />
-              <div>
-                <p className="text-xs font-bold text-[#111111]">Smooth 60 FPS</p>
-                <p className="text-[10px] text-[#777777]">Optimized for buttery gameplay.</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-2.5 rounded-xl bg-[#F8F9FA] p-3">
-              <Wifi className="h-4 w-4 text-[#22C55E] shrink-0 mt-0.5" />
-              <div>
-                <p className="text-xs font-bold text-[#111111]">Online & Offline</p>
-                <p className="text-[10px] text-[#777777]">Play anytime anywhere.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* What's New */}
-        <div className="rounded-[20px] sm:rounded-[24px] border border-[#E5E7EB] bg-white p-4 sm:p-5 shadow-sm space-y-3">
-          <h2 className="font-display text-xs sm:text-sm font-bold text-[#111111] flex items-center gap-2">
-            <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[#FFC107]" /> What's New
-          </h2>
-          <p className="text-xs sm:text-sm leading-relaxed text-[#555555]">
-            Performance improvements, new tournaments and a smoother, faster gaming experience.
-          </p>
-        </div>
-
-        {/* Additional Information */}
-        <div className="rounded-[20px] sm:rounded-[24px] border border-[#E5E7EB] bg-white p-4 sm:p-5 shadow-sm space-y-4">
-          <h2 className="font-display text-xs sm:text-sm font-bold text-[#111111]">Additional Information</h2>
-          <div className="space-y-3 text-xs">
-            <div className="flex justify-between border-b border-[#F1F1F1] pb-2"><span className="text-[#777777]">Version</span><span className="font-medium text-[#111111]">{app.version || "1.0.0"}</span></div>
-            <div className="flex justify-between border-b border-[#F1F1F1] pb-2"><span className="text-[#777777]">Size</span><span className="font-medium text-[#111111]">{app.size || "45 MB"}</span></div>
-            <div className="flex justify-between border-b border-[#F1F1F1] pb-2"><span className="text-[#777777]">Category</span><span className="font-medium text-[#111111]">{app.category || "Games"}</span></div>
-            <div className="flex justify-between border-b border-[#F1F1F1] pb-2"><span className="text-[#777777]">Requires</span><span className="font-medium text-[#111111]">Android 5.0+</span></div>
-            <div className="flex justify-between pb-1"><span className="text-[#777777]">Developer</span><span className="font-medium text-[#111111]">newyono.games</span></div>
-          </div>
-        </div>
-
-        {/* Features & Permissions */}
-        <div className="rounded-[20px] sm:rounded-[24px] border border-[#E5E7EB] bg-white p-4 sm:p-5 shadow-sm space-y-5">
-          <div>
-            <h2 className="font-display text-xs sm:text-sm font-bold text-[#111111] mb-3">Features</h2>
-            <div className="flex flex-wrap gap-2">
-              {["Real Cash Games", "Instant Withdrawal", "24/7 Support", "100% Safe & Secure", "Daily Bonus", "Refer & Earn"].map((feat, i) => (
-                <span key={i} className="inline-flex items-center gap-1 rounded-full border border-[#E5E7EB] bg-[#FAFAFA] px-3 py-1.5 text-[11px] font-medium text-[#555555]">
-                  <CheckCircle2 className="h-3 w-3 text-[#22C55E]" /> {feat}
-                </span>
-              ))}
-            </div>
-          </div>
-          <div className="border-t border-[#E5E7EB] pt-4">
-            <h2 className="font-display text-xs sm:text-sm font-bold text-[#111111] mb-3">Permissions</h2>
-            <ul className="space-y-2 text-[11px] text-[#555555]">
-              <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-[#FFC107]"></span> Storage</li>
-              <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-[#FFC107]"></span> Network access</li>
-              <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-[#FFC107]"></span> Phone state</li>
-            </ul>
           </div>
         </div>
 

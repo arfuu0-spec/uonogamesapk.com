@@ -17,21 +17,9 @@ export default function AppDetail() {
   const location = useLocation();
   const navigate = useNavigate();
   
-  // Robust identifier extraction (Checks params first, then falls back to URL path)
+  // Safe identifier extraction from URL path if params are empty
   const pathSegments = location.pathname.split("/").filter(Boolean);
   const identifier = slug || id || pathSegments[pathSegments.length - 1];
-
-  // Immediate safeguard if identifier is invalid
-  if (!identifier || identifier === "undefined" || identifier === "null" || identifier === "app") {
-    return (
-      <div className="app-shell flex min-h-screen flex-col items-center justify-center bg-white p-4 text-center">
-        <p className="text-base font-bold text-[#111111] mb-2">Invalid Game Link</p>
-        <RippleButton onClick={() => navigate("/")} className="rounded-full bg-[#FFC107] px-6 py-2.5 text-xs font-semibold text-[#111111]">
-          Go to Home
-        </RippleButton>
-      </div>
-    );
-  }
 
   const cachedData = typeof window !== "undefined" ? localStorage.getItem("yono_apps_perm_cache") : null;
   const parsedCache = useMemo(() => {
@@ -44,10 +32,10 @@ export default function AppDetail() {
 
   const initialApp = useMemo(() => {
     if (location.state?.app) return location.state.app;
-    if (parsedCache && parsedCache.apps) {
+    if (parsedCache && parsedCache.apps && identifier && identifier !== "undefined") {
       return parsedCache.apps.find(a => String(a.id) === String(identifier) || a.slug === identifier);
     }
-    return null;
+    return parsedCache?.apps?.[0] || null;
   }, [location.state, parsedCache, identifier]);
 
   const [app, setApp] = useState(initialApp);
@@ -62,6 +50,8 @@ export default function AppDetail() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    if (!identifier || identifier === "undefined" || identifier === "null") return;
+
     let isMounted = true;
     setLoading(true);
 

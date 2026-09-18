@@ -12,7 +12,6 @@ import AppIcon from "@/components/AppIcon";
 import RippleButton from "@/components/RippleButton";
 import RummyFeatures from "@/components/RummyFeatures";
 import AnimatedCounter from "@/components/AnimatedCounter";
-import { StoreSkeleton } from "@/components/Skeletons";
 import FaqSection from "@/components/FaqSection";
 import LegalSection from "@/components/LegalSection";
 import LegalDialog from "@/components/LegalDialog";
@@ -64,6 +63,17 @@ const LANDING_100_KEYWORDS = [
   "First Deposit Bonus", "Extra Cashback Offer", "Loss Back Guarantee", "Instant Support 24x7", "Official Yono Games Store"
 ];
 
+// Instant Fallback data so zero delay on incognito/first load
+const INITIAL_FALLBACK_DATA = {
+  apps: [
+    { id: 1, name: "Rummy Ludo", slug: "rummy-ludo", version: "1.0.0", size: "45 MB", downloads: 500000, rating: 4.8, verified: true, signup_bonus: "₹501", min_withdraw: "₹100", category: "Games" },
+    { id: 2, name: "Ind Rummy", slug: "ind-rummy", version: "1.0.0", size: "45 MB", downloads: 480000, rating: 4.8, verified: true, signup_bonus: "₹501", min_withdraw: "₹100", category: "Games" },
+    { id: 3, name: "Gold Rummy", slug: "gold-rummy", version: "1.0.0", size: "45 MB", downloads: 450000, rating: 4.8, verified: true, signup_bonus: "₹501", min_withdraw: "₹100", category: "Games" },
+    { id: 4, name: "Rummy 888", slug: "rummy-888", version: "1.0.0", size: "45 MB", downloads: 400000, rating: 4.8, verified: true, signup_bonus: "₹501", min_withdraw: "₹100", category: "Games" },
+    { id: 5, name: "Rummy 91", slug: "rummy-91", version: "1.0.0", size: "45 MB", downloads: 390000, rating: 4.8, verified: true, signup_bonus: "₹501", min_withdraw: "₹100", category: "Games" }
+  ]
+};
+
 export default function Store() {
   const { settings } = useSettings();
   const navigate = useNavigate();
@@ -77,8 +87,9 @@ export default function Store() {
     }
   }, [cachedData]);
 
-  const [data, setData] = useState(() => parsedCache);
-  const [loading, setLoading] = useState(!parsedCache);
+  // Immediately use cache or fallback data so loading is 0 seconds
+  const [data, setData] = useState(() => parsedCache || INITIAL_FALLBACK_DATA);
+  const [loading, setLoading] = useState(false);
   
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
@@ -88,25 +99,18 @@ export default function Store() {
   const fetchApps = async () => {
     try {
       const res = await api.get("/apps?limit=100");
-      if (res.data) {
+      if (res.data && res.data.apps) {
         setData(res.data);
         localStorage.setItem("yono_apps_perm_cache", JSON.stringify(res.data));
       }
     } catch (e) {
-      if (!data) toast.error("Failed to load apps");
-    } finally {
-      setLoading(false);
+      // Keep fallback if offline/error
     }
   };
 
   useEffect(() => {
-    if (parsedCache) {
-      setLoading(false);
-      fetchApps();
-    } else {
-      fetchApps();
-    }
-  }, [parsedCache]);
+    fetchApps();
+  }, []);
 
   const handleDownload = (app) => {
     toast.success(`Opening: ${app.name}`, { description: `${app.size} • v${app.version}` });
@@ -361,149 +365,145 @@ export default function Store() {
       </div>
 
       <main className="space-y-5 px-4 pt-1">
-        {loading && !data ? (
-          <StoreSkeleton />
-        ) : (
-          <>
-            {/* TOP 3 GAMES PODIUM DESIGN (#1 UPAR PROMINENT, #2 & #3 SIDE BY SIDE) */}
-            {isDefaultView && (
-              <section className="space-y-3 mb-2">
-                <div className="flex items-center gap-2">
-                  <Sparkles className="h-4 w-4 text-[#FFC107]" />
-                  <h2 className="font-display text-base font-bold text-[#111111]">Top 3 Games</h2>
-                </div>
-                {(() => {
-                  const top3 = (data?.featured || data?.apps || []).slice(0, 3);
-                  if (top3.length === 0) return null;
-                  const first = top3[0];
-                  const second = top3[1];
-                  const third = top3[2];
-                  return (
-                    <div className="space-y-3">
-                      {/* #1 Game Card (Prominent Top) */}
-                      {first && (
-                        <div
-                          onClick={() => navigate(`/${first.slug || first.id}`, { state: { app: first } })}
-                          className="relative flex cursor-pointer items-center gap-4 rounded-[22px] border-2 border-[#FFC107] bg-gradient-to-r from-[#FFF8E1] to-white p-4 shadow-md transition-shadow hover:shadow-lg"
-                        >
-                          <div className="absolute -left-2 -top-2 z-20 flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-extrabold text-white shadow-md bg-[#FFC107] border-2 border-white">
-                            <span>1</span>
-                          </div>
-                          <AppIcon src={resolveUrl(first.icon_url)} alt={first.name} className="h-20 w-20 rounded-[18px] object-cover shadow-sm" />
-                          <div className="min-w-0 flex-1">
-                            <h3 className="font-display text-base font-bold text-[#111111] truncate">{first.name}</h3>
-                            <p className="text-xs text-[#777777]">v{first.version || "1.0"} • {first.size || "45 MB"}</p>
-                            {first.signup_bonus && (
-                              <span className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-[#FFC107] px-2.5 py-0.5 text-[10px] font-extrabold text-white shadow-sm">
-                                <Gift className="h-3 w-3" /> Bonus {first.signup_bonus}
-                              </span>
-                            )}
-                          </div>
-                          <RippleButton
-                            onClick={(e) => { e.stopPropagation(); handleDownload(first); }}
-                            className="flex shrink-0 items-center gap-1.5 rounded-full bg-[#FFC107] px-3.5 py-2.5 text-[13px] font-semibold text-[#111111] shadow-md hover:bg-[#FFB300]"
-                          >
-                            <Download className="h-4 w-4" /> Download
-                          </RippleButton>
+        <>
+          {/* TOP 3 GAMES PODIUM DESIGN (#1 UPAR PROMINENT, #2 & #3 SIDE BY SIDE) */}
+          {isDefaultView && (
+            <section className="space-y-3 mb-2">
+              <div className="flex items-center gap-2">
+                <Sparkles className="h-4 w-4 text-[#FFC107]" />
+                <h2 className="font-display text-base font-bold text-[#111111]">Top 3 Games</h2>
+              </div>
+              {(() => {
+                const top3 = (data?.featured || data?.apps || []).slice(0, 3);
+                if (top3.length === 0) return null;
+                const first = top3[0];
+                const second = top3[1];
+                const third = top3[2];
+                return (
+                  <div className="space-y-3">
+                    {/* #1 Game Card (Prominent Top) */}
+                    {first && (
+                      <div
+                        onClick={() => navigate(`/${first.slug || first.id}`, { state: { app: first } })}
+                        className="relative flex cursor-pointer items-center gap-4 rounded-[22px] border-2 border-[#FFC107] bg-gradient-to-r from-[#FFF8E1] to-white p-4 shadow-md transition-shadow hover:shadow-lg"
+                      >
+                        <div className="absolute -left-2 -top-2 z-20 flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-extrabold text-white shadow-md bg-[#FFC107] border-2 border-white">
+                          <span>1</span>
                         </div>
-                      )}
-
-                      {/* #2 and #3 Game Cards (Side by Side Below #1) */}
-                      <div className="grid grid-cols-2 gap-2.5">
-                        {[second, third].map((app, idx) => {
-                          if (!app) return null;
-                          const rank = idx + 2;
-                          return (
-                            <div
-                              key={app.id}
-                              onClick={() => navigate(`/${app.slug || app.id}`, { state: { app } })}
-                              className="relative flex flex-col cursor-pointer rounded-[18px] border border-[#E5E7EB] bg-white p-3 shadow-sm hover:shadow-md transition-shadow"
-                            >
-                              <div
-                                className="absolute -left-2 -top-2 z-20 flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-extrabold text-white shadow-md border-2 border-white"
-                                style={{ backgroundColor: rank === 2 ? "#9E9E9E" : "#CD7F32" }}
-                              >
-                                <span>{rank}</span>
-                              </div>
-                              <div className="flex items-center gap-2 mb-2.5">
-                                <AppIcon src={resolveUrl(app.icon_url)} alt={app.name} className="h-12 w-12 rounded-[14px] object-cover shadow-sm shrink-0" />
-                                <div className="min-w-0 flex-1">
-                                  <h4 className="font-display text-xs font-bold text-[#111111] truncate">{app.name}</h4>
-                                  <p className="text-[10px] text-[#777777]">{app.size || "45 MB"}</p>
-                                </div>
-                              </div>
-                              <RippleButton
-                                onClick={(e) => { e.stopPropagation(); handleDownload(app); }}
-                                className="w-full mt-auto flex items-center justify-center gap-1 rounded-full bg-[#FFC107] py-2 text-[11px] font-semibold text-[#111111] shadow-sm hover:bg-[#FFB300]"
-                              >
-                                <Download className="h-3 w-3" /> Get
-                              </RippleButton>
-                            </div>
-                          );
-                        })}
+                        <AppIcon src={resolveUrl(first.icon_url)} alt={first.name} className="h-20 w-20 rounded-[18px] object-cover shadow-sm" />
+                        <div className="min-w-0 flex-1">
+                          <h3 className="font-display text-base font-bold text-[#111111] truncate">{first.name}</h3>
+                          <p className="text-xs text-[#777777]">v{first.version || "1.0"} • {first.size || "45 MB"}</p>
+                          {first.signup_bonus && (
+                            <span className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-[#FFC107] px-2.5 py-0.5 text-[10px] font-extrabold text-white shadow-sm">
+                              <Gift className="h-3 w-3" /> Bonus {first.signup_bonus}
+                            </span>
+                          )}
+                        </div>
+                        <RippleButton
+                          onClick={(e) => { e.stopPropagation(); handleDownload(first); }}
+                          className="flex shrink-0 items-center gap-1.5 rounded-full bg-[#FFC107] px-3.5 py-2.5 text-[13px] font-semibold text-[#111111] shadow-md hover:bg-[#FFB300]"
+                        >
+                          <Download className="h-4 w-4" /> Download
+                        </RippleButton>
                       </div>
+                    )}
+
+                    {/* #2 and #3 Game Cards (Side by Side Below #1) */}
+                    <div className="grid grid-cols-2 gap-2.5">
+                      {[second, third].map((app, idx) => {
+                        if (!app) return null;
+                        const rank = idx + 2;
+                        return (
+                          <div
+                            key={app.id}
+                            onClick={() => navigate(`/${app.slug || app.id}`, { state: { app } })}
+                            className="relative flex flex-col cursor-pointer rounded-[18px] border border-[#E5E7EB] bg-white p-3 shadow-sm hover:shadow-md transition-shadow"
+                          >
+                            <div
+                              className="absolute -left-2 -top-2 z-20 flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-extrabold text-white shadow-md border-2 border-white"
+                              style={{ backgroundColor: rank === 2 ? "#9E9E9E" : "#CD7F32" }}
+                            >
+                              <span>{rank}</span>
+                            </div>
+                            <div className="flex items-center gap-2 mb-2.5">
+                              <AppIcon src={resolveUrl(app.icon_url)} alt={app.name} className="h-12 w-12 rounded-[14px] object-cover shadow-sm shrink-0" />
+                              <div className="min-w-0 flex-1">
+                                <h4 className="font-display text-xs font-bold text-[#111111] truncate">{app.name}</h4>
+                                <p className="text-[10px] text-[#777777]">{app.size || "45 MB"}</p>
+                              </div>
+                            </div>
+                            <RippleButton
+                              onClick={(e) => { e.stopPropagation(); handleDownload(app); }}
+                              className="w-full mt-auto flex items-center justify-center gap-1 rounded-full bg-[#FFC107] py-2 text-[11px] font-semibold text-[#111111] shadow-sm hover:bg-[#FFB300]"
+                            >
+                              <Download className="h-3 w-3" /> Get
+                            </RippleButton>
+                          </div>
+                        );
+                      })}
                     </div>
-                  );
-                })()}
-              </section>
-            )}
-
-            {/* Render other enabled sections using finalOrder (excluding reviews, faq, and legal to prevent duplication) */}
-            {finalOrder.map((id) => (id !== "reviews" && id !== "faq" && id !== "legal") ? renderers[id] : null).filter(Boolean)}
-
-            {/* WHAT USERS SAY (Single Instance) */}
-            {isDefaultView && en("reviews") && <ReviewsSection key="reviews" />}
-
-            {/* ABOUT THE GAME DESCRIPTION (₹501 BONUS) PLACED DIRECTLY BELOW WHAT USERS SAY */}
-            {isDefaultView && (
-              <section className="space-y-4 rounded-[24px] border border-[#E5E7EB] bg-white p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
-                <h2 className="font-display text-xl font-bold text-[#111111]">
-                  All Yono Games - Discover New Yono Apps & Play Top Gaming Apps
-                </h2>
-                <div className="space-y-4 text-sm leading-relaxed text-[#555555]">
-                  <p>
-                    Welcome to <strong>newyono.games</strong> - India's most trusted gaming platform in 2026. Get up to ₹501 sign-up bonus instantly, enjoy smooth 60 FPS gameplay, secure withdrawals, and access the latest 2026 Yono APK versions safely.
-                  </p>
-                  <p>
-                    That's exactly what <strong>All New Yono Apps</strong> aims to deliver. Our platform brings together a collection of games that combine classic gameplay with modern mobile experiences. From popular card titles like <strong>Yono Rummy</strong> to the latest slot and arcade apps gaining popularity in India, every game listed here is chosen carefully for its entertainment value.
-                  </p>
-                </div>
-              </section>
-            )}
-
-            {/* KEYWORDS CLOUD PLACED DIRECTLY BELOW THE DESCRIPTION */}
-            {isDefaultView && (
-              <section className="rounded-[22px] border border-[#E5E7EB] bg-white p-4 shadow-[0_6px_20px_rgba(0,0,0,0.02)] space-y-3">
-                <div className="flex items-center gap-2">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-[#FFF8E1] text-[#FFC107]">
-                    <Flame className="h-4 w-4 fill-[#FFC107]" />
-                  </span>
-                  <div>
-                    <h3 className="font-display text-sm font-bold text-[#111111]">Top 100 Yono Games, Rummy &amp; Money Game Keywords</h3>
-                    <p className="text-[10px] text-[#888888]">Click any keyword to explore games and instant download links</p>
                   </div>
-                </div>
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  {LANDING_100_KEYWORDS.map((kw, i) => (
-                    <button
-                      key={i}
-                      onClick={() => handleKeywordClick(kw)}
-                      className="rounded-full border border-[#E5E7EB] bg-[#FAFAFA] px-3 py-1 text-[11px] font-medium text-[#555555] hover:bg-[#FFF8E1] hover:border-[#FFE082] hover:text-[#B45309] transition-colors text-left cursor-pointer"
-                    >
-                      #{kw}
-                    </button>
-                  ))}
-                </div>
-              </section>
-            )}
+                );
+              })()}
+            </section>
+          )}
 
-            {/* SINGLE INSTANCE OF WINNERS, ADS, FAQ AND LEGAL AT THE BOTTOM */}
-            {isDefaultView && en("winners") && <RedeemBox />}
-            {isDefaultView && AdSlot && <AdSlot ads={settings?.ads} />}
-            {isDefaultView && en("faq") && <FaqSection key="faq" />}
-            {isDefaultView && en("legal") && <LegalSection key="legal" onOpen={setLegalId} />}
-          </>
-        )}
+          {/* Render other enabled sections using finalOrder (excluding reviews, faq, and legal to prevent duplication) */}
+          {finalOrder.map((id) => (id !== "reviews" && id !== "faq" && id !== "legal") ? renderers[id] : null).filter(Boolean)}
+
+          {/* WHAT USERS SAY (Single Instance) */}
+          {isDefaultView && en("reviews") && <ReviewsSection key="reviews" />}
+
+          {/* ABOUT THE GAME DESCRIPTION (₹501 BONUS) PLACED DIRECTLY BELOW WHAT USERS SAY */}
+          {isDefaultView && (
+            <section className="space-y-4 rounded-[24px] border border-[#E5E7EB] bg-white p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
+              <h2 className="font-display text-xl font-bold text-[#111111]">
+                All Yono Games - Discover New Yono Apps & Play Top Gaming Apps
+              </h2>
+              <div className="space-y-4 text-sm leading-relaxed text-[#555555]">
+                <p>
+                  Welcome to <strong>newyono.games</strong> - India's most trusted gaming platform in 2026. Get up to ₹501 sign-up bonus instantly, enjoy smooth 60 FPS gameplay, secure withdrawals, and access the latest 2026 Yono APK versions safely.
+                </p>
+                <p>
+                  That's exactly what <strong>All New Yono Apps</strong> aims to deliver. Our platform brings together a collection of games that combine classic gameplay with modern mobile experiences. From popular card titles like <strong>Yono Rummy</strong> to the latest slot and arcade apps gaining popularity in India, every game listed here is chosen carefully for its entertainment value.
+                </p>
+              </div>
+            </section>
+          )}
+
+          {/* KEYWORDS CLOUD PLACED DIRECTLY BELOW THE DESCRIPTION */}
+          {isDefaultView && (
+            <section className="rounded-[22px] border border-[#E5E7EB] bg-white p-4 shadow-[0_6px_20px_rgba(0,0,0,0.02)] space-y-3">
+              <div className="flex items-center gap-2">
+                <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-[#FFF8E1] text-[#FFC107]">
+                  <Flame className="h-4 w-4 fill-[#FFC107]" />
+                </span>
+                <div>
+                  <h3 className="font-display text-sm font-bold text-[#111111]">Top 100 Yono Games, Rummy &amp; Money Game Keywords</h3>
+                  <p className="text-[10px] text-[#888888]">Click any keyword to explore games and instant download links</p>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                {LANDING_100_KEYWORDS.map((kw, i) => (
+                  <button
+                    key={i}
+                    onClick={() => handleKeywordClick(kw)}
+                    className="rounded-full border border-[#E5E7EB] bg-[#FAFAFA] px-3 py-1 text-[11px] font-medium text-[#555555] hover:bg-[#FFF8E1] hover:border-[#FFE082] hover:text-[#B45309] transition-colors text-left cursor-pointer"
+                  >
+                    #{kw}
+                  </button>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* SINGLE INSTANCE OF WINNERS, ADS, FAQ AND LEGAL AT THE BOTTOM */}
+          {isDefaultView && en("winners") && <RedeemBox />}
+          {isDefaultView && AdSlot && <AdSlot ads={settings?.ads} />}
+          {isDefaultView && en("faq") && <FaqSection key="faq" />}
+          {isDefaultView && en("legal") && <LegalSection key="legal" onOpen={setLegalId} />}
+        </>
       </main>
 
       <SiteFooter onOpenLegal={setLegalId} />

@@ -452,7 +452,7 @@ export default function Store() {
             {/* WHAT USERS SAY (REVIEWS) */}
             {isDefaultView && en("reviews") && <ReviewsSection key="reviews" />}
 
-            {/* SEO DASHBOARD / 3 MENU TABS ON LANDING PAGE */}
+            {/* SEO DASHBOARD / 3 MENU TABS ON LANDING PAGE (WITHOUT 'guaranteed') */}
             {isDefaultView && (
               <section className="rounded-[20px] sm:rounded-[24px] border border-[#E5E7EB] bg-white p-4 sm:p-5 shadow-sm space-y-3">
                 <div className="flex border-b border-[#E5E7EB] pb-2 gap-4 overflow-x-auto no-scrollbar">
@@ -479,7 +479,7 @@ export default function Store() {
                 <div className="pt-2 text-xs sm:text-sm text-[#555555] leading-relaxed">
                   {activeTab === "description" && (
                     <div className="space-y-2">
-                      <p><strong>newyono.games</strong> is the ultimate platform offering 100+ games including Yono Rummy, Teen Patti, Slots, and Ludo with a guaranteed <strong>₹501 sign-up bonus</strong>.</p>
+                      <p><strong>newyono.games</strong> is the ultimate platform offering 100+ games including Yono Rummy, Teen Patti, Slots, and Ludo with a <strong>₹501 sign-up bonus</strong>.</p>
                       <p>Designed for Android users with fast 60 FPS performance, instant UPI withdrawals, and secure anti-ban mod files in 2026.</p>
                     </div>
                   )}

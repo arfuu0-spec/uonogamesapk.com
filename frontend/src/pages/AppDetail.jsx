@@ -19,6 +19,13 @@ export default function AppDetail() {
   
   const identifier = slug || id;
 
+  // Safeguard: Redirect if identifier is invalid or undefined
+  useEffect(() => {
+    if (!identifier || identifier === "undefined" || identifier === "null") {
+      navigate("/", { replace: true });
+    }
+  }, [identifier, navigate]);
+
   const cachedData = typeof window !== "undefined" ? localStorage.getItem("yono_apps_perm_cache") : null;
   const parsedCache = useMemo(() => {
     try {
@@ -37,19 +44,26 @@ export default function AppDetail() {
   }, [location.state, parsedCache, identifier]);
 
   const [app, setApp] = useState(initialApp);
-  const [similarApps, setSimilarApps] = useState([]);
+  const [similarApps, setSimilarApps] = useState(() => {
+    if (parsedCache && parsedCache.apps && initialApp) {
+      return parsedCache.apps.filter(a => String(a.id) !== String(initialApp.id) && a.slug !== initialApp.slug).slice(0, 20);
+    }
+    return [];
+  });
   const [loading, setLoading] = useState(!initialApp);
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (!identifier || identifier === "undefined") return;
+    if (!identifier || identifier === "undefined" || identifier === "null") return;
+
+    let isMounted = true;
     setLoading(true);
 
     const fetchAppData = async () => {
       try {
         const res = await api.get(`/apps/${identifier}`);
-        if (res.data) {
+        if (res.data && isMounted) {
           const fetchedApp = res.data.app || res.data;
           setApp(fetchedApp);
           
@@ -62,19 +76,22 @@ export default function AppDetail() {
           const listRes = await api.get("/apps?limit=100");
           const all = [...(listRes.data.featured || []), ...(listRes.data.apps || []), ...(listRes.data.trending || [])];
           const found = all.find(a => String(a.id) === String(identifier) || a.slug === identifier);
-          if (found) {
+          if (found && isMounted) {
             setApp(found);
             setSimilarApps(all.filter(a => String(a.id) !== String(found.id) && a.slug !== identifier).slice(0, 20));
           }
         } catch (err) {
-          if (!app) toast.error("Failed to load app details");
+          if (!app && isMounted) {
+            toast.error("Failed to load app details");
+          }
         }
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     };
 
     fetchAppData();
+    return () => { isMounted = false; };
   }, [identifier]);
 
   const handleDownload = (targetApp) => {
@@ -106,7 +123,16 @@ export default function AppDetail() {
     );
   }
 
-  if (!app) return null;
+  if (!app) {
+    return (
+      <div className="app-shell flex min-h-screen flex-col items-center justify-center bg-white p-4 text-center">
+        <p className="text-base font-bold text-[#111111] mb-2">App not found</p>
+        <RippleButton onClick={() => navigate("/")} className="rounded-full bg-[#FFC107] px-6 py-2.5 text-xs font-semibold text-[#111111]">
+          Go to Home
+        </RippleButton>
+      </div>
+    );
+  }
 
   return (
     <div className="app-shell pb-10 bg-[#FAFAFA]">

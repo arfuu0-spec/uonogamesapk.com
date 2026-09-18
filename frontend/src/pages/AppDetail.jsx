@@ -20,12 +20,43 @@ function normalize(s) {
 }
 
 const GAME_KEYWORDS = [
-  "Yono Games", "Yono Rummy", "Rummy Games", "Slots Games", "Casino Games", "Teen Patti Real Cash",
-  "New Yono Apps 2026", "Best Rummy App India", "Sign Up Bonus 501", "Instant UPI Withdrawal",
-  "Mod APK Download", "Yono VIP Program", "Daily Jackpot Win", "Safe APK Store", "Online Card Games",
-  "Yono All Games List", "Winning Strategies", "Fastest Withdrawal App", "Trusted Rummy Platform",
-  "Android Gaming Hub", "Free Bonus Apps", "Real Money Games", "Latest Version Update", "Ind Rummy APK",
-  "Gold Rummy Download", "Yono Ludo App", "Teen Patti Gold", "Dragon Tiger Game", "Andar Bahar Online"
+  "yono games all app",
+  "yono games app",
+  "yono app",
+  "you games online",
+  "all your game store",
+  "you know games",
+  "yono app link",
+  "all yono game new",
+  "rummy game app store",
+  "new yono games",
+  "yono games com apk",
+  "yono game apk download for android latest version",
+  "yono games apk lsgd",
+  "yono games 2",
+  "you know game",
+  "yono game google",
+  "yono genes",
+  "all your game app download",
+  "all you game",
+  "all your app",
+  "all many games",
+  "all your game apk latest version",
+  "you game game",
+  "all your games download free",
+  "all your gamespin crush",
+  "yono games apk",
+  "yono all games",
+  "all your game apk",
+  "all yono games list apk",
+  "yono game home",
+  "yono india",
+  "all you know game",
+  "all new game",
+  "yono arcade all apk",
+  "yono rummy games for android",
+  "yono games all new apk",
+  "yono games all new 2026 apk"
 ];
 
 export default function AppDetail() {
@@ -313,7 +344,7 @@ export default function AppDetail() {
 
         {/* Download Button */}
         <div className="pt-1">
-          <RippleButton onClick={() => handleDownload(app)} className="w-full flex items-center justify-center gap-2 rounded-[20px] sm:rounded-[22px] bg-[#FFC107] py-3.5 sm:py-4 text-sm sm:text-base font-extrabold text-[#111111] shadow-[0_8px_24px_rgba(255,193,7,0.4)] hover:bg-[#FFB300]">
+          <RippleButton onClick={() => handleDownload(app)} className="w-full flex items-center justify-center gap-2 rounded-[20px] sm:rounded-[22px] bg-[#FFC107] py-3.5 sm:py-4 text-sm sm:text-base font-extrabold text-[#111111] shadow-[0_8px_24px_rgba(255,193,7,0.4)] hover:bg-[#FFB300] animate-pulse">
             <Download className="h-4 w-4 sm:h-5 sm:w-5" />
             <span>Download APK ({app.size || "45 MB"})</span>
           </RippleButton>
@@ -363,7 +394,7 @@ export default function AppDetail() {
               <Flame className="h-3.5 w-3.5 sm:h-4 sm:w-4 fill-[#FFC107]" />
             </span>
             <div>
-              <h3 className="font-display text-xs sm:text-sm font-bold text-[#111111]">Top Yono &amp; Rummy Game Keywords</h3>
+              <h3 className="font-display text-xs sm:text-sm font-bold text-[#111111]">Top Google Search Keywords</h3>
               <p className="text-[9px] sm:text-[10px] text-[#888888]">Click any keyword to search and explore</p>
             </div>
           </div>

@@ -1,6 +1,6 @@
 import { useDeferredValue, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Search, Send, Download, Sparkles, TrendingUp, ShieldCheck, ArrowDownWideNarrow, X, Flame, Gift } from "lucide-react";
+import { Search, Send, Download, Sparkles, TrendingUp, ShieldCheck, ArrowDownWideNarrow, X, Flame, Gift, Trophy } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import api, { API, resolveUrl } from "@/lib/api";
@@ -365,12 +365,14 @@ export default function Store() {
           <StoreSkeleton />
         ) : (
           <>
-            {/* TOP 3 GAMES PODIUM DESIGN (COMPACT MOBILE VIEW) */}
+            {/* ELITE TOP 3 GAMES PODIUM DESIGN */}
             {isDefaultView && (
-              <section className="space-y-2.5 mb-2">
+              <section className="space-y-3 mb-2">
                 <div className="flex items-center gap-2">
-                  <Sparkles className="h-4 w-4 text-[#FFC107]" />
-                  <h2 className="font-display text-sm font-bold text-[#111111]">Top 3 Games</h2>
+                  <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-gradient-to-r from-[#FFC107] to-[#FF8F00] text-white shadow-sm">
+                    <Trophy className="h-3.5 w-3.5" />
+                  </span>
+                  <h2 className="font-display text-sm sm:text-base font-extrabold text-[#111111]">Top 3 Trending Games</h2>
                 </div>
                 {(() => {
                   const top3 = (data?.featured || data?.apps || []).slice(0, 3);
@@ -380,45 +382,43 @@ export default function Store() {
                   const third = top3[2];
                   return (
                     <div className="space-y-2.5">
-                      {/* #1 Game Card */}
+                      {/* #1 Elite Spotlight Game Card */}
                       {first && (
                         <div
                           onClick={() => navigate(`/${first.slug || first.id}`, { state: { app: first } })}
-                          className="group relative flex cursor-pointer items-center gap-3 rounded-[18px] border-2 border-[#FFC107] bg-gradient-to-r from-[#FFFDE7] via-white to-white p-3 shadow-[0_6px_20px_rgba(255,193,7,0.12)] transition-all hover:shadow-[0_12px_28px_rgba(255,193,7,0.2)]"
+                          className="group relative flex cursor-pointer items-center gap-3.5 rounded-[20px] border-2 border-[#FFC107] bg-gradient-to-r from-[#FFFDE7] via-white to-white p-3.5 sm:p-4 shadow-[0_8px_25px_rgba(255,193,7,0.2)] transition-all hover:scale-[1.01]"
                         >
-                          <div className="absolute -left-1.5 -top-1.5 z-20 flex h-6 w-6 items-center justify-center rounded-full text-[10px] font-extrabold text-white shadow-md bg-gradient-to-r from-[#FFC107] to-[#FFA000] border-2 border-white">
-                            <span>👑 1</span>
+                          <div className="absolute -left-2 -top-2 z-20 flex h-7 w-7 items-center justify-center rounded-full text-xs font-black text-white shadow-md bg-gradient-to-r from-[#FFC107] to-[#FF8F00] border-2 border-white">
+                            <span>1</span>
                           </div>
-                          <AppIcon src={resolveUrl(first.icon_url)} alt={first.name} className="h-16 w-16 rounded-[14px] object-cover shadow-sm ring-1 ring-black/5 shrink-0" />
+                          <AppIcon src={resolveUrl(first.icon_url)} alt={first.name} className="h-16 w-16 sm:h-20 sm:w-20 rounded-[16px] object-cover shadow-md ring-1 ring-black/5 shrink-0" />
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center justify-between gap-2">
-                              <h3 className="font-display text-xs font-bold text-[#111111] truncate">{first.name}</h3>
-                              <div className="flex shrink-0 items-center gap-0.5 rounded-full bg-[#FFF8E1] px-2 py-0.5">
-                                <span className="text-[11px] font-semibold text-[#111111]">⭐ {first.rating?.toFixed(1) || "4.9"}</span>
+                              <h3 className="font-display text-sm sm:text-base font-extrabold text-[#111111] truncate">{first.name}</h3>
+                              <div className="flex shrink-0 items-center gap-1 rounded-full bg-[#FFF8E1] px-2.5 py-0.5 border border-[#FFE082]">
+                                <span className="text-[11px] font-bold text-[#B45309]">⭐ {first.rating?.toFixed(1) || "4.9"}</span>
                               </div>
                             </div>
                             <p className="mt-0.5 text-[11px] text-[#777777]">v{first.version || "1.0"} • {first.size || "45 MB"}</p>
-                            <p className="mt-0.5 text-[10px] font-medium text-[#555555] truncate">
-                              👥 {(first.downloads ? (first.downloads * 8).toLocaleString() : "4.2M")} active players
-                            </p>
-                            {first.signup_bonus && (
-                              <div className="mt-1 flex items-center gap-1">
-                                <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-[#FFC107] to-[#FF9800] px-2 py-0.5 text-[9px] font-extrabold text-white shadow-sm">
-                                  <Gift className="h-2.5 w-2.5" /> Bonus {first.signup_bonus}
+                            <div className="mt-1.5 flex items-center gap-2 flex-wrap">
+                              <span className="text-[10px] font-semibold text-[#555555]">👥 4.2M+ active</span>
+                              {first.signup_bonus && (
+                                <span className="inline-flex items-center gap-1 rounded-full bg-[#FFC107] px-2 py-0.5 text-[9px] font-black text-[#111111] shadow-sm">
+                                  🎁 Bonus {first.signup_bonus}
                                 </span>
-                              </div>
-                            )}
+                              )}
+                            </div>
                           </div>
                           <RippleButton
                             onClick={(e) => { e.stopPropagation(); handleDownload(first); }}
-                            className="flex shrink-0 items-center gap-1 rounded-full bg-[#FFC107] px-3 py-2 text-[11px] font-semibold text-[#111111] shadow-[0_4px_12px_rgba(255,193,7,0.35)] hover:bg-[#FFB300]"
+                            className="flex shrink-0 items-center gap-1.5 rounded-full bg-[#FFC107] px-3.5 py-2.5 text-xs sm:text-sm font-bold text-[#111111] shadow-[0_4px_14px_rgba(255,193,7,0.4)] hover:bg-[#FFB300]"
                           >
-                            <Download className="h-3.5 w-3.5" /> Download
+                            <Download className="h-4 w-4" /> Download
                           </RippleButton>
                         </div>
                       )}
 
-                      {/* #2 and #3 Game Cards */}
+                      {/* #2 and #3 Clean Compact Grid Cards */}
                       <div className="grid grid-cols-2 gap-2.5">
                         {[second, third].map((app, idx) => {
                           if (!app) return null;
@@ -427,34 +427,34 @@ export default function Store() {
                             <div
                               key={app.id}
                               onClick={() => navigate(`/${app.slug || app.id}`, { state: { app } })}
-                              className="relative flex flex-col cursor-pointer rounded-[16px] border border-[#E5E7EB] bg-white p-3 shadow-sm hover:shadow-md transition-all"
+                              className="relative flex flex-col cursor-pointer rounded-[18px] border border-[#E5E7EB] bg-white p-3 shadow-sm hover:shadow-md transition-all"
                             >
                               <div
-                                className="absolute -left-1.5 -top-1.5 z-20 flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-extrabold text-white shadow-md border-2 border-white"
+                                className="absolute -left-1.5 -top-1.5 z-20 flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-black text-white shadow-sm border-2 border-white"
                                 style={{ backgroundColor: rank === 2 ? "#64748B" : "#D97706" }}
                               >
                                 <span>{rank}</span>
                               </div>
-                              <div className="flex items-start gap-2 mb-2">
+                              <div className="flex items-start gap-2.5 mb-2">
                                 <AppIcon src={resolveUrl(app.icon_url)} alt={app.name} className="h-12 w-12 rounded-[12px] object-cover shadow-sm shrink-0 ring-1 ring-black/5" />
                                 <div className="min-w-0 flex-1">
-                                  <h4 className="font-display text-[11px] font-bold text-[#111111] truncate">{app.name}</h4>
+                                  <h4 className="font-display text-xs font-bold text-[#111111] truncate">{app.name}</h4>
                                   <div className="flex items-center gap-0.5 mt-0.5">
-                                    <span className="text-[10px] font-semibold text-[#111111]">⭐ {app.rating?.toFixed(1) || "4.8"}</span>
+                                    <span className="text-[10px] font-bold text-[#B45309]">⭐ {app.rating?.toFixed(1) || "4.8"}</span>
                                   </div>
                                   <p className="text-[10px] text-[#777777] mt-0.5">{app.size || "45 MB"}</p>
                                 </div>
                               </div>
                               {app.signup_bonus && (
                                 <div className="mb-2">
-                                  <span className="inline-flex items-center gap-0.5 rounded-full bg-[#FFF8E1] px-2 py-0.5 text-[9px] font-extrabold text-[#B45309]">
+                                  <span className="inline-flex items-center gap-0.5 rounded-full bg-[#FFF8E1] px-2 py-0.5 text-[9px] font-bold text-[#B45309]">
                                     🎁 {app.signup_bonus}
                                   </span>
                                 </div>
                               )}
                               <RippleButton
                                 onClick={(e) => { e.stopPropagation(); handleDownload(app); }}
-                                className="w-full mt-auto flex items-center justify-center gap-1 rounded-full bg-[#FFC107] py-1.5 text-[11px] font-semibold text-[#111111] shadow-sm hover:bg-[#FFB300]"
+                                className="w-full mt-auto flex items-center justify-center gap-1 rounded-full bg-[#FFC107] py-1.5 text-xs font-bold text-[#111111] shadow-sm hover:bg-[#FFB300]"
                               >
                                 <Download className="h-3 w-3" /> Download
                               </RippleButton>

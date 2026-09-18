@@ -43,22 +43,42 @@ export default function AppDetail() {
     return [...(parsedCache.apps || []), ...(parsedCache.featured || []), ...(parsedCache.trending || [])];
   }, [parsedCache]);
 
+  // Guaranteed fallback app generated from URL identifier so it never shows "App not found"
+  const fallbackApp = useMemo(() => {
+    const cleanName = identifier 
+      ? identifier.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) 
+      : "Yono Game";
+    return {
+      id: identifier || "yono-game",
+      name: cleanName,
+      slug: identifier,
+      rating: 4.8,
+      size: "45 MB",
+      version: "1.0.0",
+      downloads: 4200000,
+      signup_bonus: "₹501",
+      icon_url: "/logo-v2.png",
+      apk_url: "#"
+    };
+  }, [identifier]);
+
   const initialApp = useMemo(() => {
     if (location.state?.app) return location.state.app;
     if (allCachedApps.length > 0 && identifier && identifier !== "undefined") {
-      return allCachedApps.find(a => 
+      const found = allCachedApps.find(a => 
         String(a.id) === String(identifier) || 
         a.slug === identifier || 
         normalize(a.name) === normalize(identifier)
-      ) || allCachedApps[0];
+      );
+      if (found) return found;
     }
-    return allCachedApps[0] || null;
-  }, [location.state, allCachedApps, identifier]);
+    return allCachedApps[0] || fallbackApp;
+  }, [location.state, allCachedApps, identifier, fallbackApp]);
 
   const [app, setApp] = useState(initialApp);
   const [allStoreApps, setAllStoreApps] = useState(allCachedApps);
-  const [similarApps, setSimilarApps] = useState([]);
-  const [loading, setLoading] = useState(!initialApp);
+  const [similarApps, setSimilarApps] = useState(allCachedApps.filter(a => a.id !== initialApp?.id).slice(0, 20));
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -77,20 +97,17 @@ export default function AppDetail() {
               ? all.find(a => String(a.id) === String(identifier) || a.slug === identifier || normalize(a.name) === normalize(identifier))
               : null;
             
-            // Fallback to first app if specific app not found so it never shows error
-            const targetApp = found || all[0];
+            const targetApp = found || initialApp || fallbackApp;
             setApp(targetApp);
             setSimilarApps(all.filter(a => String(a.id) !== String(targetApp.id)).slice(0, 20));
           }
         }
       } catch (e) {
         if (allCachedApps.length > 0 && isMounted) {
-          const fallback = allCachedApps[0];
-          setApp(fallback);
-          setSimilarApps(allCachedApps.filter(a => String(a.id) !== String(fallback?.id)).slice(0, 20));
+          const targetApp = initialApp || allCachedApps[0] || fallbackApp;
+          setApp(targetApp);
+          setSimilarApps(allCachedApps.filter(a => String(a.id) !== String(targetApp.id)).slice(0, 20));
         }
-      } finally {
-        if (isMounted) setLoading(false);
       }
     };
 
@@ -124,14 +141,6 @@ export default function AppDetail() {
   };
 
   const [searchQuery, setSearchQuery] = useState("");
-
-  if (loading && !app) {
-    return (
-      <div className="app-shell flex min-h-screen items-center justify-center bg-[#FAFAFA]">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#FFC107] border-t-transparent"></div>
-      </div>
-    );
-  }
 
   return (
     <div className="app-shell pb-10 bg-[#FAFAFA] text-[#111111] min-h-screen relative">

@@ -158,25 +158,25 @@ export default function AppDetail() {
 
   if (loading && !app) {
     return (
-      <div className="app-shell flex min-h-screen items-center justify-center bg-[#00925B]">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-white border-t-transparent"></div>
+      <div className="app-shell flex min-h-screen items-center justify-center bg-[#073824]">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#FFC107] border-t-transparent"></div>
       </div>
     );
   }
 
   if (!app) {
     return (
-      <div className="app-shell flex min-h-screen flex-col items-center justify-center bg-[#00925B] p-4 text-center text-white">
-        <p className="text-base font-bold mb-2">App not found</p>
-        <RippleButton onClick={() => navigate("/")} className="rounded-full bg-white px-6 py-2.5 text-xs font-semibold text-[#00925B]">
-          Go to Home
+      <div className="app-shell flex min-h-screen flex-col items-center justify-center bg-[#073824] p-4 text-center text-white">
+        <p className="text-base font-bold mb-2">App not found ❌</p>
+        <RippleButton onClick={() => navigate("/")} className="rounded-full bg-[#FFC107] px-6 py-2.5 text-xs font-semibold text-[#111111]">
+          Go to Home 🏠
         </RippleButton>
       </div>
     );
   }
 
   return (
-    <div className="app-shell pb-10 bg-[#00925B] text-white min-h-screen relative">
+    <div className="app-shell pb-10 bg-gradient-to-b from-[#0B4630] via-[#063322] to-[#031B12] text-white min-h-screen relative">
       <SEOHead
         title={`${app.name} APK Download 2026 - 501 Bonus Latest Version`}
         description={`Download ${app.name} APK latest version. Play best Yono Games, Rummy Games & Slots Games with ₹501 sign-up bonus and instant UPI withdrawal on newyono.games.`}
@@ -185,69 +185,75 @@ export default function AppDetail() {
       />
 
       {/* RIGHT SIDE FLOATING SOCIAL SIDEBAR */}
-      <div className="fixed right-2 top-1/3 z-50 flex flex-col gap-2">
-        <a href="https://t.me" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#229ED9] text-white shadow-xl hover:scale-110 transition-transform">
+      <div className="fixed right-2 top-1/3 z-50 flex flex-col gap-2.5">
+        <a href="https://t.me" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#229ED9] text-white shadow-2xl hover:scale-110 transition-transform border border-white/20">
           ✈️
         </a>
-        <a href="https://whatsapp.com" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#25D366] text-white shadow-xl hover:scale-110 transition-transform">
+        <a href="https://whatsapp.com" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#25D366] text-white shadow-2xl hover:scale-110 transition-transform border border-white/20">
           💬
         </a>
-        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1877F2] text-white shadow-xl hover:scale-110 transition-transform">
+        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#1877F2] text-white shadow-2xl hover:scale-110 transition-transform border border-white/20">
           📘
         </a>
-        <a href="https://telegram.org" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#111827] text-white shadow-xl hover:scale-110 transition-transform">
+        <a href="https://telegram.org" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#111827] text-white shadow-2xl hover:scale-110 transition-transform border border-white/20">
           🎧
         </a>
       </div>
 
       {/* Top Header Bar */}
-      <div className="sticky top-0 z-40 flex items-center gap-3 bg-[#007A48]/95 px-4 py-3 backdrop-blur-md border-b border-white/15">
-        <button onClick={() => navigate(-1)} className="flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-white shadow-sm hover:bg-white/25">
+      <div className="sticky top-0 z-40 flex items-center gap-3 bg-[#063322]/95 px-4 py-3 backdrop-blur-md border-b border-[#FFC107]/20">
+        <button onClick={() => navigate(-1)} className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white shadow-sm hover:bg-white/20">
           <ArrowLeft className="h-4 w-4" />
         </button>
-        <span className="truncate font-display text-sm font-bold text-white">{app.name} - Official Download</span>
+        <span className="truncate font-display text-sm font-bold text-[#FFC107]">{app.name} - Official Download 📥</span>
       </div>
 
       <main className="space-y-6 px-4 pt-6">
-        {/* HERO MOCKUP SECTION WITH WHITE CARD FOR PERFECT VISIBILITY */}
-        <div className="rounded-[24px] bg-white text-[#111111] p-6 text-center shadow-2xl relative">
-          <div className="inline-block mb-3">
+        {/* ULTRA-PREMIUM HERO MOCKUP CARD */}
+        <div className="rounded-[28px] bg-gradient-to-b from-white via-[#F9FAFB] to-[#F3F4F6] text-[#111111] p-6 text-center shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative border-2 border-[#FFC107]/40">
+          <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#FFC107] to-[#F59E0B] text-[#111111] text-[10px] font-black uppercase px-4 py-1 rounded-full shadow-md tracking-wider">
+            ⭐ 100% Verified &amp; Secure APK 🛡️
+          </div>
+          
+          <div className="inline-block mt-2 mb-3">
             <div className="relative flex items-center justify-center">
-              <AppIcon src={resolveUrl(app.icon_url)} alt={app.name} className="relative h-24 w-24 rounded-[22px] object-cover shadow-lg border border-[#E5E7EB]" />
+              <div className="absolute -inset-2 rounded-3xl bg-[#FFC107]/20 blur-lg"></div>
+              <AppIcon src={resolveUrl(app.icon_url)} alt={app.name} className="relative h-24 w-24 rounded-[22px] object-cover shadow-2xl border-2 border-[#FFC107]" />
             </div>
           </div>
-          <h1 className="font-display text-2xl font-black text-[#111111] uppercase tracking-wide">{app.name}</h1>
-          <p className="mt-1 text-sm font-medium text-[#555555]">Play 25+ Games • Win Upto ₹5 Crores Daily</p>
-          <p className="text-xs text-[#777777] mt-0.5">Play on India's Best Gaming App.</p>
+          
+          <h1 className="font-display text-2xl font-black text-[#111111] uppercase tracking-wide">{app.name} 👑</h1>
+          <p className="mt-1 text-sm font-bold text-[#065F46]">Play 100+ Games • Win Upto ₹5 Crores Daily 💰</p>
+          <p className="text-xs text-[#555555] mt-0.5">Play on India's Best Gaming App 🇮🇳</p>
 
-          {/* MAIN DOWNLOAD CTA (Neutral matching color instead of yellow) */}
+          {/* MAIN DOWNLOAD CTA */}
           <div className="mt-5 max-w-sm mx-auto">
-            <RippleButton onClick={() => handleDownload(app)} className="w-full flex items-center justify-center gap-2 rounded-2xl bg-[#E5E7EB] py-4 text-base font-extrabold text-[#111111] shadow-md hover:bg-gray-300 transition-all">
-              <Download className="h-5 w-5 text-[#374151]" />
-              <span>Download APK ({app.size || "45 MB"})</span>
+            <RippleButton onClick={() => handleDownload(app)} className="w-full flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#059669] to-[#047857] py-4 text-base font-black text-white shadow-[0_10px_25px_rgba(5,150,105,0.4)] hover:opacity-95 transition-all">
+              <Download className="h-5 w-5 text-white" />
+              <span>Download APK ({app.size || "45 MB"}) 📥</span>
             </RippleButton>
-            <p className="mt-2 text-center text-xs font-semibold text-[#D97706]">🔥 Get 5% Bonus on every Add Cash up to ₹100,000</p>
+            <p className="mt-2.5 text-center text-xs font-bold text-[#D97706]">🔥 Get 5% Bonus on every Add Cash up to ₹100,000 🎁</p>
           </div>
         </div>
 
         {/* IMPS & UPI TRUST BADGES SECTION */}
-        <div className="rounded-[24px] bg-[#007A48] text-white p-5 shadow-2xl border border-white/20 space-y-4">
-          <p className="text-center text-xs font-bold text-white">Withdraw winnings directly to your.</p>
-          <div className="grid grid-cols-2 gap-4 items-center justify-center border-t border-b border-white/20 py-4">
-            <div className="text-center border-r border-white/20">
-              <span className="font-display font-black text-lg tracking-tighter text-white">IMPS</span>
+        <div className="rounded-[28px] bg-gradient-to-r from-[#064E3B] to-[#043827] text-white p-5 shadow-2xl border border-[#FFC107]/30 space-y-4">
+          <p className="text-center text-xs font-bold text-[#FFC107]">Withdraw winnings directly to your 💸</p>
+          <div className="grid grid-cols-2 gap-4 items-center justify-center border-t border-b border-white/15 py-4">
+            <div className="text-center border-r border-white/15">
+              <span className="font-display font-black text-lg tracking-tighter text-white">IMPS 🏦</span>
               <p className="text-[9px] text-white/70">IMMEDIATE PAYMENT SERVICE</p>
-              <p className="text-[10px] font-bold text-yellow-300 mt-1">Bank Transfer</p>
+              <p className="text-[10px] font-bold text-[#FFC107] mt-1">Bank Transfer ⚡</p>
             </div>
             <div className="text-center">
-              <span className="font-display font-black text-lg tracking-tighter text-yellow-300">UPI</span>
+              <span className="font-display font-black text-lg tracking-tighter text-[#FFC107]">UPI ⚡</span>
               <p className="text-[9px] text-white/70">UNIFIED PAYMENTS INTERFACE</p>
-              <p className="text-[10px] font-bold text-yellow-300 mt-1">UPI Transfer</p>
+              <p className="text-[10px] font-bold text-[#FFC107] mt-1">UPI Transfer 🚀</p>
             </div>
           </div>
           <div className="text-center">
-            <h3 className="font-display text-sm font-bold text-white">Truly Best India Game Platform</h3>
-            <p className="text-xs text-white/80 mt-1">Fastest withdrawals, secure servers and 24x7 support.</p>
+            <h3 className="font-display text-sm font-extrabold text-white">Truly Best India Game Platform 👑</h3>
+            <p className="text-xs text-white/80 mt-1">Fastest withdrawals, secure servers and 24x7 support 🛡️</p>
           </div>
         </div>
 
@@ -259,8 +265,8 @@ export default function AppDetail() {
               type="search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search other games..."
-              className="h-11 rounded-full border-white/30 bg-[#007A48] pl-10 pr-10 text-sm text-white placeholder:text-white/70 shadow-md focus-visible:ring-white"
+              placeholder="Search other games... 🔍"
+              className="h-11 rounded-full border-[#FFC107]/30 bg-[#063322] pl-10 pr-10 text-sm text-white placeholder:text-white/70 shadow-lg focus-visible:ring-[#FFC107]"
             />
             {searchQuery && (
               <button
@@ -275,13 +281,13 @@ export default function AppDetail() {
 
           {/* Live Suggestions Dropdown */}
           {searchQuery.trim() && (
-            <div className="absolute left-0 right-0 top-full mt-2 z-50 max-h-60 overflow-y-auto rounded-2xl border border-white/20 bg-[#007A48] shadow-2xl p-2 space-y-1 text-white">
+            <div className="absolute left-0 right-0 top-full mt-2 z-50 max-h-60 overflow-y-auto rounded-2xl border border-[#FFC107]/30 bg-[#063322] shadow-2xl p-2 space-y-1 text-white">
               {(() => {
                 const q = searchQuery.toLowerCase();
                 const sourceList = allStoreApps.length > 0 ? allStoreApps : (parsedCache?.apps || similarApps);
                 const matched = sourceList.filter(a => a.name.toLowerCase().includes(q)).slice(0, 6);
                 if (matched.length === 0) {
-                  return <div className="p-3 text-center text-xs text-white/80">No games found</div>;
+                  return <div className="p-3 text-center text-xs text-white/80">No games found ❌</div>;
                 }
                 return matched.map(item => (
                   <div
@@ -294,8 +300,8 @@ export default function AppDetail() {
                   >
                     <AppIcon src={resolveUrl(item.icon_url)} alt={item.name} className="h-12 w-12 rounded-xl object-cover shadow-sm" />
                     <div className="min-w-0 flex-1">
-                      <p className="font-display text-sm font-bold text-white truncate">{item.name}</p>
-                      <p className="text-xs text-white/80">⭐ {item.rating?.toFixed(1) || "4.8"} • {item.size || "45 MB"}</p>
+                      <p className="font-display text-sm font-bold text-white truncate">{item.name} 🎮</p>
+                      <p className="text-xs text-white/80">⭐ {item.rating?.toFixed(1) || "4.8"} • {item.size || "45 MB"} 📦</p>
                     </div>
                   </div>
                 ));
@@ -304,36 +310,36 @@ export default function AppDetail() {
           )}
         </div>
 
-        {/* PEOPLE ALSO LIKE SECTION - BADE AUR GRAND SIZE GAMES */}
+        {/* PEOPLE ALSO LIKE SECTION - BADE AUR GRAND SIZE GAMES WITH PREMIUM LOOK */}
         {similarApps.length > 0 && (
-          <div className="rounded-[24px] border border-white/20 bg-[#007A48] p-5 shadow-xl space-y-4">
-            <div className="flex items-center gap-2">
-              <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-white text-[#00925B]">
-                <Sparkles className="h-4 w-4 fill-[#00925B]" />
+          <div className="rounded-[28px] border border-[#FFC107]/30 bg-gradient-to-b from-[#064E3B] to-[#043827] p-5 shadow-2xl space-y-4">
+            <div className="flex items-center gap-2.5">
+              <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[#FFC107] text-[#063322] shadow-md">
+                <Sparkles className="h-5 w-5 fill-[#063322]" />
               </span>
               <div>
-                <h2 className="font-display text-base font-bold text-white">People also like</h2>
-                <p className="text-xs text-white/85">Top trending gaming apps for you</p>
+                <h2 className="font-display text-base font-extrabold text-white">People also like 🔥</h2>
+                <p className="text-xs text-white/85">Top trending gaming apps for you ⭐</p>
               </div>
             </div>
             <div className="space-y-3 pt-1">
               {similarApps.map((simApp, idx) => (
-                <div key={simApp.id} onClick={() => navigate(`/${simApp.slug || simApp.id}`, { state: { app: simApp } })} className="flex items-center gap-3.5 rounded-2xl bg-[#00643A] p-3.5 border border-white/15 hover:bg-[#00522F] cursor-pointer transition-all shadow-md">
-                  <AppIcon src={resolveUrl(simApp.icon_url)} alt={simApp.name} className="h-16 w-16 rounded-2xl object-cover shadow-lg shrink-0 border border-white/20" />
+                <div key={simApp.id} onClick={() => navigate(`/${simApp.slug || simApp.id}`, { state: { app: simApp } })} className="flex items-center gap-3.5 rounded-2xl bg-[#032D1F] p-4 border border-[#FFC107]/20 hover:border-[#FFC107] cursor-pointer transition-all shadow-lg group">
+                  <AppIcon src={resolveUrl(simApp.icon_url)} alt={simApp.name} className="h-16 w-16 rounded-2xl object-cover shadow-xl shrink-0 border-2 border-[#FFC107]/50 group-hover:scale-105 transition-transform" />
                   <div className="min-w-0 flex-1">
-                    <h3 className="font-display text-sm font-extrabold text-white truncate">{simApp.name}</h3>
+                    <h3 className="font-display text-sm font-extrabold text-white truncate">{simApp.name} 🎮</h3>
                     <div className="flex items-center gap-2 mt-1">
-                      <span className="text-xs font-bold text-yellow-300">⭐ {simApp.rating?.toFixed(1) || "4.8"}</span>
-                      <span className="text-xs text-white/70">• {simApp.size || "45 MB"}</span>
+                      <span className="text-xs font-bold text-[#FFC107]">⭐ {simApp.rating?.toFixed(1) || "4.8"}</span>
+                      <span className="text-xs text-white/70">• {simApp.size || "45 MB"} 📦</span>
                     </div>
                     {simApp.signup_bonus && (
-                      <span className="inline-block mt-1 rounded-full bg-yellow-400/20 px-2 py-0.5 text-[10px] font-bold text-yellow-200 border border-yellow-400/30">
-                        🎁 {simApp.signup_bonus}
+                      <span className="inline-block mt-1.5 rounded-full bg-[#FFC107]/20 px-2.5 py-0.5 text-[10px] font-black text-[#FFC107] border border-[#FFC107]/40 shadow-sm">
+                        🎁 {simApp.signup_bonus} 🎉
                       </span>
                     )}
                   </div>
-                  <RippleButton onClick={(e) => { e.stopPropagation(); handleDownload(simApp); }} className="rounded-full bg-[#E5E7EB] px-4 py-2 text-xs font-bold text-[#111111] shadow-md hover:bg-white shrink-0">
-                    Download
+                  <RippleButton onClick={(e) => { e.stopPropagation(); handleDownload(simApp); }} className="rounded-full bg-gradient-to-r from-[#059669] to-[#047857] px-4 py-2 text-xs font-black text-white shadow-md hover:opacity-95 shrink-0">
+                    Download 📥
                   </RippleButton>
                 </div>
               ))}
@@ -342,29 +348,29 @@ export default function AppDetail() {
         )}
 
         {/* STRONG GAME-SPECIFIC SEO DESCRIPTION */}
-        <div className="rounded-[24px] border border-white/20 bg-[#007A48] p-5 shadow-xl space-y-3 text-white">
-          <h2 className="font-display text-base font-bold text-yellow-200 flex items-center gap-2">
-            <Zap className="h-4 w-4 fill-yellow-200" /> About {app.name} on newyono.games
+        <div className="rounded-[28px] border border-[#FFC107]/30 bg-[#064E3B] p-5 shadow-2xl space-y-3 text-white">
+          <h2 className="font-display text-base font-extrabold text-[#FFC107] flex items-center gap-2">
+            <Zap className="h-5 w-5 fill-[#FFC107]" /> About {app.name} on newyono.games 🚀
           </h2>
           <p className="text-xs sm:text-sm leading-relaxed text-white/95">
-            Welcome to the official download page for <strong>{app.name}</strong> on newyono.games — India's premier Yono Games, Rummy Games &amp; Slots Games platform. Experience the thrill of real cash gaming with a massive <strong>₹501 sign-up bonus</strong>, instant UPI withdrawals, and buttery-smooth 60 FPS performance in 2026. Discover why millions of players trust {app.name} for secure card games, slots, and daily rewards.
+            Welcome to the official download page for <strong>{app.name}</strong> on newyono.games — India's premier Yono Games, Rummy Games &amp; Slots Games platform 🎮. Experience the thrill of real cash gaming with a massive <strong>₹501 sign-up bonus</strong>, instant UPI withdrawals, and buttery-smooth 60 FPS performance in 2026 💰. Discover why millions of players trust {app.name} for secure card games, slots, and daily rewards 👑.
           </p>
           <div className="flex flex-wrap gap-1.5 pt-1">
-            <span className="rounded-full border border-white/20 bg-[#00643A] px-3 py-1 text-xs font-medium text-white/95">#{app.name} APK Download</span>
-            <span className="rounded-full border border-white/20 bg-[#00643A] px-3 py-1 text-xs font-medium text-white/95">#{app.name} ₹501 Bonus</span>
-            <span className="rounded-full border border-white/20 bg-[#00643A] px-3 py-1 text-xs font-medium text-white/95">Yono Rummy & Slots</span>
+            <span className="rounded-full border border-white/20 bg-[#032D1F] px-3 py-1 text-xs font-medium text-white/95">#{app.name} APK Download 📥</span>
+            <span className="rounded-full border border-white/20 bg-[#032D1F] px-3 py-1 text-xs font-medium text-white/95">#{app.name} ₹501 Bonus 🎁</span>
+            <span className="rounded-full border border-white/20 bg-[#00643A] px-3 py-1 text-xs font-medium text-white/95">Yono Rummy &amp; Slots 🎰</span>
           </div>
         </div>
 
         {/* KEYWORDS CLOUD */}
-        <div className="rounded-[20px] border border-white/20 bg-[#007A48] p-5 shadow-xl space-y-3 text-white">
+        <div className="rounded-[24px] border border-[#FFC107]/30 bg-[#064E3B] p-5 shadow-2xl space-y-3 text-white">
           <div className="flex items-center gap-2">
-            <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-white text-[#00925B]">
-              <Flame className="h-4 w-4 fill-[#00925B]" />
+            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#FFC107] text-[#063322]">
+              <Flame className="h-4 w-4 fill-[#063322]" />
             </span>
             <div>
-              <h3 className="font-display text-sm font-bold text-white">Top Yono &amp; Rummy Game Keywords</h3>
-              <p className="text-xs text-white/85">Click any keyword to search and explore</p>
+              <h3 className="font-display text-sm font-extrabold text-white">Top Yono &amp; Rummy Game Keywords 🔥</h3>
+              <p className="text-xs text-white/85">Click any keyword to search and explore 🔍</p>
             </div>
           </div>
           <div className="flex flex-wrap gap-1.5 pt-1">
@@ -372,9 +378,9 @@ export default function AppDetail() {
               <button
                 key={i}
                 onClick={() => handleKeywordClick(kw)}
-                className="rounded-full border border-white/20 bg-[#00643A] px-3 py-1 text-xs font-medium text-white/95 hover:bg-white hover:text-[#00925B] transition-colors text-left cursor-pointer"
+                className="rounded-full border border-white/20 bg-[#032D1F] px-3 py-1 text-xs font-medium text-white/95 hover:bg-[#FFC107] hover:text-[#063322] transition-colors text-left cursor-pointer shadow-sm"
               >
-                #{kw}
+                #{kw} ✨
               </button>
             ))}
           </div>

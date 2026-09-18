@@ -17,9 +17,7 @@ export default function AppDetail() {
   const location = useLocation();
   const navigate = useNavigate();
   
-  // Safe identifier extraction from URL path if params are empty
-  const pathSegments = location.pathname.split("/").filter(Boolean);
-  const identifier = slug || id || pathSegments[pathSegments.length - 1];
+  const identifier = slug || id;
 
   const cachedData = typeof window !== "undefined" ? localStorage.getItem("yono_apps_perm_cache") : null;
   const parsedCache = useMemo(() => {
@@ -241,7 +239,7 @@ export default function AppDetail() {
           <p className="mt-2 text-center text-[11px] text-[#777777]">🔒 Safe & virus-scanned • 500,013 downloads</p>
         </div>
 
-        {/* PEOPLE ALSO LIKE SECTION (20 GAMES) */}
+        {/* PEOPLE ALSO LIKE SECTION */}
         {similarApps.length > 0 && (
           <div className="rounded-[24px] border border-[#E5E7EB] bg-white p-5 shadow-sm space-y-4">
             <div className="flex items-center gap-2">

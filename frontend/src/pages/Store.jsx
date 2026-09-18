@@ -1,6 +1,6 @@
 import { useDeferredValue, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Search, Send, Download, Sparkles, TrendingUp, ShieldCheck, ArrowDownWideNarrow, X, Flame } from "lucide-react";
+import { Search, Send, Download, Sparkles, TrendingUp, ShieldCheck, ArrowDownWideNarrow, X, Flame, Gift } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import api, { API, resolveUrl } from "@/lib/api";
@@ -8,6 +8,8 @@ import SEOHead from "@/components/SEOHead";
 import { useSettings, sectionEnabled } from "@/context/SettingsContext";
 import Header from "@/components/Header";
 import AppCard from "@/components/AppCard";
+import AppIcon from "@/components/AppIcon";
+import RippleButton from "@/components/RippleButton";
 import RummyFeatures from "@/components/RummyFeatures";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import { StoreSkeleton } from "@/components/Skeletons";
@@ -362,22 +364,91 @@ export default function Store() {
           <StoreSkeleton />
         ) : (
           <>
-            {/* TOP 3 GAMES SECTION RESTORED */}
+            {/* TOP 3 GAMES PODIUM DESIGN (#1 UPAR PROMINENT, #2 & #3 SIDE BY SIDE) */}
             {isDefaultView && (
-              <section className="space-y-3">
+              <section className="space-y-3 mb-2">
                 <div className="flex items-center gap-2">
                   <Sparkles className="h-4 w-4 text-[#FFC107]" />
                   <h2 className="font-display text-base font-bold text-[#111111]">Top 3 Games</h2>
                 </div>
-                <div className="space-y-3">
-                  {(data?.featured || data?.apps || []).slice(0, 3).map((app, i) => (
-                    <AppCard key={app.id} app={app} index={i} onDownload={handleDownload} />
-                  ))}
-                </div>
+                {(() => {
+                  const top3 = (data?.featured || data?.apps || []).slice(0, 3);
+                  if (top3.length === 0) return null;
+                  const first = top3[0];
+                  const second = top3[1];
+                  const third = top3[2];
+                  return (
+                    <div className="space-y-3">
+                      {/* #1 Game Card (Prominent Top) */}
+                      {first && (
+                        <div
+                          onClick={() => navigate(`/${first.slug || first.id}`, { state: { app: first } })}
+                          className="relative flex cursor-pointer items-center gap-4 rounded-[22px] border-2 border-[#FFC107] bg-gradient-to-r from-[#FFF8E1] to-white p-4 shadow-md transition-shadow hover:shadow-lg"
+                        >
+                          <div className="absolute -left-2 -top-2 z-20 flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-extrabold text-white shadow-md bg-[#FFC107] border-2 border-white">
+                            <span>1</span>
+                          </div>
+                          <AppIcon src={resolveUrl(first.icon_url)} alt={first.name} className="h-20 w-20 rounded-[18px] object-cover shadow-sm" />
+                          <div className="min-w-0 flex-1">
+                            <h3 className="font-display text-base font-bold text-[#111111] truncate">{first.name}</h3>
+                            <p className="text-xs text-[#777777]">v{first.version || "1.0"} • {first.size || "45 MB"}</p>
+                            {first.signup_bonus && (
+                              <span className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-[#FFC107] px-2.5 py-0.5 text-[10px] font-extrabold text-white shadow-sm">
+                                <Gift className="h-3 w-3" /> Bonus {first.signup_bonus}
+                              </span>
+                            )}
+                          </div>
+                          <RippleButton
+                            onClick={(e) => { e.stopPropagation(); handleDownload(first); }}
+                            className="flex shrink-0 items-center gap-1.5 rounded-full bg-[#FFC107] px-3.5 py-2.5 text-[13px] font-semibold text-[#111111] shadow-md hover:bg-[#FFB300]"
+                          >
+                            <Download className="h-4 w-4" /> Download
+                          </RippleButton>
+                        </div>
+                      )}
+
+                      {/* #2 and #3 Game Cards (Side by Side Below #1) */}
+                      <div className="grid grid-cols-2 gap-2.5">
+                        {[second, third].map((app, idx) => {
+                          if (!app) return null;
+                          const rank = idx + 2;
+                          return (
+                            <div
+                              key={app.id}
+                              onClick={() => navigate(`/${app.slug || app.id}`, { state: { app } })}
+                              className="relative flex flex-col cursor-pointer rounded-[18px] border border-[#E5E7EB] bg-white p-3 shadow-sm hover:shadow-md transition-shadow"
+                            >
+                              <div
+                                className="absolute -left-2 -top-2 z-20 flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-extrabold text-white shadow-md border-2 border-white"
+                                style={{ backgroundColor: rank === 2 ? "#9E9E9E" : "#CD7F32" }}
+                              >
+                                <span>{rank}</span>
+                              </div>
+                              <div className="flex items-center gap-2 mb-2.5">
+                                <AppIcon src={resolveUrl(app.icon_url)} alt={app.name} className="h-12 w-12 rounded-[14px] object-cover shadow-sm shrink-0" />
+                                <div className="min-w-0 flex-1">
+                                  <h4 className="font-display text-xs font-bold text-[#111111] truncate">{app.name}</h4>
+                                  <p className="text-[10px] text-[#777777]">{app.size || "45 MB"}</p>
+                                </div>
+                              </div>
+                              <RippleButton
+                                onClick={(e) => { e.stopPropagation(); handleDownload(app); }}
+                                className="w-full mt-auto flex items-center justify-center gap-1 rounded-full bg-[#FFC107] py-2 text-[11px] font-semibold text-[#111111] shadow-sm hover:bg-[#FFB300]"
+                              >
+                                <Download className="h-3 w-3" /> Get
+                              </RippleButton>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })()}
               </section>
             )}
 
-            {finalOrder.map((id) => id !== "reviews" ? renderers[id] : null).filter(Boolean)}
+            {/* Render other enabled sections using finalOrder (excluding FAQ/Legal to prevent duplication) */}
+            {finalOrder.map((id) => (id !== "faq" && id !== "legal") ? renderers[id] : null).filter(Boolean)}
 
             {/* WHAT USERS SAY */}
             {isDefaultView && en("reviews") && <ReviewsSection key="reviews" />}
@@ -425,6 +496,7 @@ export default function Store() {
               </section>
             )}
 
+            {/* SINGLE INSTANCE OF FAQ AND LEGAL AT THE BOTTOM */}
             {isDefaultView && en("winners") && <RedeemBox />}
             {isDefaultView && AdSlot && <AdSlot ads={settings?.ads} />}
             {isDefaultView && en("faq") && <FaqSection key="faq" />}

@@ -394,7 +394,7 @@ export default function Store() {
                             <div className="flex items-center justify-between gap-2">
                               <h3 className="font-display text-xs sm:text-base font-bold text-[#111111] truncate">{first.name}</h3>
                               <div className="flex shrink-0 items-center gap-0.5 rounded-full bg-[#FFF8E1] px-2 py-0.5">
-                                <span className-[11px] sm:text-xs font-semibold text-[#111111]">⭐ {first.rating?.toFixed(1) || "4.9"}</span>
+                                <span className="text-[11px] sm:text-xs font-semibold text-[#111111]">⭐ {first.rating?.toFixed(1) || "4.9"}</span>
                               </div>
                             </div>
                             <p className="mt-0.5 text-[11px] sm:text-xs text-[#777777]">v{first.version || "1.0"} • {first.size || "45 MB"}</p>
@@ -413,7 +413,7 @@ export default function Store() {
                             onClick={(e) => { e.stopPropagation(); handleDownload(first); }}
                             className="flex shrink-0 items-center gap-1 rounded-full bg-[#FFC107] px-3 sm:px-3.5 py-2 sm:py-2.5 text-[11px] sm:text-[13px] font-semibold text-[#111111] shadow-[0_4px_12px_rgba(255,193,7,0.35)] hover:bg-[#FFB300]"
                           >
-                            <Download className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> <span className="hidden xs:inline">Download</span>
+                            <Download className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> Download
                           </RippleButton>
                         </div>
                       )}
@@ -440,9 +440,9 @@ export default function Store() {
                                 <div className="min-w-0 flex-1">
                                   <h4 className="font-display text-[11px] sm:text-xs font-bold text-[#111111] truncate">{app.name}</h4>
                                   <div className="flex items-center gap-0.5 mt-0.5">
-                                    <span className-[10px] font-semibold text-[#111111]">⭐ {app.rating?.toFixed(1) || "4.8"}</span>
+                                    <span className="text-[10px] font-semibold text-[#111111]">⭐ {app.rating?.toFixed(1) || "4.8"}</span>
                                   </div>
-                                  <p className-[10px] text-[#777777] mt-0.5">{app.size || "45 MB"}</p>
+                                  <p className="text-[10px] text-[#777777] mt-0.5">{app.size || "45 MB"}</p>
                                 </div>
                               </div>
                               {app.signup_bonus && (

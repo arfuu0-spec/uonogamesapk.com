@@ -40,6 +40,8 @@ const SORTS = [
 ];
 
 const LANDING_100_KEYWORDS = [
+  "yono games all app", "yono games apk", "all yono games list apk", "yono game apk download for android latest version",
+  "all your game store", "yono app link", "all yono game new", "yono game home", "yono india", "you know game",
   "Yono Games", "Yono Rummy", "Rummy Games", "Money Games", "Casino Games", "Teen Patti Real Cash",
   "New Yono Apps 2026", "Best Rummy App India", "Sign Up Bonus 501", "Instant UPI Withdrawal",
   "Mod APK Download", "Yono VIP Program", "Daily Jackpot Win", "Safe APK Store", "Online Card Games",
@@ -262,9 +264,9 @@ export default function Store() {
   return (
     <div className="app-shell pb-10 bg-[#FAFAFA] text-[#111111] min-h-screen relative">
       <SEOHead
-        title={settings?.seo?.homepage_title || "YONO GAMES - Play and Win | Premium Rummy & Games APK Store"}
-        description={settings?.seo?.homepage_description || "Download the latest Rummy and gaming APK apps for Android free. Fast, safe & verified downloads with sign-up bonuses at YONO GAMES — newyono.games"}
-        keywords={settings?.seo?.homepage_keywords || "yono games, rummy apk, teen patti apk, real cash rummy, apk download, android games, newyono.games"}
+        title="Yono Games All App & APK Download List 2026 - Yono Games APK Store"
+        description="Looking for yono games all app or yono games apk? Download the latest Yono Rummy & Casino games with instant UPI withdrawal and sign-up bonus on newyono.games."
+        keywords="yono games all app, yono games apk, all yono games list apk, yono games, rummy apk, newyono.games"
         canonical="https://newyono.games/"
         image="/logo-v2.png"
       />
@@ -283,7 +285,7 @@ export default function Store() {
       </div>
 
       <div className="px-4 pt-4 text-center">
-        <h1 className="font-display text-lg font-bold text-[#111111]">Welcome to YONO GAMES 👑</h1>
+        <h1 className="font-display text-lg font-bold text-[#111111]">Yono Games All App &amp; APK Download List 👑</h1>
         <p className="text-xs text-[#777777]">PLAY &amp; WIN • SINCE 2024 🎮</p>
       </div>
 
@@ -481,18 +483,18 @@ export default function Store() {
             {/* WHAT USERS SAY (REVIEWS) */}
             {isDefaultView && en("reviews") && <ReviewsSection key="reviews" />}
 
-            {/* SEO DESCRIPTION */}
+            {/* SEO DESCRIPTION WITH EXACT TARGET KEYWORDS */}
             {isDefaultView && (
               <section className="space-y-3 rounded-[20px] border border-[#E5E7EB] bg-white p-5 shadow-[0_6px_20px_rgba(0,0,0,0.03)]">
                 <h2 className="font-display text-base font-bold text-[#111111]">
-                  All Yono Games - Discover New Yono Apps & Play Top Gaming Apps 🚀
+                  Yono Games All App &amp; APK Download List - Discover New Yono Apps 🚀
                 </h2>
                 <div className="space-y-3 text-sm leading-relaxed text-[#555555]">
                   <p>
-                    Welcome to <strong>newyono.games</strong> - India's most trusted gaming platform in 2026. Get up to ₹501 sign-up bonus instantly, enjoy smooth 60 FPS gameplay, secure withdrawals, and access the latest 2026 Yono APK versions safely 💎.
+                    Looking for <strong>yono games all app</strong> or <strong>yono games apk</strong>? Welcome to <strong>newyono.games</strong> - India's most trusted gaming platform in 2026. Get up to ₹501 sign-up bonus instantly, enjoy smooth 60 FPS gameplay, secure withdrawals, and access the latest 2026 Yono APK versions safely 💎.
                   </p>
                   <p>
-                    That's exactly what <strong>All New Yono Apps</strong> aims to deliver. Our platform brings together a collection of games that combine classic gameplay with modern mobile experiences 🎮. From popular card titles like <strong>Yono Rummy</strong> to the latest slot and arcade apps gaining popularity in India, every game listed here is chosen carefully for its entertainment value 🏆.
+                    That's exactly what the complete <strong>all yono games list apk</strong> aims to deliver. Our platform brings together a collection of games that combine classic gameplay with modern mobile experiences 🎮. From popular card titles like <strong>Yono Rummy</strong> to the latest slot and arcade apps gaining popularity in India, every game listed here is chosen carefully for its entertainment value 🏆.
                   </p>
                 </div>
               </section>

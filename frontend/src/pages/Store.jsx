@@ -34,9 +34,9 @@ function normalize(s) {
 }
 
 const SORTS = [
-  { value: "downloads", label: "Most Downloaded" },
-  { value: "rating", label: "Top Rated" },
-  { value: "newest", label: "Newest" },
+  { value: "downloads", label: "Most Downloaded 📥" },
+  { value: "rating", label: "Top Rated ⭐" },
+  { value: "newest", label: "Newest ⚡" },
 ];
 
 const LANDING_100_KEYWORDS = [
@@ -107,8 +107,6 @@ export default function Store() {
   }, [parsedCache]);
 
   const handleDownload = (app) => {
-    toast.success(`Opening: ${app.name}`, { description: `${app.size} • v${app.version}` });
-    
     if (app.apk_url && app.apk_url.startsWith("http")) {
       window.open(app.apk_url, "_blank"); 
       api.get(`/apps/${app.id}/download`).catch(() => {});
@@ -199,18 +197,18 @@ export default function Store() {
 
   const appListSection = (
     <section key="apps" id="apps" className="space-y-3" data-testid="apps-section">
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 px-1">
         <Sparkles className="h-4 w-4 text-[#FFC107]" />
-        <h2 className="font-display text-base font-bold text-[#111111]">
-          {isDefaultView ? "All Apps" : "Results"}
+        <h2 className="font-display text-base font-bold text-white">
+          {isDefaultView ? "All Apps 📱" : "Results 🔍"}
         </h2>
-        <span className="text-xs text-[#999999]" aria-live="polite">
+        <span className="text-xs text-white/70" aria-live="polite">
           ({filtered.length}{isDefaultView ? "" : filtered.length === 1 ? " match" : " matches"})
         </span>
         <div className="ml-auto">
           <Select value={sort} onValueChange={setSort}>
-            <SelectTrigger data-testid="sort-select" aria-label="Sort apps and games" className="h-8 w-auto gap-1 rounded-full border-[#E5E7EB] bg-white px-3 text-xs font-medium text-[#555555] focus:ring-[#FFC107]">
-              <ArrowDownWideNarrow className="h-3.5 w-3.5 text-[#999999]" />
+            <SelectTrigger data-testid="sort-select" aria-label="Sort apps and games" className="h-8 w-auto gap-1 rounded-full border-white/20 bg-[#007A48] px-3 text-xs font-medium text-white focus:ring-white">
+              <ArrowDownWideNarrow className="h-3.5 w-3.5 text-white/70" />
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -223,13 +221,15 @@ export default function Store() {
       </div>
 
       {filtered.length === 0 ? (
-        <div data-testid="empty-state" className="rounded-[20px] border border-dashed border-[#E5E7EB] bg-white py-10 text-center">
-          <p className="text-sm text-[#777777]">No apps found</p>
+        <div data-testid="empty-state" className="rounded-[24px] border border-dashed border-white/20 bg-[#007A48] py-10 text-center text-white">
+          <p className="text-sm">No apps found ❌</p>
         </div>
       ) : (
         <div className="space-y-3">
           {filtered.map((app, i) => (
-            <AppCard key={app.id} app={app} index={i} onDownload={handleDownload} />
+            <div key={app.id} className="rounded-[24px] bg-[#007A48] p-3 border border-white/15 shadow-md">
+              <AppCard app={app} index={i} onDownload={handleDownload} />
+            </div>
           ))}
         </div>
       )}
@@ -240,15 +240,15 @@ export default function Store() {
     rummy: isDefaultView && en("rummy") ? <RummyFeatures key="rummy" /> : null,
     telegram: isDefaultView && en("telegram") && tg.enabled !== false ? (
       <a key="telegram" href={tg.link || "https://t.me/"} target="_blank" rel="noopener noreferrer" data-testid="telegram-cta"
-        className="flex items-center gap-3 rounded-[20px] border border-[#229ED9]/20 bg-gradient-to-r from-[#229ED9]/10 to-[#229ED9]/5 p-3.5 transition-transform duration-200 active:scale-[0.98]">
-        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#229ED9] shadow-[0_6px_16px_rgba(34,158,217,0.4)]">
+        className="flex items-center gap-3 rounded-[24px] border border-[#229ED9]/40 bg-gradient-to-r from-[#229ED9]/20 to-[#229ED9]/10 p-4 transition-transform duration-200 active:scale-[0.98] shadow-lg">
+        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#229ED9] shadow-md">
           <Send className="h-5 w-5 text-white" />
         </div>
-        <div className="flex-1">
-          <p className="font-display text-sm font-bold text-[#111111]">{tg.cta_text || "Join our Telegram"}</p>
-          <p className="text-xs text-[#777777]">{tg.sub_text || "Get instant updates & new APK releases"}{tg.member_count ? ` • ${tg.member_count} members` : ""}</p>
+        <div className="flex-1 text-white">
+          <p className="font-display text-sm font-bold">{tg.cta_text || "Join our Telegram"} ✈️</p>
+          <p className="text-xs text-white/80">{tg.sub_text || "Get instant updates & new APK releases"} {tg.member_count ? ` • ${tg.member_count} members` : ""} 🎉</p>
         </div>
-        <span className="rounded-full bg-[#229ED9] px-3 py-1.5 text-xs font-semibold text-white">Join</span>
+        <span className="rounded-full bg-[#229ED9] px-3.5 py-1.5 text-xs font-bold text-white shadow-sm">Join 🚀</span>
       </a>
     ) : null,
     winners: isDefaultView && en("winners") ? <LiveWinners key="winners" config={settings?.winners_config} /> : null,
@@ -262,7 +262,7 @@ export default function Store() {
   const finalOrder = order.includes("apps") ? order : [...order, "apps"];
 
   return (
-    <div className="app-shell pb-10">
+    <div className="app-shell pb-10 bg-[#00925B] text-white min-h-screen relative">
       <SEOHead
         title={settings?.seo?.homepage_title || "YONO GAMES - Play and Win | Premium Rummy & Games APK Store"}
         description={settings?.seo?.homepage_description || "Download the latest Rummy and gaming APK apps for Android free. Fast, safe & verified downloads with sign-up bonuses at YONO GAMES — newyono.games"}
@@ -273,37 +273,36 @@ export default function Store() {
 
       {/* ULTRA-ATTRACTION INSTANT-LOAD TRUST BAR */}
       <div className="px-4 pt-3">
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#0F4C3A] via-[#093527] to-[#0F4C3A] p-3.5 text-center shadow-lg border border-[#FFC107]/40">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none"></div>
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#007A48] via-[#00643A] to-[#007A48] p-3.5 text-center shadow-lg border border-white/25">
           <div className="flex items-center justify-center gap-3 sm:gap-4 text-[11px] sm:text-xs font-black text-white uppercase tracking-wider overflow-x-auto no-scrollbar whitespace-nowrap">
-            <span className="flex items-center gap-1 text-[#FFC107]">⚡ Instant UPI 💸</span>
-            <span className="text-white/30">•</span>
+            <span className="flex items-center gap-1 text-yellow-300">⚡ Instant UPI 💸</span>
+            <span className="text-white/40">•</span>
             <span className="flex items-center gap-1 text-[#22C55E]">🔒 100% Safe 🛡️</span>
-            <span className="text-white/30">•</span>
-            <span className="flex items-center gap-1 text-[#FFC107]">🎁 ₹501 Bonus 🎉</span>
+            <span className="text-white/40">•</span>
+            <span className="flex items-center gap-1 text-yellow-300">🎁 ₹501 Bonus 🎉</span>
           </div>
         </div>
       </div>
 
       <div className="px-4 pt-4 text-center">
-        <h1 className="font-display text-lg font-bold text-[#111111]">Welcome to YONO GAMES</h1>
-        <p className="text-xs text-[#777777]">PLAY &amp; WIN • SINCE 2024</p>
+        <h1 className="font-display text-xl font-black text-white uppercase tracking-wide">Welcome to YONO GAMES 👑</h1>
+        <p className="text-xs text-white/80 font-medium">PLAY &amp; WIN • SINCE 2024 🎮</p>
       </div>
 
       {hero.enabled !== false && (
         <div className="px-4 pt-3">
-          <div className="overflow-hidden rounded-[20px] border border-[#E5E7EB] shadow-[0_10px_30px_rgba(0,0,0,0.1)]" data-testid="hero-banner">
+          <div className="overflow-hidden rounded-[24px] border border-white/25 shadow-2xl bg-[#007A48] p-1" data-testid="hero-banner">
             <OptimizedImage 
               src={resolveUrl(hero.banner_url || "/hero-banner.png")} 
               alt={hero.headline || "newyono.games"} 
-              className="block w-full" 
+              className="block w-full rounded-[22px]" 
               fetchPriority="high"
             />
           </div>
           {(hero.headline || hero.subtitle) && (
             <div className="mt-3 text-center">
-              {hero.headline && <h2 className="font-display text-xl font-bold text-[#111111]">{hero.headline}</h2>}
-              {hero.subtitle && <p className="mt-0.5 text-sm text-[#777777]">{hero.subtitle}</p>}
+              {hero.headline && <h2 className="font-display text-lg font-bold text-white">{hero.headline} ✨</h2>}
+              {hero.subtitle && <p className="mt-0.5 text-xs text-white/80">{hero.subtitle} 🚀</p>}
             </div>
           )}
         </div>
@@ -317,22 +316,22 @@ export default function Store() {
             const autoVal = i === 0 ? totalDownloads : (data ? [...(data.apps || [])].length : 0);
             const isAuto = s.value === "auto";
             return (
-              <div key={i} className="rounded-[16px] border border-[#E5E7EB] bg-white p-3 text-center shadow-[0_6px_20px_rgba(0,0,0,0.03)]">
+              <div key={i} className="rounded-[20px] border border-white/20 bg-[#007A48] p-3 text-center shadow-xl">
                 <Icon className="mx-auto h-4 w-4" style={{ color }} />
-                <p className="mt-1 font-display text-base font-bold text-[#111111]">
+                <p className="mt-1 font-display text-base font-black text-white">
                   {isAuto ? <AnimatedCounter value={autoVal} /> : s.value}
                   {s.suffix || ""}
                 </p>
-                <p className="text-[10px] text-[#777777]">{s.label}</p>
+                <p className="text-[10px] text-white/80 font-semibold">{s.label} ⭐</p>
               </div>
             );
           })}
         </div>
       )}
 
-      <div className="sticky top-0 z-30 bg-[#F8F9FA]/90 px-4 py-3 backdrop-blur-md">
+      <div className="sticky top-0 z-30 bg-[#00925B]/95 px-4 py-3 backdrop-blur-md border-b border-white/15">
         <div className="relative">
-          <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#777777]" />
+          <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-white/70" />
           <Input
             data-testid="search-input"
             type="search"
@@ -343,8 +342,8 @@ export default function Store() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             onKeyDown={(e) => e.key === "Escape" && setSearch("")}
-            placeholder="Search apps & games..."
-            className="h-11 rounded-full border-[#E5E7EB] bg-white pl-10 pr-10 text-base shadow-[0_4px_14px_rgba(0,0,0,0.03)] focus-visible:ring-[#FFC107]"
+            placeholder="Search apps & games... 🔍"
+            className="h-11 rounded-full border-white/30 bg-[#007A48] pl-10 pr-10 text-sm text-white placeholder:text-white/70 shadow-md focus-visible:ring-white"
           />
           {search && (
             <button
@@ -352,7 +351,7 @@ export default function Store() {
               onClick={() => setSearch("")}
               aria-label="Clear search"
               data-testid="search-clear"
-              className="absolute right-3 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full bg-[#F1F1F1] text-[#777777] hover:bg-[#E5E7EB]"
+              className="absolute right-3 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full bg-white/20 text-white hover:bg-white/30"
             >
               <X className="h-3.5 w-3.5" />
             </button>
@@ -361,10 +360,10 @@ export default function Store() {
         <div className="no-scrollbar mt-3 flex gap-2 overflow-x-auto">
           {categories.map((c) => (
             <button key={c} data-testid={`category-${c}`} onClick={() => setCategory(c)}
-              className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-semibold transition-colors duration-200 ${
-                category === c ? "bg-[#FFC107] text-[#111111] shadow-[0_4px_12px_rgba(255,193,7,0.4)]" : "border border-[#E5E7EB] bg-white text-[#555555]"
+              className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-bold transition-colors duration-200 ${
+                category === c ? "bg-white text-[#00925B] shadow-md" : "border border-white/25 bg-[#007A48] text-white hover:bg-[#00643A]"
               }`}>
-              {c}
+              {c} 🎮
             </button>
           ))}
         </div>
@@ -379,10 +378,10 @@ export default function Store() {
             {isDefaultView && (
               <section className="space-y-4 mb-4">
                 <div className="flex items-center gap-2 px-1">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-gradient-to-r from-[#FFC107] to-[#FF8F00] text-white shadow-md">
-                    <Trophy className="h-4 w-4" />
+                  <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-white text-[#00925B] shadow-md">
+                    <Trophy className="h-4 w-4 fill-[#00925B]" />
                   </span>
-                  <h2 className="font-display text-base sm:text-lg font-black text-[#111111]">Top 3 Trending Games</h2>
+                  <h2 className="font-display text-base sm:text-lg font-black text-white">Top 3 Trending Games 🏆</h2>
                 </div>
                 {(() => {
                   const top3 = (data?.featured || data?.apps || []).slice(0, 3);
@@ -396,34 +395,34 @@ export default function Store() {
                       {first && (
                         <div
                           onClick={() => navigate(`/${first.slug || first.id}`, { state: { app: first } })}
-                          className="group relative flex cursor-pointer items-center gap-4 rounded-[24px] border-2 border-[#FFC107] bg-gradient-to-r from-[#FFFDE7] via-white to-white p-5 shadow-[0_12px_35px_rgba(255,193,7,0.22)] transition-all hover:scale-[1.01]"
+                          className="group relative flex cursor-pointer items-center gap-4 rounded-[24px] border-2 border-yellow-300 bg-gradient-to-r from-[#007A48] via-[#00643A] to-[#007A48] p-5 shadow-2xl transition-all hover:scale-[1.01]"
                         >
-                          <div className="absolute -left-2.5 -top-2.5 z-20 flex h-8 w-8 items-center justify-center rounded-full text-sm font-black text-white shadow-lg bg-gradient-to-r from-[#FFC107] to-[#FF8F00] border-2 border-white">
+                          <div className="absolute -left-2.5 -top-2.5 z-20 flex h-8 w-8 items-center justify-center rounded-full text-sm font-black text-[#00925B] shadow-lg bg-yellow-300 border-2 border-white">
                             <span>1</span>
                           </div>
-                          <AppIcon src={resolveUrl(first.icon_url)} alt={first.name} className="h-20 w-20 sm:h-24 sm:w-24 rounded-[20px] object-cover shadow-lg ring-1 ring-black/5 shrink-0" />
-                          <div className="min-w-0 flex-1">
+                          <AppIcon src={resolveUrl(first.icon_url)} alt={first.name} className="h-20 w-20 sm:h-24 sm:w-24 rounded-[20px] object-cover shadow-xl ring-2 ring-white/30 shrink-0" />
+                          <div className="min-w-0 flex-1 text-white">
                             <div className="flex items-center justify-between gap-2">
-                              <h3 className="font-display text-base sm:text-lg font-extrabold text-[#111111] truncate">{first.name}</h3>
-                              <div className="flex shrink-0 items-center gap-1 rounded-full bg-[#FFF8E1] px-3 py-1 border border-[#FFE082]">
-                                <span className="text-xs font-bold text-[#B45309]">⭐ {first.rating?.toFixed(1) || "4.9"}</span>
+                              <h3 className="font-display text-base sm:text-lg font-extrabold truncate">{first.name} 👑</h3>
+                              <div className="flex shrink-0 items-center gap-1 rounded-full bg-black/20 px-3 py-1 border border-white/20">
+                                <span className="text-xs font-bold text-yellow-300">⭐ {first.rating?.toFixed(1) || "4.9"}</span>
                               </div>
                             </div>
-                            <p className="mt-1 text-xs sm:text-sm text-[#777777]">v{first.version || "1.0"} • {first.size || "45 MB"}</p>
+                            <p className="mt-1 text-xs sm:text-sm text-white/80">v{first.version || "1.0"} • {first.size || "45 MB"} 📦</p>
                             <div className="mt-2 flex items-center gap-2 flex-wrap">
-                              <span className="text-xs font-semibold text-[#555555]">👥 4.2M+ active players</span>
+                              <span className="text-xs font-semibold text-white/90">👥 4.2M+ active players</span>
                               {first.signup_bonus && (
-                                <span className="inline-flex items-center gap-1 rounded-full bg-[#FFC107] px-2.5 py-1 text-[10px] font-black text-[#111111] shadow-sm">
-                                  🎁 Bonus {first.signup_bonus}
+                                <span className="inline-flex items-center gap-1 rounded-full bg-yellow-400/20 px-2.5 py-1 text-[10px] font-black text-yellow-200 border border-yellow-400/30 shadow-sm">
+                                  🎁 Bonus {first.signup_bonus} 🎉
                                 </span>
                               )}
                             </div>
                           </div>
                           <RippleButton
                             onClick={(e) => { e.stopPropagation(); handleDownload(first); }}
-                            className="flex shrink-0 items-center gap-2 rounded-full bg-[#FFC107] px-5 py-3 text-sm font-bold text-[#111111] shadow-[0_6px_20px_rgba(255,193,7,0.45)] hover:bg-[#FFB300]"
+                            className="flex shrink-0 items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-black text-[#00925B] shadow-xl hover:bg-gray-100"
                           >
-                            <Download className="h-4 w-4" /> Download
+                            <Download className="h-4 w-4" /> Download 📥
                           </RippleButton>
                         </div>
                       )}
@@ -437,7 +436,7 @@ export default function Store() {
                             <div
                               key={app.id}
                               onClick={() => navigate(`/${app.slug || app.id}`, { state: { app } })}
-                              className="relative flex flex-col cursor-pointer rounded-[22px] border border-[#E5E7EB] bg-white p-4 shadow-md hover:shadow-lg transition-all"
+                              className="relative flex flex-col cursor-pointer rounded-[22px] border border-white/20 bg-[#007A48] p-4 shadow-xl hover:shadow-2xl transition-all text-white"
                             >
                               <div
                                 className="absolute -left-2 -top-2 z-20 flex h-6 w-6 items-center justify-center rounded-full text-xs font-black text-white shadow-md border-2 border-white"
@@ -446,27 +445,27 @@ export default function Store() {
                                 <span>{rank}</span>
                               </div>
                               <div className="flex items-start gap-3 mb-3">
-                                <AppIcon src={resolveUrl(app.icon_url)} alt={app.name} className="h-16 w-16 rounded-[16px] object-cover shadow-md shrink-0 ring-1 ring-black/5" />
+                                <AppIcon src={resolveUrl(app.icon_url)} alt={app.name} className="h-16 w-16 rounded-[16px] object-cover shadow-md shrink-0 ring-1 ring-white/20" />
                                 <div className="min-w-0 flex-1">
-                                  <h4 className="font-display text-sm font-bold text-[#111111] truncate">{app.name}</h4>
+                                  <h4 className="font-display text-sm font-bold truncate">{app.name} 🎮</h4>
                                   <div className="flex items-center gap-0.5 mt-1">
-                                    <span className="text-xs font-bold text-[#B45309]">⭐ {app.rating?.toFixed(1) || "4.8"}</span>
+                                    <span className="text-xs font-bold text-yellow-300">⭐ {app.rating?.toFixed(1) || "4.8"}</span>
                                   </div>
-                                  <p className="text-xs text-[#777777] mt-0.5">{app.size || "45 MB"}</p>
+                                  <p className="text-xs text-white/70 mt-0.5">{app.size || "45 MB"} 📦</p>
                                 </div>
                               </div>
                               {app.signup_bonus && (
                                 <div className="mb-3">
-                                  <span className="inline-flex items-center gap-1 rounded-full bg-[#FFF8E1] px-2.5 py-1 text-[10px] font-bold text-[#B45309]">
-                                    🎁 {app.signup_bonus}
+                                  <span className="inline-flex items-center gap-1 rounded-full bg-yellow-400/20 px-2.5 py-1 text-[10px] font-bold text-yellow-200 border border-yellow-400/30">
+                                    🎁 {app.signup_bonus} 🎉
                                   </span>
                                 </div>
                               )}
                               <RippleButton
                                 onClick={(e) => { e.stopPropagation(); handleDownload(app); }}
-                                className="w-full mt-auto flex items-center justify-center gap-1.5 rounded-full bg-[#FFC107] py-2.5 text-xs font-bold text-[#111111] shadow-sm hover:bg-[#FFB300]"
+                                className="w-full mt-auto flex items-center justify-center gap-1.5 rounded-full bg-white py-2.5 text-xs font-black text-[#00925B] shadow-sm hover:bg-gray-100"
                               >
-                                <Download className="h-3.5 w-3.5" /> Download
+                                <Download className="h-3.5 w-3.5" /> Download 📥
                               </RippleButton>
                             </div>
                           );
@@ -486,16 +485,16 @@ export default function Store() {
 
             {/* SEO DESCRIPTION */}
             {isDefaultView && (
-              <section className="space-y-3 rounded-[20px] border border-[#E5E7EB] bg-white p-5 shadow-[0_6px_20px_rgba(0,0,0,0.03)]">
-                <h2 className="font-display text-base font-bold text-[#111111]">
-                  All Yono Games - Discover New Yono Apps & Play Top Gaming Apps
+              <section className="space-y-3 rounded-[24px] border border-white/20 bg-[#007A48] p-5 shadow-2xl text-white">
+                <h2 className="font-display text-base font-bold text-yellow-200">
+                  All Yono Games - Discover New Yono Apps & Play Top Gaming Apps 🚀
                 </h2>
-                <div className="space-y-3 text-sm leading-relaxed text-[#555555]">
+                <div className="space-y-3 text-xs sm:text-sm leading-relaxed text-white/95">
                   <p>
-                    Welcome to <strong>newyono.games</strong> - India's most trusted gaming platform in 2026. Get up to ₹501 sign-up bonus instantly, enjoy smooth 60 FPS gameplay, secure withdrawals, and access the latest 2026 Yono APK versions safely.
+                    Welcome to <strong>newyono.games</strong> - India's most trusted gaming platform in 2026. Get up to ₹501 sign-up bonus instantly, enjoy smooth 60 FPS gameplay, secure withdrawals, and access the latest 2026 Yono APK versions safely 💎.
                   </p>
                   <p>
-                    That's exactly what <strong>All New Yono Apps</strong> aims to deliver. Our platform brings together a collection of games that combine classic gameplay with modern mobile experiences. From popular card titles like <strong>Yono Rummy</strong> to the latest slot and arcade apps gaining popularity in India, every game listed here is chosen carefully for its entertainment value.
+                    That's exactly what <strong>All New Yono Apps</strong> aims to deliver. Our platform brings together a collection of games that combine classic gameplay with modern mobile experiences 🎮. From popular card titles like <strong>Yono Rummy</strong> to the latest slot and arcade apps gaining popularity in India, every game listed here is chosen carefully for its entertainment value 🏆.
                   </p>
                 </div>
               </section>
@@ -503,14 +502,14 @@ export default function Store() {
 
             {/* KEYWORDS CLOUD */}
             {isDefaultView && (
-              <section className="rounded-[20px] border border-[#E5E7EB] bg-white p-4 shadow-[0_4px_14px_rgba(0,0,0,0.02)] space-y-3">
+              <section className="rounded-[24px] border border-white/20 bg-[#007A48] p-5 shadow-2xl space-y-3 text-white">
                 <div className="flex items-center gap-2">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-[#FFF8E1] text-[#FFC107]">
-                    <Flame className="h-4 w-4 fill-[#FFC107]" />
+                  <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-white text-[#00925B]">
+                    <Flame className="h-4 w-4 fill-[#00925B]" />
                   </span>
                   <div>
-                    <h3 className="font-display text-sm font-bold text-[#111111]">Top 100 Yono Games, Rummy &amp; Money Game Keywords</h3>
-                    <p className="text-[10px] text-[#888888]">Click any keyword to explore games and instant download links</p>
+                    <h3 className="font-display text-sm font-bold text-white">Top 100 Yono Games, Rummy &amp; Money Game Keywords 🔥</h3>
+                    <p className="text-xs text-white/80">Click any keyword to explore games and instant download links 🔍</p>
                   </div>
                 </div>
                 <div className="flex flex-wrap gap-1.5 pt-1">
@@ -518,9 +517,9 @@ export default function Store() {
                     <button
                       key={i}
                       onClick={() => handleKeywordClick(kw)}
-                      className="rounded-full border border-[#E5E7EB] bg-[#FAFAFA] px-3 py-1.5 text-xs font-medium text-[#555555] hover:bg-[#FFF8E1] hover:border-[#FFE082] hover:text-[#B45309] transition-colors text-left cursor-pointer"
+                      className="rounded-full border border-white/20 bg-[#00643A] px-3 py-1.5 text-xs font-medium text-white/95 hover:bg-white hover:text-[#00925B] transition-colors text-left cursor-pointer shadow-sm"
                     >
-                      #{kw}
+                      #{kw} ✨
                     </button>
                   ))}
                 </div>

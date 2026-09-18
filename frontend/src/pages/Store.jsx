@@ -258,7 +258,7 @@ export default function Store() {
     legal: isDefaultView && en("legal") ? <LegalSection key="legal" onOpen={setLegalId} /> : null,
   };
 
-  const order = (settings?.sections || []).map((s) => s.id).filter(id => id !== "trending" && id !== "featured");
+  const order = (settings?.sections || []).map((s) => s.id).filter(id => id !== "trending");
   const finalOrder = order.includes("apps") ? order : [...order, "apps"];
 
   return (
@@ -362,54 +362,74 @@ export default function Store() {
           <StoreSkeleton />
         ) : (
           <>
-            {finalOrder.map((id) => renderers[id]).filter(Boolean)}
+            {/* TOP 3 GAMES SECTION RESTORED */}
+            {isDefaultView && (
+              <section className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-[#FFC107]" />
+                  <h2 className="font-display text-base font-bold text-[#111111]">Top 3 Games</h2>
+                </div>
+                <div className="space-y-3">
+                  {(data?.featured || data?.apps || []).slice(0, 3).map((app, i) => (
+                    <AppCard key={app.id} app={app} index={i} onDownload={handleDownload} />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {finalOrder.map((id) => id !== "reviews" ? renderers[id] : null).filter(Boolean)}
+
+            {/* WHAT USERS SAY */}
+            {isDefaultView && en("reviews") && <ReviewsSection key="reviews" />}
+
+            {/* ABOUT THE GAME DESCRIPTION (₹501 BONUS) PLACED DIRECTLY BELOW WHAT USERS SAY */}
+            {isDefaultView && (
+              <section className="space-y-4 rounded-[24px] border border-[#E5E7EB] bg-white p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
+                <h2 className="font-display text-xl font-bold text-[#111111]">
+                  All Yono Games - Discover New Yono Apps & Play Top Gaming Apps
+                </h2>
+                <div className="space-y-4 text-sm leading-relaxed text-[#555555]">
+                  <p>
+                    Welcome to <strong>newyono.games</strong> - India's most trusted gaming platform in 2026. Get up to ₹501 sign-up bonus instantly, enjoy smooth 60 FPS gameplay, secure withdrawals, and access the latest 2026 Yono APK versions safely.
+                  </p>
+                  <p>
+                    That's exactly what <strong>All New Yono Apps</strong> aims to deliver. Our platform brings together a collection of games that combine classic gameplay with modern mobile experiences. From popular card titles like <strong>Yono Rummy</strong> to the latest slot and arcade apps gaining popularity in India, every game listed here is chosen carefully for its entertainment value.
+                  </p>
+                </div>
+              </section>
+            )}
+
+            {/* KEYWORDS CLOUD PLACED DIRECTLY BELOW THE DESCRIPTION */}
+            {isDefaultView && (
+              <section className="rounded-[22px] border border-[#E5E7EB] bg-white p-4 shadow-[0_6px_20px_rgba(0,0,0,0.02)] space-y-3">
+                <div className="flex items-center gap-2">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-[#FFF8E1] text-[#FFC107]">
+                    <Flame className="h-4 w-4 fill-[#FFC107]" />
+                  </span>
+                  <div>
+                    <h3 className="font-display text-sm font-bold text-[#111111]">Top 100 Yono Games, Rummy &amp; Money Game Keywords</h3>
+                    <p className="text-[10px] text-[#888888]">Click any keyword to explore games and instant download links</p>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-1.5 pt-1">
+                  {LANDING_100_KEYWORDS.map((kw, i) => (
+                    <button
+                      key={i}
+                      onClick={() => handleKeywordClick(kw)}
+                      className="rounded-full border border-[#E5E7EB] bg-[#FAFAFA] px-3 py-1 text-[11px] font-medium text-[#555555] hover:bg-[#FFF8E1] hover:border-[#FFE082] hover:text-[#B45309] transition-colors text-left cursor-pointer"
+                    >
+                      #{kw}
+                    </button>
+                  ))}
+                </div>
+              </section>
+            )}
 
             {isDefaultView && en("winners") && <RedeemBox />}
             {isDefaultView && AdSlot && <AdSlot ads={settings?.ads} />}
+            {isDefaultView && en("faq") && <FaqSection key="faq" />}
+            {isDefaultView && en("legal") && <LegalSection key="legal" onOpen={setLegalId} />}
           </>
-        )}
-
-        {/* ABOUT THE GAME SECTION (HOMEPAGE) */}
-        {isDefaultView && (
-          <section className="mt-8 mb-4 space-y-4 rounded-[24px] border border-[#E5E7EB] bg-white p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
-            <h2 className="font-display text-xl font-bold text-[#111111]">
-              All Yono Games - Discover New Yono Apps & Play Top Gaming Apps
-            </h2>
-            <div className="space-y-4 text-sm leading-relaxed text-[#555555]">
-              <p>
-                Welcome to <strong>newyono.games</strong> - India's most trusted gaming platform in 2026. Get up to ₹501 sign-up bonus instantly, enjoy smooth 60 FPS gameplay, secure withdrawals, and access the latest 2026 Yono APK versions safely.
-              </p>
-              <p>
-                That's exactly what <strong>All New Yono Apps</strong> aims to deliver. Our platform brings together a collection of games that combine classic gameplay with modern mobile experiences. From popular card titles like <strong>Yono Rummy</strong> to the latest slot and arcade apps gaining popularity in India, every game listed here is chosen carefully for its entertainment value.
-              </p>
-            </div>
-          </section>
-        )}
-
-        {/* KEYWORDS CLOUD PLACED DIRECTLY BELOW ABOUT THE GAME */}
-        {isDefaultView && (
-          <section className="rounded-[22px] border border-[#E5E7EB] bg-white p-4 shadow-[0_6px_20px_rgba(0,0,0,0.02)] space-y-3 my-4">
-            <div className="flex items-center gap-2">
-              <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-[#FFF8E1] text-[#FFC107]">
-                <Flame className="h-4 w-4 fill-[#FFC107]" />
-              </span>
-              <div>
-                <h3 className="font-display text-sm font-bold text-[#111111]">Top 100 Yono Games, Rummy &amp; Money Game Keywords</h3>
-                <p className="text-[10px] text-[#888888]">Click any keyword to explore games and instant download links</p>
-              </div>
-            </div>
-            <div className="flex flex-wrap gap-1.5 pt-1">
-              {LANDING_100_KEYWORDS.map((kw, i) => (
-                <button
-                  key={i}
-                  onClick={() => handleKeywordClick(kw)}
-                  className="rounded-full border border-[#E5E7EB] bg-[#FAFAFA] px-3 py-1 text-[11px] font-medium text-[#555555] hover:bg-[#FFF8E1] hover:border-[#FFE082] hover:text-[#B45309] transition-colors text-left cursor-pointer"
-                >
-                  #{kw}
-                </button>
-              ))}
-            </div>
-          </section>
         )}
       </main>
 

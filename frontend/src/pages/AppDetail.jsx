@@ -13,7 +13,7 @@ import AppCard from "@/components/AppCard";
 import { Input } from "@/components/ui/input";
 
 const GAME_KEYWORDS = [
-  "Yono Games", "Yono Rummy", "Rummy Games", "Money Games", "Casino Games", "Teen Patti Real Cash",
+  "Yono Games", "Yono Rummy", "Rummy Games", "Slots Games", "Casino Games", "Teen Patti Real Cash",
   "New Yono Apps 2026", "Best Rummy App India", "Sign Up Bonus 501", "Instant UPI Withdrawal",
   "Mod APK Download", "Yono VIP Program", "Daily Jackpot Win", "Safe APK Store", "Online Card Games",
   "Yono All Games List", "Winning Strategies", "Fastest Withdrawal App", "Trusted Rummy Platform",
@@ -164,8 +164,8 @@ export default function AppDetail() {
   return (
     <div className="app-shell pb-10 bg-[#FAFAFA]">
       <SEOHead
-        title={`${app.name} Apk Download Latest Version 2026 New Yono - ₹501 Bonus`}
-        description={`Download ${app.name} APK latest version for Android free. Get ₹501 sign-up bonus, instant UPI withdrawal, and play best Yono Rummy & money games on newyono.games.`}
+        title={`${app.name} APK Download 2026 - 501 Bonus Latest Version`}
+        description={`Download ${app.name} APK latest version. Play best Yono Games, Rummy Games & Slots Games with ₹501 sign-up bonus and instant UPI withdrawal on newyono.games.`}
         canonical={`https://newyono.games/${app.slug || `app/${app.id}`}`}
         image={app.icon_url || "/logo-v2.png"}
       />
@@ -331,12 +331,12 @@ export default function AppDetail() {
             <Zap className="h-4 w-4 sm:h-5 sm:w-5 text-[#FFC107] fill-[#FFC107]" /> About {app.name} on newyono.games
           </h2>
           <p className="text-xs sm:text-sm leading-relaxed text-[#555555]">
-            Welcome to the official download page for <strong>{app.name}</strong> on newyono.games — India's premier Yono Games &amp; Rummy Games platform. Experience the thrill of real cash gaming with a massive <strong>₹501 sign-up bonus</strong>, instant UPI withdrawals, and buttery-smooth 60 FPS performance in 2026. Discover why millions of players trust {app.name} for secure card games, daily jackpot rewards, and uninterrupted entertainment.
+            Welcome to the official download page for <strong>{app.name}</strong> on newyono.games — India's premier Yono Games, Rummy Games &amp; Slots Games platform. Experience the thrill of real cash gaming with a massive <strong>₹501 sign-up bonus</strong>, instant UPI withdrawals, and buttery-smooth 60 FPS performance in 2026. Discover why millions of players trust {app.name} for secure card games, slots, and daily rewards.
           </p>
           <div className="flex flex-wrap gap-1.5 pt-1">
             <span className="rounded-full border border-[#E5E7EB] bg-[#FAFAFA] px-2.5 py-1 text-[10px] sm:text-[11px] font-medium text-[#555555]">#{app.name} APK Download</span>
             <span className="rounded-full border border-[#E5E7EB] bg-[#FAFAFA] px-2.5 py-1 text-[10px] sm:text-[11px] font-medium text-[#555555]">#{app.name} ₹501 Bonus</span>
-            <span className="rounded-full border border-[#E5E7EB] bg-[#FAFAFA] px-2.5 py-1 text-[10px] sm:text-[11px] font-medium text-[#555555]">Yono Rummy Real Cash</span>
+            <span className="rounded-full border border-[#E5E7EB] bg-[#FAFAFA] px-2.5 py-1 text-[10px] sm:text-[11px] font-medium text-[#555555]">Yono Rummy & Slots</span>
             <span className="rounded-full border border-[#E5E7EB] bg-[#FAFAFA] px-2.5 py-1 text-[10px] sm:text-[11px] font-medium text-[#555555]">Instant Withdrawal App</span>
           </div>
         </div>

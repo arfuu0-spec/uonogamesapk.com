@@ -287,6 +287,7 @@ export default function Store() {
               src={resolveUrl(hero.banner_url || "/hero-banner.png")} 
               alt={hero.headline || "newyono.games"} 
               className="block w-full" 
+              fetchPriority="high"
             />
           </div>
           {(hero.headline || hero.subtitle) && (

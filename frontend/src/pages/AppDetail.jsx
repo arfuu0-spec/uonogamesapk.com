@@ -158,7 +158,7 @@ export default function AppDetail() {
 
   if (loading && !app) {
     return (
-      <div className="app-shell flex min-h-screen items-center justify-center bg-[#00A86B]">
+      <div className="app-shell flex min-h-screen items-center justify-center bg-[#00925B]">
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-white border-t-transparent"></div>
       </div>
     );
@@ -166,9 +166,9 @@ export default function AppDetail() {
 
   if (!app) {
     return (
-      <div className="app-shell flex min-h-screen flex-col items-center justify-center bg-[#00A86B] p-4 text-center text-white">
+      <div className="app-shell flex min-h-screen flex-col items-center justify-center bg-[#00925B] p-4 text-center text-white">
         <p className="text-base font-bold mb-2">App not found</p>
-        <RippleButton onClick={() => navigate("/")} className="rounded-full bg-white px-6 py-2.5 text-xs font-semibold text-[#00A86B]">
+        <RippleButton onClick={() => navigate("/")} className="rounded-full bg-white px-6 py-2.5 text-xs font-semibold text-[#00925B]">
           Go to Home
         </RippleButton>
       </div>
@@ -176,7 +176,7 @@ export default function AppDetail() {
   }
 
   return (
-    <div className="app-shell pb-10 bg-[#00A86B] text-white min-h-screen relative">
+    <div className="app-shell pb-10 bg-[#00925B] text-white min-h-screen relative">
       <SEOHead
         title={`${app.name} APK Download 2026 - 501 Bonus Latest Version`}
         description={`Download ${app.name} APK latest version. Play best Yono Games, Rummy Games & Slots Games with ₹501 sign-up bonus and instant UPI withdrawal on newyono.games.`}
@@ -201,7 +201,7 @@ export default function AppDetail() {
       </div>
 
       {/* Top Header Bar */}
-      <div className="sticky top-0 z-40 flex items-center gap-3 bg-[#008552]/95 px-4 py-3 backdrop-blur-md border-b border-white/15">
+      <div className="sticky top-0 z-40 flex items-center gap-3 bg-[#007A48]/95 px-4 py-3 backdrop-blur-md border-b border-white/15">
         <button onClick={() => navigate(-1)} className="flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-white shadow-sm hover:bg-white/25">
           <ArrowLeft className="h-4 w-4" />
         </button>
@@ -221,19 +221,19 @@ export default function AppDetail() {
           <p className="mt-1 text-sm font-medium text-white/95">Play 25+ Games • Win Upto ₹5 Crores Daily</p>
           <p className="text-xs text-white/80 mt-0.5">Play on India's Best Gaming App.</p>
 
-          {/* MAIN DOWNLOAD CTA */}
+          {/* MAIN DOWNLOAD CTA (Changed from Wait For Apk to Download) */}
           <div className="mt-5 max-w-sm mx-auto">
-            <RippleButton onClick={() => handleDownload(app)} className="w-full flex items-center justify-center gap-2 rounded-2xl bg-[#E5E7EB] py-4 text-base font-extrabold text-[#111111] shadow-[0_10px_30px_rgba(0,0,0,0.3)] hover:bg-white transition-all">
-              <Download className="h-5 w-5 text-[#374151]" />
-              <span>Wait For Apk...</span>
+            <RippleButton onClick={() => handleDownload(app)} className="w-full flex items-center justify-center gap-2 rounded-2xl bg-[#FFC107] py-4 text-base font-black text-[#111111] shadow-[0_10px_30px_rgba(255,193,7,0.4)] hover:bg-[#FFB300] transition-all">
+              <Download className="h-5 w-5 text-[#111111]" />
+              <span>Download APK ({app.size || "45 MB"})</span>
             </RippleButton>
             <p className="mt-2 text-center text-xs font-semibold text-yellow-200">🔥 Get 5% Bonus on every Add Cash up to ₹100,000</p>
           </div>
         </div>
 
-        {/* IMPS & UPI TRUST BADGES SECTION (Rich Dark Green Container) */}
-        <div className="rounded-[24px] bg-[#007A4D] text-white p-5 shadow-2xl border border-white/20 space-y-4">
-          <p className="text-center text-xs font-bold text-white/9ulin">Withdraw winnings directly to your.</p>
+        {/* IMPS & UPI TRUST BADGES SECTION */}
+        <div className="rounded-[24px] bg-[#007A48] text-white p-5 shadow-2xl border border-white/20 space-y-4">
+          <p className="text-center text-xs font-bold text-white">Withdraw winnings directly to your.</p>
           <div className="grid grid-cols-2 gap-4 items-center justify-center border-t border-b border-white/20 py-4">
             <div className="text-center border-r border-white/20">
               <span className="font-display font-black text-lg tracking-tighter text-white">IMPS</span>
@@ -261,7 +261,7 @@ export default function AppDetail() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search other games..."
-              className="h-11 rounded-full border-white/30 bg-[#007A4D] pl-10 pr-10 text-sm text-white placeholder:text-white/70 shadow-md focus-visible:ring-white"
+              className="h-11 rounded-full border-white/30 bg-[#007A48] pl-10 pr-10 text-sm text-white placeholder:text-white/70 shadow-md focus-visible:ring-white"
             />
             {searchQuery && (
               <button
@@ -276,7 +276,7 @@ export default function AppDetail() {
 
           {/* Live Suggestions Dropdown */}
           {searchQuery.trim() && (
-            <div className="absolute left-0 right-0 top-full mt-2 z-50 max-h-60 overflow-y-auto rounded-2xl border border-white/20 bg-[#007A4D] shadow-2xl p-2 space-y-1 text-white">
+            <div className="absolute left-0 right-0 top-full mt-2 z-50 max-h-60 overflow-y-auto rounded-2xl border border-white/20 bg-[#007A48] shadow-2xl p-2 space-y-1 text-white">
               {(() => {
                 const q = searchQuery.toLowerCase();
                 const sourceList = allStoreApps.length > 0 ? allStoreApps : (parsedCache?.apps || similarApps);
@@ -291,12 +291,12 @@ export default function AppDetail() {
                       setSearchQuery("");
                       navigate(`/${item.slug || item.id}`, { state: { app: item } });
                     }}
-                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/15 cursor-pointer transition-colors"
+                    className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/15 cursor-pointer transition-colors"
                   >
-                    <AppIcon src={resolveUrl(item.icon_url)} alt={item.name} className="h-10 w-10 rounded-xl object-cover shadow-sm" />
+                    <AppIcon src={resolveUrl(item.icon_url)} alt={item.name} className="h-12 w-12 rounded-xl object-cover shadow-sm" />
                     <div className="min-w-0 flex-1">
-                      <p className="font-display text-xs font-bold text-white truncate">{item.name}</p>
-                      <p className="text-[10px] text-white/80">⭐ {item.rating?.toFixed(1) || "4.8"} • {item.size || "45 MB"}</p>
+                      <p className="font-display text-sm font-bold text-white truncate">{item.name}</p>
+                      <p className="text-xs text-white/80">⭐ {item.rating?.toFixed(1) || "4.8"} • {item.size || "45 MB"}</p>
                     </div>
                   </div>
                 ));
@@ -305,27 +305,35 @@ export default function AppDetail() {
           )}
         </div>
 
-        {/* PEOPLE ALSO LIKE SECTION */}
+        {/* PEOPLE ALSO LIKE SECTION - BADE AUR GRAND SIZE GAMES */}
         {similarApps.length > 0 && (
-          <div className="rounded-[24px] border border-white/20 bg-[#007A4D] p-4 shadow-xl space-y-3">
+          <div className="rounded-[24px] border border-white/20 bg-[#007A48] p-5 shadow-xl space-y-4">
             <div className="flex items-center gap-2">
-              <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-white text-[#00A86B]">
-                <Sparkles className="h-4 w-4 fill-[#00A86B]" />
+              <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-white text-[#00925B]">
+                <Sparkles className="h-4 w-4 fill-[#00925B]" />
               </span>
               <div>
-                <h2 className="font-display text-sm font-bold text-white">People also like</h2>
-                <p className="text-[10px] text-white/85">Top trending gaming apps for you</p>
+                <h2 className="font-display text-base font-bold text-white">People also like</h2>
+                <p className="text-xs text-white/85">Top trending gaming apps for you</p>
               </div>
             </div>
-            <div className="space-y-2.5 pt-1">
+            <div className="space-y-3 pt-1">
               {similarApps.map((simApp, idx) => (
-                <div key={simApp.id} onClick={() => navigate(`/${simApp.slug || simApp.id}`, { state: { app: simApp } })} className="flex items-center gap-3 rounded-xl bg-[#006841] p-2.5 border border-white/15 hover:bg-[#005c38] cursor-pointer transition-all">
-                  <AppIcon src={resolveUrl(simApp.icon_url)} alt={simApp.name} className="h-12 w-12 rounded-xl object-cover shadow-md shrink-0" />
+                <div key={simApp.id} onClick={() => navigate(`/${simApp.slug || simApp.id}`, { state: { app: simApp } })} className="flex items-center gap-3.5 rounded-2xl bg-[#00643A] p-3.5 border border-white/15 hover:bg-[#00522F] cursor-pointer transition-all shadow-md">
+                  <AppIcon src={resolveUrl(simApp.icon_url)} alt={simApp.name} className="h-16 w-16 rounded-2xl object-cover shadow-lg shrink-0 border border-white/20" />
                   <div className="min-w-0 flex-1">
-                    <h3 className="font-display text-xs font-bold text-white truncate">{simApp.name}</h3>
-                    <p className="text-[10px] text-yellow-300">⭐ {simApp.rating?.toFixed(1) || "4.8"} • {simApp.size || "45 MB"}</p>
+                    <h3 className="font-display text-sm font-extrabold text-white truncate">{simApp.name}</h3>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className="text-xs font-bold text-yellow-300">⭐ {simApp.rating?.toFixed(1) || "4.8"}</span>
+                      <span className="text-xs text-white/70">• {simApp.size || "45 MB"}</span>
+                    </div>
+                    {simApp.signup_bonus && (
+                      <span className="inline-block mt-1 rounded-full bg-yellow-400/20 px-2 py-0.5 text-[10px] font-bold text-yellow-200 border border-yellow-400/30">
+                        🎁 {simApp.signup_bonus}
+                      </span>
+                    )}
                   </div>
-                  <RippleButton onClick={(e) => { e.stopPropagation(); handleDownload(simApp); }} className="rounded-full bg-white px-3 py-1.5 text-xs font-bold text-[#00A86B]">
+                  <RippleButton onClick={(e) => { e.stopPropagation(); handleDownload(simApp); }} className="rounded-full bg-[#FFC107] px-4 py-2 text-xs font-bold text-[#111111] shadow-md hover:bg-[#FFB300] shrink-0">
                     Download
                   </RippleButton>
                 </div>
@@ -335,29 +343,29 @@ export default function AppDetail() {
         )}
 
         {/* STRONG GAME-SPECIFIC SEO DESCRIPTION */}
-        <div className="rounded-[24px] border border-white/20 bg-[#007A4D] p-4 shadow-xl space-y-3 text-white">
-          <h2 className="font-display text-sm font-bold text-yellow-200 flex items-center gap-2">
+        <div className="rounded-[24px] border border-white/20 bg-[#007A48] p-5 shadow-xl space-y-3 text-white">
+          <h2 className="font-display text-base font-bold text-yellow-200 flex items-center gap-2">
             <Zap className="h-4 w-4 fill-yellow-200" /> About {app.name} on newyono.games
           </h2>
-          <p className="text-xs leading-relaxed text-white/95">
+          <p className="text-xs sm:text-sm leading-relaxed text-white/95">
             Welcome to the official download page for <strong>{app.name}</strong> on newyono.games — India's premier Yono Games, Rummy Games &amp; Slots Games platform. Experience the thrill of real cash gaming with a massive <strong>₹501 sign-up bonus</strong>, instant UPI withdrawals, and buttery-smooth 60 FPS performance in 2026. Discover why millions of players trust {app.name} for secure card games, slots, and daily rewards.
           </p>
           <div className="flex flex-wrap gap-1.5 pt-1">
-            <span className="rounded-full border border-white/20 bg-[#006841] px-2.5 py-1 text-[10px] font-medium text-white/95">#{app.name} APK Download</span>
-            <span className="rounded-full border border-white/20 bg-[#006841] px-2.5 py-1 text-[10px] font-medium text-white/95">#{app.name} ₹501 Bonus</span>
-            <span className="rounded-full border border-white/20 bg-[#006841] px-2.5 py-1 text-[10px] font-medium text-white/95">Yono Rummy & Slots</span>
+            <span className="rounded-full border border-white/20 bg-[#00643A] px-3 py-1 text-xs font-medium text-white/95">#{app.name} APK Download</span>
+            <span className="rounded-full border border-white/20 bg-[#00643A] px-3 py-1 text-xs font-medium text-white/95">#{app.name} ₹501 Bonus</span>
+            <span className="rounded-full border border-white/20 bg-[#00643A] px-3 py-1 text-xs font-medium text-white/95">Yono Rummy & Slots</span>
           </div>
         </div>
 
         {/* KEYWORDS CLOUD */}
-        <div className="rounded-[20px] border border-white/20 bg-[#007A4D] p-4 shadow-xl space-y-2.5 text-white">
+        <div className="rounded-[20px] border border-white/20 bg-[#007A48] p-5 shadow-xl space-y-3 text-white">
           <div className="flex items-center gap-2">
-            <span className="flex h-6 w-6 items-center justify-center rounded-xl bg-white text-[#00A86B]">
-              <Flame className="h-3.5 w-3.5 fill-[#00A86B]" />
+            <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-white text-[#00925B]">
+              <Flame className="h-4 w-4 fill-[#00925B]" />
             </span>
             <div>
-              <h3 className="font-display text-xs font-bold text-white">Top Yono &amp; Rummy Game Keywords</h3>
-              <p className="text-[9px] text-white/85">Click any keyword to search and explore</p>
+              <h3 className="font-display text-sm font-bold text-white">Top Yono &amp; Rummy Game Keywords</h3>
+              <p className="text-xs text-white/85">Click any keyword to search and explore</p>
             </div>
           </div>
           <div className="flex flex-wrap gap-1.5 pt-1">
@@ -365,7 +373,7 @@ export default function AppDetail() {
               <button
                 key={i}
                 onClick={() => handleKeywordClick(kw)}
-                className="rounded-full border border-white/20 bg-[#006841] px-2.5 py-1 text-[10px] font-medium text-white/95 hover:bg-white hover:text-[#00A86B] transition-colors text-left cursor-pointer"
+                className="rounded-full border border-white/20 bg-[#00643A] px-3 py-1 text-xs font-medium text-white/95 hover:bg-white hover:text-[#00925B] transition-colors text-left cursor-pointer"
               >
                 #{kw}
               </button>

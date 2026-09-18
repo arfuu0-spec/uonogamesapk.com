@@ -19,10 +19,6 @@ function normalize(s) {
     .replace(/[^a-z0-9]+/g, "");
 }
 
-const GAME_KEYWORDS = [
-  "yono games all app", "yono games app", "yono app", "you games online", "all your game store", "you know games", "yono app link", "all yono game new", "rummy game app store", "new yono games", "yono games com apk", "yono game apk download for android latest version", "yono games apk lsgd", "yono games 2", "you know game", "yono game google", "yono genes", "all your game app download", "all you game", "all your app", "all many games", "all your game apk latest version", "you game game", "all your games download free", "all your gamespin crush", "yono games apk", "yono all games", "all your game apk", "all yono games list apk", "yono game home", "yono india", "all you know game", "all new game", "yono arcade all apk", "yono rummy games for android", "yono games all new apk", "yono games all new 2026 apk"
-];
-
 export default function AppDetail() {
   const { id, slug } = useParams();
   const location = useLocation();
@@ -86,7 +82,6 @@ export default function AppDetail() {
   });
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeTab, setActiveTab] = useState("description");
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -145,11 +140,6 @@ export default function AppDetail() {
     }
   };
 
-  const handleKeywordClick = (kw) => {
-    const cleanKw = kw.replace(/apk|download|2026|app|online|india|game|games/gi, "").trim();
-    navigate(`/?search=${encodeURIComponent(cleanKw)}`);
-  };
-
   return (
     <div className="app-shell pb-10 bg-[#FAFAFA]">
       <SEOHead
@@ -161,7 +151,6 @@ export default function AppDetail() {
 
       <Header />
 
-      {/* Sticky Top Bar with Back Button & Title */}
       <div className="sticky top-[52px] sm:top-[57px] z-30 flex items-center gap-3 bg-white/95 px-4 py-2.5 backdrop-blur-md border-b border-[#E5E7EB]">
         <button onClick={() => navigate(-1)} className="flex h-8 w-8 items-center justify-center rounded-full bg-white border border-[#E5E7EB] text-[#111111] shadow-sm hover:bg-[#F1F1F1]">
           <ArrowLeft className="h-4 w-4" />
@@ -170,7 +159,7 @@ export default function AppDetail() {
       </div>
 
       <main className="space-y-4 px-4 pt-4">
-        {/* SEARCH BAR WITH LIVE SUGGESTIONS DROPDOWN */}
+        {/* Search bar */}
         <div className="relative">
           <form onSubmit={handleSearchSubmit} className="relative">
             <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#777777]" />
@@ -192,7 +181,6 @@ export default function AppDetail() {
             )}
           </form>
 
-          {/* Live Suggestions Dropdown */}
           {searchQuery.trim() && (
             <div className="absolute left-0 right-0 top-full mt-2 z-50 max-h-60 overflow-y-auto rounded-2xl border border-[#E5E7EB] bg-white shadow-xl p-2 space-y-1">
               {(() => {
@@ -223,7 +211,7 @@ export default function AppDetail() {
           )}
         </div>
 
-        {/* App Hero Section */}
+        {/* App Hero */}
         <div className="flex items-start gap-3 sm:gap-4 rounded-[20px] sm:rounded-[24px] border border-[#E5E7EB] bg-white p-4 sm:p-5 shadow-sm">
           <div className="relative shrink-0">
             <AppIcon src={resolveUrl(app?.icon_url)} alt={app?.name} className="h-20 w-20 sm:h-24 sm:w-24 rounded-[18px] sm:rounded-[22px] ring-1 ring-black/5 object-cover shadow-md" />
@@ -241,7 +229,7 @@ export default function AppDetail() {
           </div>
         </div>
 
-        {/* Quick Stats Grid with 2026 Version and Updated Time */}
+        {/* Quick Stats Grid */}
         <div className="grid grid-cols-4 gap-2 text-center">
           <div className="rounded-[16px] sm:rounded-[18px] border border-[#E5E7EB] bg-white p-2.5 sm:p-3 shadow-sm">
             <p className="text-[9px] sm:text-[10px] text-[#777777]">Updated Time</p>
@@ -261,7 +249,7 @@ export default function AppDetail() {
           </div>
         </div>
 
-        {/* Bonuses Box - Fixed ₹501 Sign up bonus */}
+        {/* Bonuses Box */}
         <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
           <div className="flex items-center gap-2.5 rounded-[18px] sm:rounded-[20px] bg-gradient-to-r from-[#FFF8E1] to-[#FFF3E0] p-3 sm:p-3.5 border border-[#FFE082]">
             <div className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-[#FFC107] text-white shrink-0"><Gift className="h-3.5 w-3.5 sm:h-4 sm:w-4" /></div>
@@ -279,7 +267,7 @@ export default function AppDetail() {
           </div>
         </div>
 
-        {/* Animated Download Button */}
+        {/* Download Button */}
         <div className="pt-1">
           <RippleButton onClick={() => handleDownload(app)} className="w-full flex items-center justify-center gap-2 rounded-[20px] sm:rounded-[22px] bg-[#FFC107] py-3.5 sm:py-4 text-sm sm:text-base font-extrabold text-[#111111] shadow-[0_8px_24px_rgba(255,193,7,0.4)] hover:bg-[#FFB300] animate-pulse">
             <Download className="h-4 w-4 sm:h-5 sm:w-5" />
@@ -288,50 +276,7 @@ export default function AppDetail() {
           <p className="mt-2 text-center text-[10px] sm:text-[11px] text-[#777777]">🔒 Safe & virus-scanned • 100+ Games Available</p>
         </div>
 
-        {/* SEO DASHBOARD / 3 MENU TABS AT THE BOTTOM */}
-        <div className="rounded-[20px] sm:rounded-[24px] border border-[#E5E7EB] bg-white p-4 sm:p-5 shadow-sm space-y-3">
-          <div className="flex border-b border-[#E5E7EB] pb-2 gap-4">
-            <button 
-              onClick={() => setActiveTab("description")}
-              className={`text-xs sm:text-sm font-bold pb-2 border-b-2 transition-colors ${activeTab === "description" ? "border-[#FFC107] text-[#111111]" : "border-transparent text-[#777777]"}`}
-            >
-              1. Complete Description 📄
-            </button>
-            <button 
-              onClick={() => setActiveTab("mobileapps")}
-              className={`text-xs sm:text-sm font-bold pb-2 border-b-2 transition-colors ${activeTab === "mobileapps" ? "border-[#FFC107] text-[#111111]" : "border-transparent text-[#777777]"}`}
-            >
-              2. Mobile Apps & Add-Ons 📱
-            </button>
-            <button 
-              onClick={() => setActiveTab("gameslist")}
-              className={`text-xs sm:text-sm font-bold pb-2 border-b-2 transition-colors ${activeTab === "gameslist" ? "border-[#FFC107] text-[#111111]" : "border-transparent text-[#777777]"}`}
-            >
-              3. All Yono Games List 🎮
-            </button>
-          </div>
-
-          <div className="pt-2 text-xs sm:text-sm text-[#555555] leading-relaxed">
-            {activeTab === "description" && (
-              <div className="space-y-2">
-                <p><strong>{app?.name}</strong> is an ultimate platform offering 100+ games including Yono Rummy, Teen Patti, Slots, and Ludo with a guaranteed <strong>₹501 sign-up bonus</strong>.</p>
-                <p>Designed for Android users with fast 60 FPS performance, instant UPI withdrawals, and secure anti-ban mod files.</p>
-              </div>
-            )}
-            {activeTab === "mobileapps" && (
-              <div className="space-y-2">
-                <p>Explore exclusive mobile addons, productivity tools, customized web extensions, and optimized APK packages for seamless gaming experience across all Android devices.</p>
-              </div>
-            )}
-            {activeTab === "gameslist" && (
-              <div className="space-y-2">
-                <p>Access the complete directory of 100+ Yono-style apps including Rummy 365, Spin Winner, Yono 777, and Jaiho Slots with verified download links.</p>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* PEOPLE ALSO LIKE SECTION */}
+        {/* People also like */}
         {similarApps.length > 0 && (
           <div className="rounded-[20px] sm:rounded-[24px] border border-[#E5E7EB] bg-white p-4 sm:p-5 shadow-sm space-y-3 sm:space-y-4">
             <div className="flex items-center gap-2">
@@ -351,28 +296,14 @@ export default function AppDetail() {
           </div>
         )}
 
-        {/* KEYWORDS CLOUD */}
-        <div className="rounded-[18px] sm:rounded-[22px] border border-[#E5E7EB] bg-white p-3.5 sm:p-4 shadow-sm space-y-2.5">
-          <div className="flex items-center gap-2">
-            <span className="flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-xl bg-[#FFF8E1] text-[#FFC107]">
-              <Flame className="h-3.5 w-3.5 sm:h-4 sm:w-4 fill-[#FFC107]" />
-            </span>
-            <div>
-              <h3 className="font-display text-xs sm:text-sm font-bold text-[#111111]">Top Google Search Keywords</h3>
-              <p className="text-[9px] sm:text-[10px] text-[#888888]">Click any keyword to search and explore</p>
-            </div>
-          </div>
-          <div className="flex flex-wrap gap-1.5 pt-1">
-            {GAME_KEYWORDS.map((kw, i) => (
-              <button
-                key={i}
-                onClick={() => handleKeywordClick(kw)}
-                className="rounded-full border border-[#E5E7EB] bg-[#FAFAFA] px-2.5 py-1 text-[10px] sm:text-[11px] font-medium text-[#555555] hover:bg-[#FFF8E1] hover:border-[#FFE082] hover:text-[#B45309] transition-colors text-left cursor-pointer"
-              >
-                #{kw}
-              </button>
-            ))}
-          </div>
+        {/* About Game */}
+        <div className="rounded-[20px] sm:rounded-[24px] border border-[#E5E7EB] bg-white p-4 sm:p-5 shadow-sm space-y-3 sm:space-y-4">
+          <h2 className="font-display text-sm sm:text-base font-bold text-[#111111] flex items-center gap-2">
+            <Zap className="h-4 w-4 sm:h-5 sm:w-5 text-[#FFC107] fill-[#FFC107]" /> About the Game
+          </h2>
+          <p className="text-xs sm:text-sm leading-relaxed text-[#555555]">
+            {app?.description || `${app?.name} is a premium gaming experience built for smooth, lag-free play on Android with a guaranteed ₹501 sign-up bonus.`}
+          </p>
         </div>
 
         <FaqSection />

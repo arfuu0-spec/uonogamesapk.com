@@ -271,6 +271,20 @@ export default function Store() {
         image="/logo-v2.png"
       />
 
+      {/* ULTRA-ATTRACTION INSTANT-LOAD TRUST BAR */}
+      <div className="px-4 pt-3">
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#0F4C3A] via-[#093527] to-[#0F4C3A] p-3.5 text-center shadow-lg border border-[#FFC107]/40">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none"></div>
+          <div className="flex items-center justify-center gap-3 sm:gap-4 text-[11px] sm:text-xs font-black text-white uppercase tracking-wider overflow-x-auto no-scrollbar whitespace-nowrap">
+            <span className="flex items-center gap-1 text-[#FFC107]">⚡ Instant UPI 💸</span>
+            <span className="text-white/30">•</span>
+            <span className="flex items-center gap-1 text-[#22C55E]">🔒 100% Safe 🛡️</span>
+            <span className="text-white/30">•</span>
+            <span className="flex items-center gap-1 text-[#FFC107]">🎁 ₹501 Bonus 🎉</span>
+          </div>
+        </div>
+      </div>
+
       <div className="px-4 pt-4 text-center">
         <h1 className="font-display text-lg font-bold text-[#111111]">Welcome to YONO GAMES</h1>
         <p className="text-xs text-[#777777]">PLAY &amp; WIN • SINCE 2024</p>

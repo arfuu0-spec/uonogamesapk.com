@@ -50,9 +50,9 @@ export default function AppDetail() {
         String(a.id) === String(identifier) || 
         a.slug === identifier || 
         normalize(a.name) === normalize(identifier)
-      ) || null;
+      ) || allCachedApps[0];
     }
-    return null;
+    return allCachedApps[0] || null;
   }, [location.state, allCachedApps, identifier]);
 
   const [app, setApp] = useState(initialApp);
@@ -62,12 +62,8 @@ export default function AppDetail() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (!identifier || identifier === "undefined" || identifier === "null") {
-      setLoading(false);
-      return;
-    }
-
     let isMounted = true;
+
     const fetchAppData = async () => {
       try {
         const listRes = await api.get("/apps?limit=100");
@@ -76,46 +72,29 @@ export default function AppDetail() {
           setAllStoreApps(all);
           localStorage.setItem("yono_apps_perm_cache", JSON.stringify(listRes.data));
 
-          const found = all.find(a => 
-            String(a.id) === String(identifier) || 
-            a.slug === identifier || 
-            normalize(a.name) === normalize(identifier)
-          ) || all[0];
-
-          if (found) {
-            setApp(found);
-            setSimilarApps(all.filter(a => String(a.id) !== String(found.id)).slice(0, 20));
+          if (all.length > 0) {
+            const found = identifier && identifier !== "undefined" 
+              ? all.find(a => String(a.id) === String(identifier) || a.slug === identifier || normalize(a.name) === normalize(identifier))
+              : null;
+            
+            // Fallback to first app if specific app not found so it never shows error
+            const targetApp = found || all[0];
+            setApp(targetApp);
+            setSimilarApps(all.filter(a => String(a.id) !== String(targetApp.id)).slice(0, 20));
           }
         }
       } catch (e) {
-        // Fallback to cache if offline/error
         if (allCachedApps.length > 0 && isMounted) {
-          const found = allCachedApps.find(a => 
-            String(a.id) === String(identifier) || 
-            a.slug === identifier || 
-            normalize(a.name) === normalize(identifier)
-          ) || allCachedApps[0];
-          setApp(found);
-          setSimilarApps(allCachedApps.filter(a => String(a.id) !== String(found?.id)).slice(0, 20));
+          const fallback = allCachedApps[0];
+          setApp(fallback);
+          setSimilarApps(allCachedApps.filter(a => String(a.id) !== String(fallback?.id)).slice(0, 20));
         }
       } finally {
         if (isMounted) setLoading(false);
       }
     };
 
-    if (!initialApp) {
-      fetchAppData();
-    } else {
-      setLoading(false);
-      // also fetch similar apps in background
-      api.get("/apps?limit=100").then(res => {
-        if (res.data && isMounted) {
-          const all = [...(res.data.featured || []), ...(res.data.apps || []), ...(res.data.trending || [])];
-          setAllStoreApps(all);
-          setSimilarApps(all.filter(a => String(a.id) !== String(app?.id)).slice(0, 20));
-        }
-      }).catch(() => {});
-    }
+    fetchAppData();
 
     return () => { isMounted = false; };
   }, [identifier]);
@@ -146,7 +125,7 @@ export default function AppDetail() {
 
   const [searchQuery, setSearchQuery] = useState("");
 
-  if (loading) {
+  if (loading && !app) {
     return (
       <div className="app-shell flex min-h-screen items-center justify-center bg-[#FAFAFA]">
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#FFC107] border-t-transparent"></div>
@@ -154,24 +133,13 @@ export default function AppDetail() {
     );
   }
 
-  if (!app) {
-    return (
-      <div className="app-shell flex min-h-screen flex-col items-center justify-center bg-[#FAFAFA] p-4 text-center text-[#111111]">
-        <p className="text-base font-bold mb-2">App not found ❌</p>
-        <RippleButton onClick={() => navigate("/")} className="rounded-full bg-[#FFC107] px-6 py-2.5 text-xs font-semibold text-[#111111]">
-          Go to Home 🏠
-        </RippleButton>
-      </div>
-    );
-  }
-
   return (
     <div className="app-shell pb-10 bg-[#FAFAFA] text-[#111111] min-h-screen relative">
       <SEOHead
-        title={`${app.name} APK Download 2026 - 501 Bonus Latest Version`}
-        description={`Download ${app.name} APK latest version. Play best Yono Games, Rummy Games & Slots Games with ₹501 sign-up bonus and instant UPI withdrawal on newyono.games.`}
-        canonical={`https://newyono.games/${app.slug || `app/${app.id}`}`}
-        image={app.icon_url || "/logo-v2.png"}
+        title={`${app?.name || "Yono Games"} APK Download 2026 - 501 Bonus Latest Version`}
+        description={`Download ${app?.name || "Yono Games"} APK latest version. Play best Yono Games, Rummy Games & Slots Games with ₹501 sign-up bonus and instant UPI withdrawal on newyono.games.`}
+        canonical={`https://newyono.games/${app?.slug || `app/${app?.id}`}`}
+        image={app?.icon_url || "/logo-v2.png"}
       />
 
       {/* RIGHT SIDE FLOATING SOCIAL SIDEBAR */}
@@ -200,7 +168,7 @@ export default function AppDetail() {
             <ArrowLeft className="h-5 w-5" />
           </button>
         </div>
-        <span className="truncate font-display text-sm font-bold text-[#111111] max-w-[180px] sm:max-w-xs">{app.name} 📥</span>
+        <span className="truncate font-display text-sm font-bold text-[#111111] max-w-[180px] sm:max-w-xs">{app?.name || "Yono Game"} 📥</span>
       </div>
 
       <main className="space-y-6 px-4 pt-6">
@@ -208,10 +176,10 @@ export default function AppDetail() {
         <div className="rounded-[24px] bg-white text-[#111111] p-6 text-center shadow-2xl relative border border-[#E5E7EB]">
           <div className="inline-block mb-3">
             <div className="relative flex items-center justify-center">
-              <AppIcon src={resolveUrl(app.icon_url)} alt={app.name} className="relative h-24 w-24 rounded-[22px] object-cover shadow-lg border border-[#E5E7EB]" />
+              <AppIcon src={resolveUrl(app?.icon_url)} alt={app?.name} className="relative h-24 w-24 rounded-[22px] object-cover shadow-lg border border-[#E5E7EB]" />
             </div>
           </div>
-          <h1 className="font-display text-2xl font-black text-[#111111] uppercase tracking-wide">{app.name} 👑</h1>
+          <h1 className="font-display text-2xl font-black text-[#111111] uppercase tracking-wide">{app?.name} 👑</h1>
           <p className="mt-1 text-sm font-medium text-[#555555]">Play 100+ Games • Win Upto ₹5 Crores Daily 💰</p>
           <p className="text-xs text-[#777777] mt-0.5">Play on India's Best Gaming App 🇮🇳</p>
 
@@ -222,7 +190,7 @@ export default function AppDetail() {
               className="w-full flex items-center justify-center gap-2 rounded-2xl bg-[#FFC107] py-4 text-base font-black text-[#111111] shadow-[0_0_25px_rgba(255,193,7,0.7)] animate-pulse hover:bg-[#FFB300] transition-all"
             >
               <Download className="h-5 w-5 text-[#111111]" />
-              <span>Download APK ({app.size || "45 MB"}) 📥</span>
+              <span>Download APK ({app?.size || "45 MB"}) 📥</span>
             </RippleButton>
             <p className="mt-2 text-center text-xs font-semibold text-[#D97706]">🔥 Get 5% Bonus on every Add Cash up to ₹100,000 🎁</p>
           </div>
@@ -339,14 +307,14 @@ export default function AppDetail() {
         {/* STRONG GAME-SPECIFIC SEO DESCRIPTION */}
         <div className="rounded-[24px] border border-[#E5E7EB] bg-white p-5 shadow-xl space-y-3 text-[#111111]">
           <h2 className="font-display text-base font-bold text-[#B45309] flex items-center gap-2">
-            <Zap className="h-4 w-4 fill-[#B45309]" /> About {app.name} on newyono.games 🚀
+            <Zap className="h-4 w-4 fill-[#B45309]" /> About {app?.name} on newyono.games 🚀
           </h2>
           <p className="text-xs sm:text-sm leading-relaxed text-[#555555]">
-            Welcome to the official download page for <strong>{app.name}</strong> on newyono.games — India's premier Yono Games, Rummy Games &amp; Slots Games platform 🎮. Experience the thrill of real cash gaming with a massive <strong>₹501 sign-up bonus</strong>, instant UPI withdrawals, and buttery-smooth 60 FPS performance in 2026 💰. Discover why millions of players trust {app.name} for secure card games, slots, and daily rewards 👑.
+            Welcome to the official download page for <strong>{app?.name}</strong> on newyono.games — India's premier Yono Games, Rummy Games &amp; Slots Games platform 🎮. Experience the thrill of real cash gaming with a massive <strong>₹501 sign-up bonus</strong>, instant UPI withdrawals, and buttery-smooth 60 FPS performance in 2026 💰. Discover why millions of players trust {app?.name} for secure card games, slots, and daily rewards 👑.
           </p>
           <div className="flex flex-wrap gap-1.5 pt-1">
-            <span className="rounded-full border border-[#E5E7EB] bg-[#FAFAFA] px-3 py-1 text-xs font-medium text-[#555555]">#{app.name} APK Download 📥</span>
-            <span className="rounded-full border border-[#E5E7EB] bg-[#FAFAFA] px-3 py-1 text-xs font-medium text-[#555555]">#{app.name} ₹501 Bonus 🎁</span>
+            <span className="rounded-full border border-[#E5E7EB] bg-[#FAFAFA] px-3 py-1 text-xs font-medium text-[#555555]">#{app?.name} APK Download 📥</span>
+            <span className="rounded-full border border-[#E5E7EB] bg-[#FAFAFA] px-3 py-1 text-xs font-medium text-[#555555]">#{app?.name} ₹501 Bonus 🎁</span>
             <span className="rounded-full border border-[#E5E7EB] bg-[#FAFAFA] px-3 py-1 text-xs font-medium text-[#555555]">Yono Rummy &amp; Slots 🎰</span>
           </div>
         </div>

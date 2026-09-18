@@ -47,13 +47,13 @@ export default function AppDetail() {
   }, [location.state, parsedCache, identifier]);
 
   const [app, setApp] = useState(initialApp);
+  const [allStoreApps, setAllStoreApps] = useState(parsedCache?.apps || []);
   const [similarApps, setSimilarApps] = useState(() => {
     if (parsedCache && parsedCache.apps && initialApp) {
       return parsedCache.apps.filter(a => String(a.id) !== String(initialApp.id) && a.slug !== initialApp.slug).slice(0, 20);
     }
     return parsedCache?.apps ? parsedCache.apps.slice(0, 20) : [];
   });
-  // If we already have initialApp from cache/state, don't show infinite loading spinner
   const [loading, setLoading] = useState(!initialApp);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -65,8 +65,6 @@ export default function AppDetail() {
     }
 
     let isMounted = true;
-    
-    // Safety timeout: Never let loading spinner run for more than 4 seconds
     const timer = setTimeout(() => {
       if (isMounted) setLoading(false);
     }, 4000);
@@ -78,7 +76,13 @@ export default function AppDetail() {
           const fetchedApp = res.data.app || res.data;
           setApp(fetchedApp);
           
-          const allApps = res.data.similar || (parsedCache ? parsedCache.apps : []);
+          const listRes = await api.get("/apps?limit=100");
+          const all = [...(listRes.data.featured || []), ...(listRes.data.apps || []), ...(listRes.data.trending || [])];
+          if (all.length > 0) {
+            setAllStoreApps(all);
+          }
+
+          const allApps = res.data.similar || all;
           const filteredSimilar = allApps.filter(a => String(a.id) !== String(fetchedApp.id) && a.slug !== fetchedApp.slug);
           setSimilarApps(filteredSimilar.slice(0, 20));
         }
@@ -86,6 +90,7 @@ export default function AppDetail() {
         try {
           const listRes = await api.get("/apps?limit=100");
           const all = [...(listRes.data.featured || []), ...(listRes.data.apps || []), ...(listRes.data.trending || [])];
+          setAllStoreApps(all);
           const found = all.find(a => String(a.id) === String(identifier) || a.slug === identifier);
           if (found && isMounted) {
             setApp(found);
@@ -176,26 +181,58 @@ export default function AppDetail() {
       </div>
 
       <main className="space-y-4 px-4 pt-4">
-        {/* SEARCH BAR AT THE TOP */}
-        <form onSubmit={handleSearchSubmit} className="relative">
-          <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#777777]" />
-          <Input
-            type="search"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search apps & games..."
-            className="h-10 sm:h-11 rounded-full border-[#E5E7EB] bg-white pl-10 pr-10 text-sm sm:text-base shadow-[0_4px_14px_rgba(0,0,0,0.03)] focus-visible:ring-[#FFC107]"
-          />
-          {searchQuery && (
-            <button
-              type="button"
-              onClick={() => setSearchQuery("")}
-              className="absolute right-3 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full bg-[#F1F1F1] text-[#777777] hover:bg-[#E5E7EB]"
-            >
-              <X className="h-3 w-3" />
-            </button>
+        {/* SEARCH BAR WITH LIVE SUGGESTIONS DROPDOWN */}
+        <div className="relative">
+          <form onSubmit={handleSearchSubmit} className="relative">
+            <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#777777]" />
+            <Input
+              type="search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search apps & games..."
+              className="h-10 sm:h-11 rounded-full border-[#E5E7EB] bg-white pl-10 pr-10 text-sm sm:text-base shadow-[0_4px_14px_rgba(0,0,0,0.03)] focus-visible:ring-[#FFC107]"
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery("")}
+                className="absolute right-3 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full bg-[#F1F1F1] text-[#777777] hover:bg-[#E5E7EB]"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            )}
+          </form>
+
+          {/* Live Suggestions Dropdown */}
+          {searchQuery.trim() && (
+            <div className="absolute left-0 right-0 top-full mt-2 z-50 max-h-60 overflow-y-auto rounded-2xl border border-[#E5E7EB] bg-white shadow-xl p-2 space-y-1">
+              {(() => {
+                const q = searchQuery.toLowerCase();
+                const sourceList = allStoreApps.length > 0 ? allStoreApps : (parsedCache?.apps || similarApps);
+                const matched = sourceList.filter(a => a.name.toLowerCase().includes(q)).slice(0, 6);
+                if (matched.length === 0) {
+                  return <div className="p-3 text-center text-xs text-[#777777]">No games found</div>;
+                }
+                return matched.map(item => (
+                  <div
+                    key={item.id}
+                    onClick={() => {
+                      setSearchQuery("");
+                      navigate(`/${item.slug || item.id}`, { state: { app: item } });
+                    }}
+                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[#FFF8E1] cursor-pointer transition-colors"
+                  >
+                    <AppIcon src={resolveUrl(item.icon_url)} alt={item.name} className="h-10 w-10 rounded-xl object-cover shadow-sm" />
+                    <div className="min-w-0 flex-1">
+                      <p className="font-display text-xs font-bold text-[#111111] truncate">{item.name}</p>
+                      <p className="text-[10px] text-[#777777]">⭐ {item.rating?.toFixed(1) || "4.8"} • {item.size || "45 MB"}</p>
+                    </div>
+                  </div>
+                ));
+              })()}
+            </div>
           )}
-        </form>
+        </div>
 
         {/* App Hero Section */}
         <div className="flex items-start gap-3 sm:gap-4 rounded-[20px] sm:rounded-[24px] border border-[#E5E7EB] bg-white p-4 sm:p-5 shadow-sm">
@@ -371,7 +408,7 @@ export default function AppDetail() {
           <div className="space-y-3 text-xs">
             <div className="flex justify-between border-b border-[#F1F1F1] pb-2"><span className="text-[#777777]">Version</span><span className="font-medium text-[#111111]">{app.version || "1.0.0"}</span></div>
             <div className="flex justify-between border-b border-[#F1F1F1] pb-2"><span className="text-[#777777]">Size</span><span className="font-medium text-[#111111]">{app.size || "45 MB"}</span></div>
-            <div className="flex justify-between border-b border-[#F1F1F1] pb-2"><span className="text-[#777777]">Category</span><span className="font-medium text-[#111111]">{app.category || "Games"}</span>}</div>
+            <div className="flex justify-between border-b border-[#F1F1F1] pb-2"><span className="text-[#777777]">Category</span><span className="font-medium text-[#111111]">{app.category || "Games"}</span></div>
             <div className="flex justify-between border-b border-[#F1F1F1] pb-2"><span className="text-[#777777]">Requires</span><span className="font-medium text-[#111111]">Android 5.0+</span></div>
             <div className="flex justify-between pb-1"><span className="text-[#777777]">Developer</span><span className="font-medium text-[#111111]">newyono.games</span></div>
           </div>
@@ -391,9 +428,11 @@ export default function AppDetail() {
           </div>
           <div className="border-t border-[#E5E7EB] pt-4">
             <h2 className="font-display text-xs sm:text-sm font-bold text-[#111111] mb-3">Permissions</h2>
-            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/json" width="24" height="24" fill="none" viewBox="0 0 24 24">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"/>
-            </svg>
+            <ul className="space-y-2 text-[11px] text-[#555555]">
+              <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-[#FFC107]"></span> Storage</li>
+              <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-[#FFC107]"></span> Network access</li>
+              <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-[#FFC107]"></span> Phone state</li>
+            </ul>
           </div>
         </div>
 

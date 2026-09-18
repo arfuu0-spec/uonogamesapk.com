@@ -17,10 +17,12 @@ export default function AppDetail() {
   const location = useLocation();
   const navigate = useNavigate();
   
-  const identifier = slug || id;
+  // Robust identifier extraction (Checks params first, then falls back to URL path)
+  const pathSegments = location.pathname.split("/").filter(Boolean);
+  const identifier = slug || id || pathSegments[pathSegments.length - 1];
 
-  // Immediate safeguard at the top level
-  if (!identifier || identifier === "undefined" || identifier === "null") {
+  // Immediate safeguard if identifier is invalid
+  if (!identifier || identifier === "undefined" || identifier === "null" || identifier === "app") {
     return (
       <div className="app-shell flex min-h-screen flex-col items-center justify-center bg-white p-4 text-center">
         <p className="text-base font-bold text-[#111111] mb-2">Invalid Game Link</p>
@@ -53,7 +55,7 @@ export default function AppDetail() {
     if (parsedCache && parsedCache.apps && initialApp) {
       return parsedCache.apps.filter(a => String(a.id) !== String(initialApp.id) && a.slug !== initialApp.slug).slice(0, 20);
     }
-    return [];
+    return parsedCache?.apps ? parsedCache.apps.slice(0, 20) : [];
   });
   const [loading, setLoading] = useState(!initialApp);
   const [searchQuery, setSearchQuery] = useState("");

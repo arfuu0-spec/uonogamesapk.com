@@ -6,7 +6,6 @@ import { toast } from "sonner";
 import api, { API, resolveUrl } from "@/lib/api";
 import SEOHead from "@/components/SEOHead";
 import { useSettings, sectionEnabled } from "@/context/SettingsContext";
-import Header from "@/components/Header";
 import AppCard from "@/components/AppCard";
 import AppIcon from "@/components/AppIcon";
 import RippleButton from "@/components/RippleButton";
@@ -17,7 +16,6 @@ import FaqSection from "@/components/FaqSection";
 import LegalSection from "@/components/LegalSection";
 import LegalDialog from "@/components/LegalDialog";
 import SiteFooter from "@/components/SiteFooter";
-import AnnouncementBar from "@/components/AnnouncementBar";
 import LiveWinners from "@/components/LiveWinners";
 import ReviewsSection from "@/components/ReviewsSection";
 import RedeemBox from "@/components/RedeemBox";
@@ -272,10 +270,8 @@ export default function Store() {
         canonical="https://newyono.games/"
         image="/logo-v2.png"
       />
-      <AnnouncementBar config={settings?.announcement} />
-      <Header />
 
-      <div className="px-4 pt-3 text-center">
+      <div className="px-4 pt-4 text-center">
         <h1 className="font-display text-lg font-bold text-[#111111]">Welcome to YONO GAMES</h1>
         <p className="text-xs text-[#777777]">PLAY &amp; WIN • SINCE 2024</p>
       </div>
@@ -320,7 +316,7 @@ export default function Store() {
         </div>
       )}
 
-      <div className="sticky top-[57px] z-30 bg-[#F8F9FA]/90 px-4 py-3 backdrop-blur-md">
+      <div className="sticky top-0 z-30 bg-[#F8F9FA]/90 px-4 py-3 backdrop-blur-md">
         <div className="relative">
           <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#777777]" />
           <Input

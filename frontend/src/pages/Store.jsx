@@ -1,6 +1,6 @@
 import { useDeferredValue, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Search, Send, Download, Sparkles, TrendingUp, ShieldCheck, ArrowDownWideNarrow, X, Flame } from "lucide-react";
+import { Search, Send, Download, Sparkles, TrendingUp, ShieldCheck, ArrowDownWideNarrow, X, Flame, Gift } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import api, { API, resolveUrl } from "@/lib/api";
@@ -8,6 +8,8 @@ import SEOHead from "@/components/SEOHead";
 import { useSettings, sectionEnabled } from "@/context/SettingsContext";
 import Header from "@/components/Header";
 import AppCard from "@/components/AppCard";
+import AppIcon from "@/components/AppIcon";
+import RippleButton from "@/components/RippleButton";
 import RummyFeatures from "@/components/RummyFeatures";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import { StoreSkeleton } from "@/components/Skeletons";
@@ -258,16 +260,15 @@ export default function Store() {
     legal: isDefaultView && en("legal") ? <LegalSection key="legal" onOpen={setLegalId} /> : null,
   };
 
-  // EXPLICITLY FILTER OUT "trending" AND "featured" SO IT NEVER SHOWS UP
-  const order = (settings?.sections || []).map((s) => s.id).filter(id => id !== "trending" && id !== "featured");
+  const order = (settings?.sections || []).map((s) => s.id).filter(id => id !== "trending" && id !== "featured" && id !== "reviews" && id !== "faq" && id !== "legal");
   const finalOrder = order.includes("apps") ? order : [...order, "apps"];
 
   return (
     <div className="app-shell pb-10">
       <SEOHead
         title={settings?.seo?.homepage_title || "YONO GAMES - Play and Win | Premium Rummy & Games APK Store"}
-        description={settings?.seo?.homepage_description || "Download the latest Rummy and gaming APK apps for Android free. Fast, safe & verified downloads with sign-up bonuses at YONO GAMES — uonogamesapk.com"}
-        keywords={settings?.seo?.homepage_keywords || "yono games, rummy apk, teen patti apk, real cash rummy, apk download, android games, uono games apk"}
+        description={settings?.seo?.homepage_description || "Download the latest Rummy and gaming APK apps for Android free. Fast, safe & verified downloads with sign-up bonuses at YONO GAMES — newyono.games"}
+        keywords={settings?.seo?.homepage_keywords || "yono games, rummy apk, teen patti apk, real cash rummy, apk download, android games, newyono.games"}
         canonical="https://newyono.games/"
         image="/logo-v2.png"
       />
@@ -284,8 +285,9 @@ export default function Store() {
           <div className="overflow-hidden rounded-[20px] border border-[#E5E7EB] shadow-[0_10px_30px_rgba(0,0,0,0.1)]" data-testid="hero-banner">
             <OptimizedImage 
               src={resolveUrl(hero.banner_url || "/hero-banner.png")} 
-              alt={hero.headline || "Uonogamesapk.com"} 
+              alt={hero.headline || "newyono.games"} 
               className="block w-full" 
+              fetchPriority="high"
             />
           </div>
           {(hero.headline || hero.subtitle) && (
@@ -363,11 +365,135 @@ export default function Store() {
           <StoreSkeleton />
         ) : (
           <>
+            {/* STUNNING TOP 3 GAMES PODIUM DESIGN */}
+            {isDefaultView && (
+              <section className="space-y-3 mb-2">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-[#FFC107]" />
+                  <h2 className="font-display text-base font-bold text-[#111111]">Top 3 Games</h2>
+                </div>
+                {(() => {
+                  const top3 = (data?.featured || data?.apps || []).slice(0, 3);
+                  if (top3.length === 0) return null;
+                  const first = top3[0];
+                  const second = top3[1];
+                  const third = top3[2];
+                  return (
+                    <div className="space-y-3">
+                      {/* #1 Game Card (Prominent Top Podium Style) */}
+                      {first && (
+                        <div
+                          onClick={() => navigate(`/${first.slug || first.id}`, { state: { app: first } })}
+                          className="group relative flex cursor-pointer items-center gap-4 rounded-[22px] border-2 border-[#FFC107] bg-gradient-to-r from-[#FFFDE7] via-white to-white p-4 shadow-[0_10px_30px_rgba(255,193,7,0.15)] transition-all hover:shadow-[0_18px_36px_rgba(255,193,7,0.25)]"
+                        >
+                          <div className="absolute -left-2 -top-2 z-20 flex h-7 w-7 items-center justify-center rounded-full text-xs font-extrabold text-white shadow-md bg-gradient-to-r from-[#FFC107] to-[#FFA000] border-2 border-white">
+                            <span>👑 1</span>
+                          </div>
+                          <AppIcon src={resolveUrl(first.icon_url)} alt={first.name} className="h-20 w-20 rounded-[18px] object-cover shadow-sm ring-1 ring-black/5" />
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center justify-between gap-2">
+                              <h3 className="font-display text-base font-bold text-[#111111] truncate">{first.name}</h3>
+                              <div className="flex shrink-0 items-center gap-0.5 rounded-full bg-[#FFF8E1] px-2 py-0.5">
+                                <span className="text-xs font-semibold text-[#111111]">⭐ {first.rating?.toFixed(1) || "4.9"}</span>
+                              </div>
+                            </div>
+                            <p className="mt-0.5 text-xs text-[#777777]">v{first.version || "1.0"} • {first.size || "45 MB"}</p>
+                            <p className="mt-1 text-[11px] font-medium text-[#555555]">
+                              👥 {(first.downloads ? (first.downloads * 8).toLocaleString() : "4.2M")} active players
+                            </p>
+                            {first.signup_bonus && (
+                              <div className="mt-1.5 flex items-center gap-1.5">
+                                <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-[#FFC107] to-[#FF9800] px-2.5 py-0.5 text-[10px] font-extrabold text-white shadow-sm">
+                                  <Gift className="h-3 w-3" /> Bonus {first.signup_bonus}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                          <RippleButton
+                            onClick={(e) => { e.stopPropagation(); handleDownload(first); }}
+                            className="flex shrink-0 items-center gap-1.5 rounded-full bg-[#FFC107] px-3.5 py-2.5 text-[13px] font-semibold text-[#111111] shadow-[0_6px_16px_rgba(255,193,7,0.4)] hover:bg-[#FFB300]"
+                          >
+                            <Download className="h-4 w-4" /> Download
+                          </RippleButton>
+                        </div>
+                      )}
+
+                      {/* #2 and #3 Game Cards (Rich Grid Layout) */}
+                      <div className="grid grid-cols-2 gap-3">
+                        {[second, third].map((app, idx) => {
+                          if (!app) return null;
+                          const rank = idx + 2;
+                          return (
+                            <div
+                              key={app.id}
+                              onClick={() => navigate(`/${app.slug || app.id}`, { state: { app } })}
+                              className="relative flex flex-col cursor-pointer rounded-[20px] border border-[#E5E7EB] bg-white p-3.5 shadow-sm hover:shadow-md transition-all"
+                            >
+                              <div
+                                className="absolute -left-2 -top-2 z-20 flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-extrabold text-white shadow-md border-2 border-white"
+                                style={{ backgroundColor: rank === 2 ? "#64748B" : "#D97706" }}
+                              >
+                                <span>{rank}</span>
+                              </div>
+                              <div className="flex items-start gap-2.5 mb-2">
+                                <AppIcon src={resolveUrl(app.icon_url)} alt={app.name} className="h-14 w-14 rounded-[14px] object-cover shadow-sm shrink-0 ring-1 ring-black/5" />
+                                <div className="min-w-0 flex-1">
+                                  <h4 className="font-display text-xs font-bold text-[#111111] truncate">{app.name}</h4>
+                                  <div className="flex items-center gap-0.5 mt-0.5">
+                                    <span className="text-[10px] font-semibold text-[#111111]">⭐ {app.rating?.toFixed(1) || "4.8"}</span>
+                                  </div>
+                                  <p className="text-[10px] text-[#777777] mt-0.5">{app.size || "45 MB"}</p>
+                                </div>
+                              </div>
+                              {app.signup_bonus && (
+                                <div className="mb-2">
+                                  <span className="inline-flex items-center gap-0.5 rounded-full bg-[#FFF8E1] px-2 py-0.5 text-[9px] font-extrabold text-[#B45309]">
+                                    🎁 {app.signup_bonus}
+                                  </span>
+                                </div>
+                              )}
+                              <RippleButton
+                                onClick={(e) => { e.stopPropagation(); handleDownload(app); }}
+                                className="w-full mt-auto flex items-center justify-center gap-1 rounded-full bg-[#FFC107] py-2 text-[12px] font-semibold text-[#111111] shadow-sm hover:bg-[#FFB300]"
+                              >
+                                <Download className="h-3.5 w-3.5" /> Download
+                              </RippleButton>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })()}
+              </section>
+            )}
+
+            {/* RENDER OTHER SECTIONS VIA FINALORDER */}
             {finalOrder.map((id) => renderers[id]).filter(Boolean)}
 
-            {/* GUARANTEED 100 CLICKABLE KEYWORDS CLOUD PLACED DIRECTLY BELOW WHAT USERS SAY / REVIEWS */}
+            {/* WHAT USERS SAY (REVIEWS) */}
+            {isDefaultView && en("reviews") && <ReviewsSection key="reviews" />}
+
+            {/* SEO DESCRIPTION (EXACTLY DIRECTLY BELOW WHAT USERS SAY) */}
             {isDefaultView && (
-              <section className="rounded-[22px] border border-[#E5E7EB] bg-white p-4 shadow-[0_6px_20px_rgba(0,0,0,0.02)] space-y-3 my-4">
+              <section className="space-y-4 rounded-[24px] border border-[#E5E7EB] bg-white p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
+                <h2 className="font-display text-xl font-bold text-[#111111]">
+                  All Yono Games - Discover New Yono Apps & Play Top Gaming Apps
+                </h2>
+                <div className="space-y-4 text-sm leading-relaxed text-[#555555]">
+                  <p>
+                    Welcome to <strong>newyono.games</strong> - India's most trusted gaming platform in 2026. Get up to ₹501 sign-up bonus instantly, enjoy smooth 60 FPS gameplay, secure withdrawals, and access the latest 2026 Yono APK versions safely.
+                  </p>
+                  <p>
+                    That's exactly what <strong>All New Yono Apps</strong> aims to deliver. Our platform brings together a collection of games that combine classic gameplay with modern mobile experiences. From popular card titles like <strong>Yono Rummy</strong> to the latest slot and arcade apps gaining popularity in India, every game listed here is chosen carefully for its entertainment value.
+                  </p>
+                </div>
+              </section>
+            )}
+
+            {/* KEYWORDS CLOUD (EXACTLY DIRECTLY BELOW SEO DESCRIPTION) */}
+            {isDefaultView && (
+              <section className="rounded-[22px] border border-[#E5E7EB] bg-white p-4 shadow-[0_6px_20px_rgba(0,0,0,0.02)] space-y-3">
                 <div className="flex items-center gap-2">
                   <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-[#FFF8E1] text-[#FFC107]">
                     <Flame className="h-4 w-4 fill-[#FFC107]" />
@@ -391,34 +517,12 @@ export default function Store() {
               </section>
             )}
 
+            {/* BOTTOM SECTIONS */}
             {isDefaultView && en("winners") && <RedeemBox />}
             {isDefaultView && AdSlot && <AdSlot ads={settings?.ads} />}
+            {isDefaultView && en("faq") && <FaqSection key="faq" />}
+            {isDefaultView && en("legal") && <LegalSection key="legal" onOpen={setLegalId} />}
           </>
-        )}
-
-        {isDefaultView && (
-          <section className="mt-8 mb-4 space-y-4 rounded-[24px] border border-[#E5E7EB] bg-white p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
-            <h2 className="font-display text-xl font-bold text-[#111111]">
-              All Yono Games - Discover New Yono Apps & Play Top Gaming Apps
-            </h2>
-            <div className="space-y-4 text-sm leading-relaxed text-[#555555]">
-              <p>
-                <strong>Yono New Games</strong> was launched with a simple mission — to give players across India a place where they can easily discover, download, and enjoy exciting mobile games. We noticed that modern players want more than just simple tapping games. Today's gamers enjoy challenges that require strategy, quick thinking, and skill.
-              </p>
-              <p>
-                That's exactly what <strong>All New Yono Apps</strong> aims to deliver. Our platform brings together a collection of games that combine classic gameplay with modern mobile experiences. From popular card titles like <strong>Yono Rummy</strong> to the latest slot and arcade apps gaining popularity in India, every game listed here is chosen carefully for its entertainment value.
-              </p>
-              <h3 className="font-display text-lg font-bold text-[#111111] pt-2">
-                Why Thousands of Players Choose Yono New Games
-              </h3>
-              <p>
-                Finding a reliable place to explore mobile gaming apps can be difficult. New Yono Games focuses on making that process easier for Indian players. We provide detailed information, safe download links, fast updates, and app features right at your fingertips so you can start playing instantly.
-              </p>
-              <p className="text-xs text-[#999999] pt-2 border-t border-[#E5E7EB]">
-                Disclaimer: We are an independent informational platform. We do not own, operate, or manage any gaming applications listed on this website. Always play responsibly.
-              </p>
-            </div>
-          </section>
         )}
       </main>
 

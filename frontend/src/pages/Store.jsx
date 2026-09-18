@@ -63,6 +63,16 @@ const LANDING_100_KEYWORDS = [
   "First Deposit Bonus", "Extra Cashback Offer", "Loss Back Guarantee", "Instant Support 24x7", "Official Yono Games Store"
 ];
 
+function StoreSkeleton() {
+  return (
+    <div className="space-y-3 py-4 animate-pulse">
+      <div className="h-24 rounded-[22px] bg-gray-100" />
+      <div className="h-20 rounded-[22px] bg-gray-100" />
+      <div className="h-20 rounded-[22px] bg-gray-100" />
+    </div>
+  );
+}
+
 export default function Store() {
   const { settings } = useSettings();
   const navigate = useNavigate();

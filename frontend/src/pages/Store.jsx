@@ -12,7 +12,6 @@ import AppIcon from "@/components/AppIcon";
 import RippleButton from "@/components/RippleButton";
 import RummyFeatures from "@/components/RummyFeatures";
 import AnimatedCounter from "@/components/AnimatedCounter";
-import { StoreSkeleton } from "@/components/Skeletons";
 import FaqSection from "@/components/FaqSection";
 import LegalSection from "@/components/LegalSection";
 import LegalDialog from "@/components/LegalDialog";
@@ -365,7 +364,7 @@ export default function Store() {
           <StoreSkeleton />
         ) : (
           <>
-            {/* TOP 3 GAMES PODIUM DESIGN (#1 UPAR PROMINENT, #2 & #3 SIDE BY SIDE) */}
+            {/* TOP 3 GAMES PODIUM DESIGN (#1 UPAR PROMINENT, #2 & #3 SIDE BY SIDE WITH FULL DETAILS) */}
             {isDefaultView && (
               <section className="space-y-3 mb-2">
                 <div className="flex items-center gap-2">
@@ -380,36 +379,46 @@ export default function Store() {
                   const third = top3[2];
                   return (
                     <div className="space-y-3">
-                      {/* #1 Game Card (Prominent Top) */}
+                      {/* #1 Game Card (Prominent Top Podium Style) */}
                       {first && (
                         <div
                           onClick={() => navigate(`/${first.slug || first.id}`, { state: { app: first } })}
-                          className="relative flex cursor-pointer items-center gap-4 rounded-[22px] border-2 border-[#FFC107] bg-gradient-to-r from-[#FFF8E1] to-white p-4 shadow-md transition-shadow hover:shadow-lg"
+                          className="group relative flex cursor-pointer items-center gap-4 rounded-[22px] border-2 border-[#FFC107] bg-gradient-to-r from-[#FFFDE7] via-white to-white p-4 shadow-[0_10px_30px_rgba(255,193,7,0.15)] transition-all hover:shadow-[0_18px_36px_rgba(255,193,7,0.25)]"
                         >
-                          <div className="absolute -left-2 -top-2 z-20 flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-extrabold text-white shadow-md bg-[#FFC107] border-2 border-white">
-                            <span>1</span>
+                          <div className="absolute -left-2 -top-2 z-20 flex h-7 w-7 items-center justify-center rounded-full text-xs font-extrabold text-white shadow-md bg-gradient-to-r from-[#FFC107] to-[#FFA000] border-2 border-white">
+                            <span>👑 1</span>
                           </div>
-                          <AppIcon src={resolveUrl(first.icon_url)} alt={first.name} className="h-20 w-20 rounded-[18px] object-cover shadow-sm" />
+                          <AppIcon src={resolveUrl(first.icon_url)} alt={first.name} className="h-20 w-20 rounded-[18px] object-cover shadow-sm ring-1 ring-black/5" />
                           <div className="min-w-0 flex-1">
-                            <h3 className="font-display text-base font-bold text-[#111111] truncate">{first.name}</h3>
-                            <p className="text-xs text-[#777777]">v{first.version || "1.0"} • {first.size || "45 MB"}</p>
+                            <div className="flex items-center justify-between gap-2">
+                              <h3 className="font-display text-base font-bold text-[#111111] truncate">{first.name}</h3>
+                              <div className="flex shrink-0 items-center gap-0.5 rounded-full bg-[#FFF8E1] px-2 py-0.5">
+                                <span className="text-xs font-semibold text-[#111111]">⭐ {first.rating?.toFixed(1) || "4.9"}</span>
+                              </div>
+                            </div>
+                            <p className="mt-0.5 text-xs text-[#777777]">v{first.version || "1.0"} • {first.size || "45 MB"}</p>
+                            <p className="mt-1 text-[11px] font-medium text-[#555555]">
+                              👥 {(first.downloads ? (first.downloads * 8).toLocaleString() : "4.2M")} active players
+                            </p>
                             {first.signup_bonus && (
-                              <span className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-[#FFC107] px-2.5 py-0.5 text-[10px] font-extrabold text-white shadow-sm">
-                                <Gift className="h-3 w-3" /> Bonus {first.signup_bonus}
-                              </span>
+                              <div className="mt-1.5 flex items-center gap-1.5">
+                                <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-[#FFC107] to-[#FF9800] px-2.5 py-0.5 text-[10px] font-extrabold text-white shadow-sm">
+                                  <Gift className="h-3 w-3" /> Bonus {first.signup_bonus}
+                                </span>
+                              </div>
                             )}
                           </div>
                           <RippleButton
                             onClick={(e) => { e.stopPropagation(); handleDownload(first); }}
-                            className="flex shrink-0 items-center gap-1.5 rounded-full bg-[#FFC107] px-3.5 py-2.5 text-[13px] font-semibold text-[#111111] shadow-md hover:bg-[#FFB300]"
+                            className="flex shrink-0 items-center gap-1.5 rounded-full bg-[#FFC107] px-3.5 py-2.5 text-[13px] font-semibold text-[#111111] shadow-[0_6px_16px_rgba(255,193,7,0.4)] hover:bg-[#FFB300]"
                           >
                             <Download className="h-4 w-4" /> Download
                           </RippleButton>
                         </div>
                       )}
 
-                      {/* #2 and #3 Game Cards (Side by Side Below #1) */}
-                      <div className="grid grid-cols-2 gap-2.5">
+                      {/* #2 and #3 Game Cards (Rich Grid Layout) */}
+                      <div className="grid grid-cols-2 gap-3">
                         {[second, third].map((app, idx) => {
                           if (!app) return null;
                           const rank = idx + 2;
@@ -417,26 +426,36 @@ export default function Store() {
                             <div
                               key={app.id}
                               onClick={() => navigate(`/${app.slug || app.id}`, { state: { app } })}
-                              className="relative flex flex-col cursor-pointer rounded-[18px] border border-[#E5E7EB] bg-white p-3 shadow-sm hover:shadow-md transition-shadow"
+                              className="relative flex flex-col cursor-pointer rounded-[20px] border border-[#E5E7EB] bg-white p-3.5 shadow-sm hover:shadow-md transition-all"
                             >
                               <div
-                                className="absolute -left-2 -top-2 z-20 flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-extrabold text-white shadow-md border-2 border-white"
-                                style={{ backgroundColor: rank === 2 ? "#9E9E9E" : "#CD7F32" }}
+                                className="absolute -left-2 -top-2 z-20 flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-extrabold text-white shadow-md border-2 border-white"
+                                style={{ backgroundColor: rank === 2 ? "#64748B" : "#D97706" }}
                               >
                                 <span>{rank}</span>
                               </div>
-                              <div className="flex items-center gap-2 mb-2.5">
-                                <AppIcon src={resolveUrl(app.icon_url)} alt={app.name} className="h-12 w-12 rounded-[14px] object-cover shadow-sm shrink-0" />
+                              <div className="flex items-start gap-2.5 mb-2">
+                                <AppIcon src={resolveUrl(app.icon_url)} alt={app.name} className="h-14 w-14 rounded-[14px] object-cover shadow-sm shrink-0 ring-1 ring-black/5" />
                                 <div className="min-w-0 flex-1">
                                   <h4 className="font-display text-xs font-bold text-[#111111] truncate">{app.name}</h4>
-                                  <p className="text-[10px] text-[#777777]">{app.size || "45 MB"}</p>
+                                  <div className="flex items-center gap-0.5 mt-0.5">
+                                    <span className="text-[10px] font-semibold text-[#111111]">⭐ {app.rating?.toFixed(1) || "4.8"}</span>
+                                  </div>
+                                  <p className="text-[10px] text-[#777777] mt-0.5">{app.size || "45 MB"}</p>
                                 </div>
                               </div>
+                              {app.signup_bonus && (
+                                <div className="mb-2">
+                                  <span className="inline-flex items-center gap-0.5 rounded-full bg-[#FFF8E1] px-2 py-0.5 text-[9px] font-extrabold text-[#B45309]">
+                                    🎁 {app.signup_bonus}
+                                  </span>
+                                </div>
+                              )}
                               <RippleButton
                                 onClick={(e) => { e.stopPropagation(); handleDownload(app); }}
-                                className="w-full mt-auto flex items-center justify-center gap-1 rounded-full bg-[#FFC107] py-2 text-[11px] font-semibold text-[#111111] shadow-sm hover:bg-[#FFB300]"
+                                className="w-full mt-auto flex items-center justify-center gap-1 rounded-full bg-[#FFC107] py-2 text-[12px] font-semibold text-[#111111] shadow-sm hover:bg-[#FFB300]"
                               >
-                                <Download className="h-3 w-3" /> Get
+                                <Download className="h-3.5 w-3.5" /> Download
                               </RippleButton>
                             </div>
                           );

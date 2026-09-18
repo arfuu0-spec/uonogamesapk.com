@@ -209,25 +209,24 @@ export default function AppDetail() {
       </div>
 
       <main className="space-y-6 px-4 pt-6">
-        {/* HERO MOCKUP SECTION */}
-        <div className="text-center relative">
+        {/* HERO MOCKUP SECTION WITH WHITE CARD FOR PERFECT VISIBILITY */}
+        <div className="rounded-[24px] bg-white text-[#111111] p-6 text-center shadow-2xl relative">
           <div className="inline-block mb-3">
             <div className="relative flex items-center justify-center">
-              <div className="absolute -inset-2 rounded-3xl bg-white/10 blur-md"></div>
-              <AppIcon src={resolveUrl(app.icon_url)} alt={app.name} className="relative h-24 w-24 rounded-[22px] object-cover shadow-2xl border-2 border-white/30" />
+              <AppIcon src={resolveUrl(app.icon_url)} alt={app.name} className="relative h-24 w-24 rounded-[22px] object-cover shadow-lg border border-[#E5E7EB]" />
             </div>
           </div>
-          <h1 className="font-display text-2xl font-black text-white uppercase tracking-wide">{app.name}</h1>
-          <p className="mt-1 text-sm font-medium text-white/95">Play 25+ Games • Win Upto ₹5 Crores Daily</p>
-          <p className="text-xs text-white/80 mt-0.5">Play on India's Best Gaming App.</p>
+          <h1 className="font-display text-2xl font-black text-[#111111] uppercase tracking-wide">{app.name}</h1>
+          <p className="mt-1 text-sm font-medium text-[#555555]">Play 25+ Games • Win Upto ₹5 Crores Daily</p>
+          <p className="text-xs text-[#777777] mt-0.5">Play on India's Best Gaming App.</p>
 
-          {/* MAIN DOWNLOAD CTA (Changed from Wait For Apk to Download) */}
+          {/* MAIN DOWNLOAD CTA (Neutral matching color instead of yellow) */}
           <div className="mt-5 max-w-sm mx-auto">
-            <RippleButton onClick={() => handleDownload(app)} className="w-full flex items-center justify-center gap-2 rounded-2xl bg-[#FFC107] py-4 text-base font-black text-[#111111] shadow-[0_10px_30px_rgba(255,193,7,0.4)] hover:bg-[#FFB300] transition-all">
-              <Download className="h-5 w-5 text-[#111111]" />
+            <RippleButton onClick={() => handleDownload(app)} className="w-full flex items-center justify-center gap-2 rounded-2xl bg-[#E5E7EB] py-4 text-base font-extrabold text-[#111111] shadow-md hover:bg-gray-300 transition-all">
+              <Download className="h-5 w-5 text-[#374151]" />
               <span>Download APK ({app.size || "45 MB"})</span>
             </RippleButton>
-            <p className="mt-2 text-center text-xs font-semibold text-yellow-200">🔥 Get 5% Bonus on every Add Cash up to ₹100,000</p>
+            <p className="mt-2 text-center text-xs font-semibold text-[#D97706]">🔥 Get 5% Bonus on every Add Cash up to ₹100,000</p>
           </div>
         </div>
 
@@ -333,7 +332,7 @@ export default function AppDetail() {
                       </span>
                     )}
                   </div>
-                  <RippleButton onClick={(e) => { e.stopPropagation(); handleDownload(simApp); }} className="rounded-full bg-[#FFC107] px-4 py-2 text-xs font-bold text-[#111111] shadow-md hover:bg-[#FFB300] shrink-0">
+                  <RippleButton onClick={(e) => { e.stopPropagation(); handleDownload(simApp); }} className="rounded-full bg-[#E5E7EB] px-4 py-2 text-xs font-bold text-[#111111] shadow-md hover:bg-white shrink-0">
                     Download
                   </RippleButton>
                 </div>

@@ -40,28 +40,52 @@ const SORTS = [
 ];
 
 const LANDING_100_KEYWORDS = [
-  "yono games all app", "yono games apk", "all yono games list apk", "yono game apk download for android latest version",
-  "all your game store", "yono app link", "all yono game new", "yono game home", "yono india", "you know game",
-  "Yono Games", "Yono Rummy", "Rummy Games", "Money Games", "Casino Games", "Teen Patti Real Cash",
-  "New Yono Apps 2026", "Best Rummy App India", "Sign Up Bonus 501", "Instant UPI Withdrawal",
-  "Mod APK Download", "Yono VIP Program", "Daily Jackpot Win", "Safe APK Store", "Online Card Games",
-  "Yono All Games List", "Winning Strategies", "Fastest Withdrawal App", "Trusted Rummy Platform",
-  "Android Gaming Hub", "Free Bonus Apps", "Real Money Games", "Latest Version Update", "Ind Rummy APK",
-  "Gold Rummy Download", "Yono Ludo App", "Teen Patti Gold", "Dragon Tiger Game", "Andar Bahar Online",
-  "7 Up 7 Down Game", "Car Roulette APK", "Zoo Roulette", "Crash Aviator Game", "Roulette Casino App",
-  "Poker Real Money", "Blackjack Online India", "Slots Win APK", "Teen Patti Master", "Yono 777 Game",
-  "Yono Slots Spin", "All Yono Rummy List", "New Rummy App 2026", "Bonus Rummy App", "No 1 Rummy Game",
-  "Real Cash Earning Apps", "Paytm Cash Games", "PhonePe Withdrawal Apps", "Google Pay Rummy", "Instant Bank Transfer Games",
-  "Safe Rummy App", "Verified APK Store", "Anti Ban Mod APK", "High Payout Casino", "Big Win Rummy",
-  "Mega Jackpot Apps", "Daily Login Bonus", "Refer and Earn Rummy", "Level Up Rewards", "VIP Club Games",
-  "Customer Care Rummy", "Direct APK Link", "Fastest App Download", "Lightweight Gaming APK", "Smooth 60 FPS Games",
-  "Offline & Online Games", "Regular App Updates", "Secure SSL Download", "Malware Free APK", "Trusted Developer Apps",
-  "Top Rated Card Games", "Most Downloaded Rummy", "Trending Casino APK", "Exclusive Game Codes", "Redeem Code Rummy",
-  "Promo Code Bonus", "Unlimited Chips Hack", "Winning Tricks Rummy", "Pro Player Strategy", "Expert Guide APK",
-  "App Installation Guide", "Root Free APK", "Android 14 Supported", "Low Storage Games", "High Speed APK Server",
-  "Multiplayer Card Games", "Live Dealer Casino", "Real Time Leaderboard", "Tournament Rummy APK", "Weekly Cash Prizes",
-  "Monthly Mega Contests", "Special Festival Bonus", "New Year Rummy Offer", "Diwali Special Bonus", "Welcome Bonus 501",
-  "First Deposit Bonus", "Extra Cashback Offer", "Loss Back Guarantee", "Instant Support 24x7", "Official Yono Games Store"
+  "yono games all app",
+  "yono games app",
+  "yono app",
+  "you games online",
+  "all your game store",
+  "you know games",
+  "yono app link",
+  "all yono game new",
+  "rummy game app store",
+  "new yono games",
+  "yono games com apk",
+  "yono game apk download for android latest version",
+  "yono games apk lsgd",
+  "yono games 2",
+  "you know game",
+  "yono game google",
+  "yono genes",
+  "all your game app download",
+  "all you game",
+  "all your app",
+  "all many games",
+  "all your game apk latest version",
+  "you game game",
+  "all your games download free",
+  "all your gamespin crush",
+  "yono games apk",
+  "yono all games",
+  "all your game apk",
+  "all yono games list apk",
+  "yono game home",
+  "yono india",
+  "all you know game",
+  "all new game",
+  "yono arcade all apk",
+  "yono rummy games for android",
+  "yono games all new apk",
+  "yono games all new 2026 apk",
+  "all yono games app",
+  "all yono game new",
+  "yono app",
+  "yono game home",
+  "yono india",
+  "all yono games list apk",
+  "yono arcade all apk",
+  "yono games all new apk",
+  "yono games all new 2026 apk"
 ];
 
 export default function Store() {
@@ -508,7 +532,7 @@ export default function Store() {
                     <Flame className="h-4 w-4 fill-[#FFC107]" />
                   </span>
                   <div>
-                    <h3 className="font-display text-sm font-bold text-[#111111]">Top 100 Yono Games, Rummy &amp; Money Game Keywords 🔥</h3>
+                    <h3 className="font-display text-sm font-bold text-[#111111]">Top Google Search Keywords 🔥</h3>
                     <p className="text-[10px] text-[#888888]">Click any keyword to explore games and instant download links 🔍</p>
                   </div>
                 </div>

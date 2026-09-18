@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-import { Star, BadgeCheck, Download, Gift, ArrowLeft, ShieldCheck, Zap, Wifi, Sparkles, CheckCircle2, Search, X, Flame } from "lucide-react";
+import { Star, BadgeCheck, Download, Gift, ArrowLeft, ShieldCheck, Zap, Wifi, Sparkles, CheckCircle2, Search, X, Flame, Home } from "lucide-react";
 import api, { API, resolveUrl } from "@/lib/api";
 import SEOHead from "@/components/SEOHead";
 import AppIcon from "@/components/AppIcon";
@@ -132,7 +132,6 @@ export default function AppDetail() {
     const currentApp = targetApp || app;
     if (!currentApp) return;
 
-    // Toast notification removed completely as requested
     if (currentApp.apk_url && currentApp.apk_url.startsWith("http")) {
       window.open(currentApp.apk_url, "_blank"); 
       api.get(`/apps/${currentApp.id}/download`).catch(() => {});
@@ -197,12 +196,17 @@ export default function AppDetail() {
         </a>
       </div>
 
-      {/* Top Header Bar */}
-      <div className="sticky top-0 z-40 flex items-center gap-3 bg-[#007A48]/95 px-4 py-3 backdrop-blur-md border-b border-white/15">
-        <button onClick={() => navigate(-1)} className="flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-white shadow-sm hover:bg-white/25">
-          <ArrowLeft className="h-4 w-4" />
-        </button>
-        <span className="truncate font-display text-sm font-bold text-white">{app.name} - Official Download 📥</span>
+      {/* Top Header Bar with Larger Home & Back Buttons */}
+      <div className="sticky top-0 z-40 flex items-center justify-between bg-[#007A48]/95 px-4 py-3 backdrop-blur-md border-b border-white/15">
+        <div className="flex items-center gap-2">
+          <button onClick={() => navigate("/")} className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 text-white shadow-md hover:bg-white/30 transition-transform" aria-label="Go to Home">
+            <Home className="h-5 w-5" />
+          </button>
+          <button onClick={() => navigate(-1)} className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 text-white shadow-md hover:bg-white/30 transition-transform" aria-label="Go Back">
+            <ArrowLeft className="h-5 w-5" />
+          </button>
+        </div>
+        <span className="truncate font-display text-sm font-bold text-white max-w-[180px] sm:max-w-xs">{app.name} 📥</span>
       </div>
 
       <main className="space-y-6 px-4 pt-6">
@@ -298,7 +302,7 @@ export default function AppDetail() {
           )}
         </div>
 
-        {/* PEOPLE ALSO LIKE SECTION - BADE AUR GRAND SIZE GAMES */}
+        {/* PEOPLE ALSO LIKE SECTION */}
         {similarApps.length > 0 && (
           <div className="rounded-[24px] border border-white/20 bg-[#007A48] p-5 shadow-xl space-y-4">
             <div className="flex items-center gap-2">

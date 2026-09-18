@@ -19,7 +19,6 @@ export default function AppDetail() {
   
   const identifier = slug || id;
 
-  // Instant cache check for lightning-fast loading
   const cachedData = typeof window !== "undefined" ? localStorage.getItem("yono_apps_perm_cache") : null;
   const parsedCache = useMemo(() => {
     try {
@@ -37,26 +36,26 @@ export default function AppDetail() {
     return null;
   }, [location.state, parsedCache, identifier]);
 
-  const initialSimilar = useMemo(() => {
-    if (parsedCache && parsedCache.apps) {
-      return parsedCache.apps.filter(a => String(a.id) !== String(identifier)).slice(0, 6);
-    }
-    return [];
-  }, [parsedCache, identifier]);
-
   const [app, setApp] = useState(initialApp);
-  const [similarApps, setSimilarApps] = useState(initialSimilar);
+  const [similarApps, setSimilarApps] = useState([]);
   const [loading, setLoading] = useState(!initialApp);
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    if (!identifier || identifier === "undefined") return;
+    setLoading(true);
+
     const fetchAppData = async () => {
       try {
         const res = await api.get(`/apps/${identifier}`);
         if (res.data) {
-          setApp(res.data.app || res.data);
-          if (res.data.similar) setSimilarApps(res.data.similar);
+          const fetchedApp = res.data.app || res.data;
+          setApp(fetchedApp);
+          
+          const allApps = res.data.similar || (parsedCache ? parsedCache.apps : []);
+          const filteredSimilar = allApps.filter(a => String(a.id) !== String(fetchedApp.id) && a.slug !== fetchedApp.slug);
+          setSimilarApps(filteredSimilar.slice(0, 20));
         }
       } catch (e) {
         try {
@@ -65,7 +64,7 @@ export default function AppDetail() {
           const found = all.find(a => String(a.id) === String(identifier) || a.slug === identifier);
           if (found) {
             setApp(found);
-            setSimilarApps(all.filter(a => a.id !== found.id).slice(0, 6));
+            setSimilarApps(all.filter(a => String(a.id) !== String(found.id) && a.slug !== identifier).slice(0, 20));
           }
         } catch (err) {
           if (!app) toast.error("Failed to load app details");
@@ -75,12 +74,8 @@ export default function AppDetail() {
       }
     };
 
-    if (!app || (String(app.id) !== String(identifier) && app.slug !== identifier)) {
-      fetchAppData();
-    } else {
-      setLoading(false);
-    }
-  }, [identifier, app]);
+    fetchAppData();
+  }, [identifier]);
 
   const handleDownload = (targetApp) => {
     const currentApp = targetApp || app;
@@ -225,7 +220,7 @@ export default function AppDetail() {
           <p className="mt-2 text-center text-[11px] text-[#777777]">🔒 Safe & virus-scanned • 500,013 downloads</p>
         </div>
 
-        {/* PEOPLE ALSO LIKE SECTION (Updated Text) */}
+        {/* PEOPLE ALSO LIKE SECTION (20 GAMES) */}
         {similarApps.length > 0 && (
           <div className="rounded-[24px] border border-[#E5E7EB] bg-white p-5 shadow-sm space-y-4">
             <div className="flex items-center gap-2">

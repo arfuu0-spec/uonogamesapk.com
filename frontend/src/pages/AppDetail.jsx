@@ -184,7 +184,7 @@ export default function AppDetail() {
         image={app.icon_url || "/logo-v2.png"}
       />
 
-      {/* RIGHT SIDE FLOATING SOCIAL SIDEBAR (101z Style) */}
+      {/* RIGHT SIDE FLOATING SOCIAL SIDEBAR */}
       <div className="fixed right-2 top-1/3 z-50 flex flex-col gap-2">
         <a href="https://t.me" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#229ED9] text-white shadow-xl hover:scale-110 transition-transform">
           ✈️
@@ -201,15 +201,15 @@ export default function AppDetail() {
       </div>
 
       {/* Top Header Bar */}
-      <div className="sticky top-0 z-40 flex items-center gap-3 bg-[#00925B]/95 px-4 py-3 backdrop-blur-md border-b border-white/10">
-        <button onClick={() => navigate(-1)} className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white shadow-sm hover:bg-white/20">
+      <div className="sticky top-0 z-40 flex items-center gap-3 bg-[#008552]/95 px-4 py-3 backdrop-blur-md border-b border-white/15">
+        <button onClick={() => navigate(-1)} className="flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-white shadow-sm hover:bg-white/25">
           <ArrowLeft className="h-4 w-4" />
         </button>
         <span className="truncate font-display text-sm font-bold text-white">{app.name} - Official Download</span>
       </div>
 
       <main className="space-y-6 px-4 pt-6">
-        {/* 101z HERO MOCKUP SECTION */}
+        {/* HERO MOCKUP SECTION */}
         <div className="text-center relative">
           <div className="inline-block mb-3">
             <div className="relative flex items-center justify-center">
@@ -218,12 +218,12 @@ export default function AppDetail() {
             </div>
           </div>
           <h1 className="font-display text-2xl font-black text-white uppercase tracking-wide">{app.name}</h1>
-          <p className="mt-1 text-sm font-medium text-white/90">Play 25+ Games • Win Upto ₹5 Crores Daily</p>
-          <p className="text-xs text-white/70 mt-0.5">Play on India's Best Gaming App.</p>
+          <p className="mt-1 text-sm font-medium text-white/95">Play 25+ Games • Win Upto ₹5 Crores Daily</p>
+          <p className="text-xs text-white/80 mt-0.5">Play on India's Best Gaming App.</p>
 
-          {/* MAIN 101z DOWNLOAD CTA */}
+          {/* MAIN DOWNLOAD CTA */}
           <div className="mt-5 max-w-sm mx-auto">
-            <RippleButton onClick={() => handleDownload(app)} className="w-full flex items-center justify-center gap-2 rounded-2xl bg-[#E5E7EB] py-4 text-base font-extrabold text-[#111111] shadow-[0_10px_30px_rgba(0,0,0,0.2)] hover:bg-white transition-all">
+            <RippleButton onClick={() => handleDownload(app)} className="w-full flex items-center justify-center gap-2 rounded-2xl bg-[#E5E7EB] py-4 text-base font-extrabold text-[#111111] shadow-[0_10px_30px_rgba(0,0,0,0.3)] hover:bg-white transition-all">
               <Download className="h-5 w-5 text-[#374151]" />
               <span>Wait For Apk...</span>
             </RippleButton>
@@ -231,37 +231,37 @@ export default function AppDetail() {
           </div>
         </div>
 
-        {/* IMPS & UPI TRUST BADGES SECTION (101z Reference) */}
-        <div className="rounded-[24px] bg-white text-[#111111] p-5 shadow-xl space-y-4">
-          <p className="text-center text-xs font-bold text-[#555555]">Withdraw winnings directly to your.</p>
-          <div className="grid grid-cols-2 gap-4 items-center justify-center border-t border-b border-[#E5E7EB] py-4">
-            <div className="text-center border-r border-[#E5E7EB]">
-              <span className="font-display font-black text-lg tracking-tighter text-[#1e293b]">IMPS</span>
-              <p className="text-[9px] text-[#777777]">IMMEDIATE PAYMENT SERVICE</p>
-              <p className="text-[10px] font-bold text-[#111111] mt-1">Bank Transfer</p>
+        {/* IMPS & UPI TRUST BADGES SECTION (Rich Dark Green Container) */}
+        <div className="rounded-[24px] bg-[#007A4D] text-white p-5 shadow-2xl border border-white/20 space-y-4">
+          <p className="text-center text-xs font-bold text-white/9ulin">Withdraw winnings directly to your.</p>
+          <div className="grid grid-cols-2 gap-4 items-center justify-center border-t border-b border-white/20 py-4">
+            <div className="text-center border-r border-white/20">
+              <span className="font-display font-black text-lg tracking-tighter text-white">IMPS</span>
+              <p className="text-[9px] text-white/70">IMMEDIATE PAYMENT SERVICE</p>
+              <p className="text-[10px] font-bold text-yellow-300 mt-1">Bank Transfer</p>
             </div>
             <div className="text-center">
-              <span className="font-display font-black text-lg tracking-tighter text-[#2563eb]">UPI</span>
-              <p className="text-[9px] text-[#777777]">UNIFIED PAYMENTS INTERFACE</p>
-              <p className="text-[10px] font-bold text-[#111111] mt-1">UPI Transfer</p>
+              <span className="font-display font-black text-lg tracking-tighter text-yellow-300">UPI</span>
+              <p className="text-[9px] text-white/70">UNIFIED PAYMENTS INTERFACE</p>
+              <p className="text-[10px] font-bold text-yellow-300 mt-1">UPI Transfer</p>
             </div>
           </div>
           <div className="text-center">
-            <h3 className="font-display text-sm font-bold text-[#111111]">Truly Best India Game Platform</h3>
-            <p className="text-xs text-[#666666] mt-1">Fastest withdrawals, secure servers and 24x7 support.</p>
+            <h3 className="font-display text-sm font-bold text-white">Truly Best India Game Platform</h3>
+            <p className="text-xs text-white/80 mt-1">Fastest withdrawals, secure servers and 24x7 support.</p>
           </div>
         </div>
 
         {/* SEARCH BAR */}
         <div className="relative">
           <form onSubmit={handleSearchSubmit} className="relative">
-            <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-200" />
+            <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-white/70" />
             <Input
               type="search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search other games..."
-              className="h-11 rounded-full border-white/30 bg-white/10 pl-10 pr-10 text-sm text-white placeholder:text-white/70 shadow-md focus-visible:ring-white"
+              className="h-11 rounded-full border-white/30 bg-[#007A4D] pl-10 pr-10 text-sm text-white placeholder:text-white/70 shadow-md focus-visible:ring-white"
             />
             {searchQuery && (
               <button
@@ -276,13 +276,13 @@ export default function AppDetail() {
 
           {/* Live Suggestions Dropdown */}
           {searchQuery.trim() && (
-            <div className="absolute left-0 right-0 top-full mt-2 z-50 max-h-60 overflow-y-auto rounded-2xl border border-white/20 bg-[#00925B] shadow-2xl p-2 space-y-1 text-white">
+            <div className="absolute left-0 right-0 top-full mt-2 z-50 max-h-60 overflow-y-auto rounded-2xl border border-white/20 bg-[#007A4D] shadow-2xl p-2 space-y-1 text-white">
               {(() => {
                 const q = searchQuery.toLowerCase();
                 const sourceList = allStoreApps.length > 0 ? allStoreApps : (parsedCache?.apps || similarApps);
                 const matched = sourceList.filter(a => a.name.toLowerCase().includes(q)).slice(0, 6);
                 if (matched.length === 0) {
-                  return <div className="p-3 text-center text-xs text-white/70">No games found</div>;
+                  return <div className="p-3 text-center text-xs text-white/80">No games found</div>;
                 }
                 return matched.map(item => (
                   <div
@@ -291,12 +291,12 @@ export default function AppDetail() {
                       setSearchQuery("");
                       navigate(`/${item.slug || item.id}`, { state: { app: item } });
                     }}
-                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/10 cursor-pointer transition-colors"
+                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/15 cursor-pointer transition-colors"
                   >
                     <AppIcon src={resolveUrl(item.icon_url)} alt={item.name} className="h-10 w-10 rounded-xl object-cover shadow-sm" />
                     <div className="min-w-0 flex-1">
                       <p className="font-display text-xs font-bold text-white truncate">{item.name}</p>
-                      <p className="text-[10px] text-white/75">⭐ {item.rating?.toFixed(1) || "4.8"} • {item.size || "45 MB"}</p>
+                      <p className="text-[10px] text-white/80">⭐ {item.rating?.toFixed(1) || "4.8"} • {item.size || "45 MB"}</p>
                     </div>
                   </div>
                 ));
@@ -307,19 +307,19 @@ export default function AppDetail() {
 
         {/* PEOPLE ALSO LIKE SECTION */}
         {similarApps.length > 0 && (
-          <div className="rounded-[24px] border border-white/20 bg-white/10 backdrop-blur-md p-4 shadow-xl space-y-3">
+          <div className="rounded-[24px] border border-white/20 bg-[#007A4D] p-4 shadow-xl space-y-3">
             <div className="flex items-center gap-2">
               <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-white text-[#00A86B]">
                 <Sparkles className="h-4 w-4 fill-[#00A86B]" />
               </span>
               <div>
                 <h2 className="font-display text-sm font-bold text-white">People also like</h2>
-                <p className="text-[10px] text-white/80">Top trending gaming apps for you</p>
+                <p className="text-[10px] text-white/85">Top trending gaming apps for you</p>
               </div>
             </div>
             <div className="space-y-2.5 pt-1">
               {similarApps.map((simApp, idx) => (
-                <div key={simApp.id} onClick={() => navigate(`/${simApp.slug || simApp.id}`, { state: { app: simApp } })} className="flex items-center gap-3 rounded-xl bg-white/10 p-2.5 border border-white/15 hover:bg-white/20 cursor-pointer transition-all">
+                <div key={simApp.id} onClick={() => navigate(`/${simApp.slug || simApp.id}`, { state: { app: simApp } })} className="flex items-center gap-3 rounded-xl bg-[#006841] p-2.5 border border-white/15 hover:bg-[#005c38] cursor-pointer transition-all">
                   <AppIcon src={resolveUrl(simApp.icon_url)} alt={simApp.name} className="h-12 w-12 rounded-xl object-cover shadow-md shrink-0" />
                   <div className="min-w-0 flex-1">
                     <h3 className="font-display text-xs font-bold text-white truncate">{simApp.name}</h3>
@@ -335,29 +335,29 @@ export default function AppDetail() {
         )}
 
         {/* STRONG GAME-SPECIFIC SEO DESCRIPTION */}
-        <div className="rounded-[24px] border border-white/20 bg-white/10 backdrop-blur-md p-4 shadow-xl space-y-3 text-white">
+        <div className="rounded-[24px] border border-white/20 bg-[#007A4D] p-4 shadow-xl space-y-3 text-white">
           <h2 className="font-display text-sm font-bold text-yellow-200 flex items-center gap-2">
             <Zap className="h-4 w-4 fill-yellow-200" /> About {app.name} on newyono.games
           </h2>
-          <p className="text-xs leading-relaxed text-white/90">
+          <p className="text-xs leading-relaxed text-white/95">
             Welcome to the official download page for <strong>{app.name}</strong> on newyono.games — India's premier Yono Games, Rummy Games &amp; Slots Games platform. Experience the thrill of real cash gaming with a massive <strong>₹501 sign-up bonus</strong>, instant UPI withdrawals, and buttery-smooth 60 FPS performance in 2026. Discover why millions of players trust {app.name} for secure card games, slots, and daily rewards.
           </p>
           <div className="flex flex-wrap gap-1.5 pt-1">
-            <span className="rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-[10px] font-medium text-white/90">#{app.name} APK Download</span>
-            <span className="rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-[10px] font-medium text-white/90">#{app.name} ₹501 Bonus</span>
-            <span className="rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-[10px] font-medium text-white/90">Yono Rummy & Slots</span>
+            <span className="rounded-full border border-white/20 bg-[#006841] px-2.5 py-1 text-[10px] font-medium text-white/95">#{app.name} APK Download</span>
+            <span className="rounded-full border border-white/20 bg-[#006841] px-2.5 py-1 text-[10px] font-medium text-white/95">#{app.name} ₹501 Bonus</span>
+            <span className="rounded-full border border-white/20 bg-[#006841] px-2.5 py-1 text-[10px] font-medium text-white/95">Yono Rummy & Slots</span>
           </div>
         </div>
 
         {/* KEYWORDS CLOUD */}
-        <div className="rounded-[20px] border border-white/20 bg-white/10 backdrop-blur-md p-4 shadow-xl space-y-2.5 text-white">
+        <div className="rounded-[20px] border border-white/20 bg-[#007A4D] p-4 shadow-xl space-y-2.5 text-white">
           <div className="flex items-center gap-2">
             <span className="flex h-6 w-6 items-center justify-center rounded-xl bg-white text-[#00A86B]">
               <Flame className="h-3.5 w-3.5 fill-[#00A86B]" />
             </span>
             <div>
               <h3 className="font-display text-xs font-bold text-white">Top Yono &amp; Rummy Game Keywords</h3>
-              <p className="text-[9px] text-white/80">Click any keyword to search and explore</p>
+              <p className="text-[9px] text-white/85">Click any keyword to search and explore</p>
             </div>
           </div>
           <div className="flex flex-wrap gap-1.5 pt-1">
@@ -365,7 +365,7 @@ export default function AppDetail() {
               <button
                 key={i}
                 onClick={() => handleKeywordClick(kw)}
-                className="rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-[10px] font-medium text-white/90 hover:bg-white hover:text-[#00A86B] transition-colors text-left cursor-pointer"
+                className="rounded-full border border-white/20 bg-[#006841] px-2.5 py-1 text-[10px] font-medium text-white/95 hover:bg-white hover:text-[#00A86B] transition-colors text-left cursor-pointer"
               >
                 #{kw}
               </button>

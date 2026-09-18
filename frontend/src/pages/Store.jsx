@@ -42,26 +42,7 @@ const SORTS = [
 ];
 
 const LANDING_100_KEYWORDS = [
-  "Yono Games", "Yono Rummy", "Rummy Games", "Money Games", "Casino Games", "Teen Patti Real Cash",
-  "New Yono Apps 2026", "Best Rummy App India", "Sign Up Bonus 501", "Instant UPI Withdrawal",
-  "Mod APK Download", "Yono VIP Program", "Daily Jackpot Win", "Safe APK Store", "Online Card Games",
-  "Yono All Games List", "Winning Strategies", "Fastest Withdrawal App", "Trusted Rummy Platform",
-  "Android Gaming Hub", "Free Bonus Apps", "Real Money Games", "Latest Version Update", "Ind Rummy APK",
-  "Gold Rummy Download", "Yono Ludo App", "Teen Patti Gold", "Dragon Tiger Game", "Andar Bahar Online",
-  "7 Up 7 Down Game", "Car Roulette APK", "Zoo Roulette", "Crash Aviator Game", "Roulette Casino App",
-  "Poker Real Money", "Blackjack Online India", "Slots Win APK", "Teen Patti Master", "Yono 777 Game",
-  "Yono Slots Spin", "All Yono Rummy List", "New Rummy App 2026", "Bonus Rummy App", "No 1 Rummy Game",
-  "Real Cash Earning Apps", "Paytm Cash Games", "PhonePe Withdrawal Apps", "Google Pay Rummy", "Instant Bank Transfer Games",
-  "Safe Rummy App", "Verified APK Store", "Anti Ban Mod APK", "High Payout Casino", "Big Win Rummy",
-  "Mega Jackpot Apps", "Daily Login Bonus", "Refer and Earn Rummy", "Level Up Rewards", "VIP Club Games",
-  "Customer Care Rummy", "Direct APK Link", "Fastest App Download", "Lightweight Gaming APK", "Smooth 60 FPS Games",
-  "Offline & Online Games", "Regular App Updates", "Secure SSL Download", "Malware Free APK", "Trusted Developer Apps",
-  "Top Rated Card Games", "Most Downloaded Rummy", "Trending Casino APK", "Exclusive Game Codes", "Redeem Code Rummy",
-  "Promo Code Bonus", "Unlimited Chips Hack", "Winning Tricks Rummy", "Pro Player Strategy", "Expert Guide APK",
-  "App Installation Guide", "Root Free APK", "Android 14 Supported", "Low Storage Games", "High Speed APK Server",
-  "Multiplayer Card Games", "Live Dealer Casino", "Real Time Leaderboard", "Tournament Rummy APK", "Weekly Cash Prizes",
-  "Monthly Mega Contests", "Special Festival Bonus", "New Year Rummy Offer", "Diwali Special Bonus", "Welcome Bonus 501",
-  "First Deposit Bonus", "Extra Cashback Offer", "Loss Back Guarantee", "Instant Support 24x7", "Official Yono Games Store"
+  "yono games all app", "yono games app", "yono app", "you games online", "all your game store", "you know games", "yono app link", "all yono game new", "rummy game app store", "new yono games", "yono games com apk", "yono game apk download for android latest version", "yono games apk lsgd", "yono games 2", "you know game", "yono game google", "yono genes", "all your game app download", "all you game", "all your app", "all many games", "all your game apk latest version", "you game game", "all your games download free", "all your gamespin crush", "yono games apk", "yono all games", "all your game apk", "all yono games list apk", "yono game home", "yono india", "all you know game", "all new game", "yono arcade all apk", "yono rummy games for android", "yono games all new apk", "yono games all new 2026 apk"
 ];
 
 export default function Store() {
@@ -84,6 +65,7 @@ export default function Store() {
   const [category, setCategory] = useState("All");
   const [sort, setSort] = useState("downloads");
   const [legalId, setLegalId] = useState(null);
+  const [activeTab, setActiveTab] = useState("description");
 
   const fetchApps = async () => {
     try {
@@ -109,7 +91,7 @@ export default function Store() {
   }, [parsedCache]);
 
   const handleDownload = (app) => {
-    toast.success(`Opening: ${app.name}`, { description: `${app.size} • v${app.version}` });
+    toast.success(`Opening: ${app.name}`, { description: `45 MB • v2026 Latest` });
     
     if (app.apk_url && app.apk_url.startsWith("http")) {
       window.open(app.apk_url, "_blank"); 
@@ -204,7 +186,7 @@ export default function Store() {
       <div className="flex items-center gap-2">
         <Sparkles className="h-4 w-4 text-[#FFC107]" />
         <h2 className="font-display text-base font-bold text-[#111111]">
-          {isDefaultView ? "All Apps" : "Results"}
+          {isDefaultView ? "All Apps (100+ Games)" : "Results"}
         </h2>
         <span className="text-xs text-[#999999]" aria-live="polite">
           ({filtered.length}{isDefaultView ? "" : filtered.length === 1 ? " match" : " matches"})
@@ -266,9 +248,9 @@ export default function Store() {
   return (
     <div className="app-shell pb-10">
       <SEOHead
-        title={settings?.seo?.homepage_title || "YONO GAMES - Play and Win | Premium Rummy & Games APK Store"}
-        description={settings?.seo?.homepage_description || "Download the latest Rummy and gaming APK apps for Android free. Fast, safe & verified downloads with sign-up bonuses at YONO GAMES — newyono.games"}
-        keywords={settings?.seo?.homepage_keywords || "yono games, rummy apk, teen patti apk, real cash rummy, apk download, android games, newyono.games"}
+        title="YONO GAMES - Play and Win | Premium Rummy & Games APK Store 2026"
+        description="Download the latest 100+ Yono Rummy and gaming APK apps with ₹501 sign-up bonus and instant UPI withdrawal on newyono.games."
+        keywords="yono games all app, yono games apk, all yono games list apk, yono games, rummy apk, newyono.games"
         canonical="https://newyono.games/"
         image="/logo-v2.png"
       />
@@ -276,8 +258,8 @@ export default function Store() {
       <Header />
 
       <div className="px-4 pt-3 text-center">
-        <h1 className="font-display text-lg font-bold text-[#111111]">Welcome to YONO GAMES</h1>
-        <p className="text-xs text-[#777777]">PLAY &amp; WIN • SINCE 2024</p>
+        <h1 className="font-display text-lg font-bold text-[#111111]">Welcome to YONO GAMES 👑</h1>
+        <p className="text-xs text-[#777777]">PLAY &amp; WIN • SIGN-UP BONUS ₹501 🎮</p>
       </div>
 
       {hero.enabled !== false && (
@@ -333,7 +315,7 @@ export default function Store() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             onKeyDown={(e) => e.key === "Escape" && setSearch("")}
-            placeholder="Search apps & games..."
+            placeholder="Search 100+ games..."
             className="h-11 rounded-full border-[#E5E7EB] bg-white pl-10 pr-10 text-base shadow-[0_4px_14px_rgba(0,0,0,0.03)] focus-visible:ring-[#FFC107]"
           />
           {search && (
@@ -399,19 +381,17 @@ export default function Store() {
                                 <span className="text-xs font-bold text-[#B45309]">⭐ {first.rating?.toFixed(1) || "4.9"}</span>
                               </div>
                             </div>
-                            <p className="mt-1 text-xs sm:text-sm text-[#777777]">v{first.version || "1.0"} • {first.size || "45 MB"}</p>
+                            <p className="mt-1 text-xs sm:text-sm text-[#777777]">v2026 Latest • {first.size || "45 MB"}</p>
                             <div className="mt-2 flex items-center gap-2 flex-wrap">
                               <span className="text-xs font-semibold text-[#555555]">👥 4.2M+ active players</span>
-                              {first.signup_bonus && (
-                                <span className="inline-flex items-center gap-1 rounded-full bg-[#FFC107] px-2.5 py-1 text-[10px] font-black text-[#111111] shadow-sm">
-                                  🎁 Bonus {first.signup_bonus}
-                                </span>
-                              )}
+                              <span className="inline-flex items-center gap-1 rounded-full bg-[#FFC107] px-2.5 py-1 text-[10px] font-black text-[#111111] shadow-sm">
+                                🎁 Bonus ₹501
+                              </span>
                             </div>
                           </div>
                           <RippleButton
                             onClick={(e) => { e.stopPropagation(); handleDownload(first); }}
-                            className="flex shrink-0 items-center gap-2 rounded-full bg-[#FFC107] px-5 py-3 text-sm font-bold text-[#111111] shadow-[0_6px_20px_rgba(255,193,7,0.45)] hover:bg-[#FFB300]"
+                            className="flex shrink-0 items-center gap-2 rounded-full bg-[#FFC107] px-5 py-3 text-sm font-bold text-[#111111] shadow-[0_6px_20px_rgba(255,193,7,0.45)] hover:bg-[#FFB300] animate-pulse"
                           >
                             <Download className="h-4 w-4" /> Download
                           </RippleButton>
@@ -445,16 +425,14 @@ export default function Store() {
                                   <p className="text-xs text-[#777777] mt-0.5">{app.size || "45 MB"}</p>
                                 </div>
                               </div>
-                              {app.signup_bonus && (
-                                <div className="mb-3">
-                                  <span className="inline-flex items-center gap-1 rounded-full bg-[#FFF8E1] px-2.5 py-1 text-[10px] font-bold text-[#B45309]">
-                                    🎁 {app.signup_bonus}
-                                  </span>
-                                </div>
-                              )}
+                              <div className="mb-3">
+                                <span className="inline-flex items-center gap-1 rounded-full bg-[#FFF8E1] px-2.5 py-1 text-[10px] font-bold text-[#B45309]">
+                                  🎁 ₹501 Bonus
+                                </span>
+                              </div>
                               <RippleButton
                                 onClick={(e) => { e.stopPropagation(); handleDownload(app); }}
-                                className="w-full mt-auto flex items-center justify-center gap-1.5 rounded-full bg-[#FFC107] py-2.5 text-xs font-bold text-[#111111] shadow-sm hover:bg-[#FFB300]"
+                                className="w-full mt-auto flex items-center justify-center gap-1.5 rounded-full bg-[#FFC107] py-2.5 text-xs font-bold text-[#111111] shadow-sm hover:bg-[#FFB300] animate-pulse"
                               >
                                 <Download className="h-3.5 w-3.5" /> Download
                               </RippleButton>
@@ -474,18 +452,63 @@ export default function Store() {
             {/* WHAT USERS SAY (REVIEWS) */}
             {isDefaultView && en("reviews") && <ReviewsSection key="reviews" />}
 
+            {/* SEO DASHBOARD / 3 MENU TABS ON LANDING PAGE */}
+            {isDefaultView && (
+              <section className="rounded-[20px] sm:rounded-[24px] border border-[#E5E7EB] bg-white p-4 sm:p-5 shadow-sm space-y-3">
+                <div className="flex border-b border-[#E5E7EB] pb-2 gap-4 overflow-x-auto no-scrollbar">
+                  <button 
+                    onClick={() => setActiveTab("description")}
+                    className={`text-xs sm:text-sm font-bold pb-2 border-b-2 whitespace-nowrap transition-colors ${activeTab === "description" ? "border-[#FFC107] text-[#111111]" : "border-transparent text-[#777777]"}`}
+                  >
+                    1. Complete Description 📄
+                  </button>
+                  <button 
+                    onClick={() => setActiveTab("mobileapps")}
+                    className={`text-xs sm:text-sm font-bold pb-2 border-b-2 whitespace-nowrap transition-colors ${activeTab === "mobileapps" ? "border-[#FFC107] text-[#111111]" : "border-transparent text-[#777777]"}`}
+                  >
+                    2. Mobile Apps & Add-Ons 📱
+                  </button>
+                  <button 
+                    onClick={() => setActiveTab("gameslist")}
+                    className={`text-xs sm:text-sm font-bold pb-2 border-b-2 whitespace-nowrap transition-colors ${activeTab === "gameslist" ? "border-[#FFC107] text-[#111111]" : "border-transparent text-[#777777]"}`}
+                  >
+                    3. All Yono Games List 🎮
+                  </button>
+                </div>
+
+                <div className="pt-2 text-xs sm:text-sm text-[#555555] leading-relaxed">
+                  {activeTab === "description" && (
+                    <div className="space-y-2">
+                      <p><strong>newyono.games</strong> is the ultimate platform offering 100+ games including Yono Rummy, Teen Patti, Slots, and Ludo with a guaranteed <strong>₹501 sign-up bonus</strong>.</p>
+                      <p>Designed for Android users with fast 60 FPS performance, instant UPI withdrawals, and secure anti-ban mod files in 2026.</p>
+                    </div>
+                  )}
+                  {activeTab === "mobileapps" && (
+                    <div className="space-y-2">
+                      <p>Explore exclusive mobile addons, productivity tools, customized web extensions, and optimized APK packages for seamless gaming experience across all Android devices.</p>
+                    </div>
+                  )}
+                  {activeTab === "gameslist" && (
+                    <div className="space-y-2">
+                      <p>Access the complete directory of 100+ Yono-style apps including Rummy 365, Spin Winner, Yono 777, and Jaiho Slots with verified download links and ₹501 sign-up bonus.</p>
+                    </div>
+                  )}
+                </div>
+              </section>
+            )}
+
             {/* SEO DESCRIPTION */}
             {isDefaultView && (
               <section className="space-y-3 rounded-[20px] border border-[#E5E7EB] bg-white p-5 shadow-[0_6px_20px_rgba(0,0,0,0.03)]">
                 <h2 className="font-display text-base font-bold text-[#111111]">
-                  All Yono Games - Discover New Yono Apps & Play Top Gaming Apps
+                  All Yono Games - Discover New Yono Apps & Play Top 100+ Gaming Apps
                 </h2>
                 <div className="space-y-3 text-sm leading-relaxed text-[#555555]">
                   <p>
                     Welcome to <strong>newyono.games</strong> - India's most trusted gaming platform in 2026. Get up to ₹501 sign-up bonus instantly, enjoy smooth 60 FPS gameplay, secure withdrawals, and access the latest 2026 Yono APK versions safely.
                   </p>
                   <p>
-                    That's exactly what <strong>All New Yono Apps</strong> aims to deliver. Our platform brings together a collection of games that combine classic gameplay with modern mobile experiences. From popular card titles like <strong>Yono Rummy</strong> to the latest slot and arcade apps gaining popularity in India, every game listed here is chosen carefully for its entertainment value.
+                    That's exactly what <strong>All New Yono Apps</strong> aims to deliver. Our platform brings together a collection of 100+ games that combine classic gameplay with modern mobile experiences. From popular card titles like <strong>Yono Rummy</strong> to the latest slot and arcade apps gaining popularity in India, every game listed here is chosen carefully for its entertainment value.
                   </p>
                 </div>
               </section>
@@ -499,7 +522,7 @@ export default function Store() {
                     <Flame className="h-4 w-4 fill-[#FFC107]" />
                   </span>
                   <div>
-                    <h3 className="font-display text-sm font-bold text-[#111111]">Top 100 Yono Games, Rummy &amp; Money Game Keywords</h3>
+                    <h3 className="font-display text-sm font-bold text-[#111111]">Top Google Search Keywords</h3>
                     <p className="text-[10px] text-[#888888]">Click any keyword to explore games and instant download links</p>
                   </div>
                 </div>

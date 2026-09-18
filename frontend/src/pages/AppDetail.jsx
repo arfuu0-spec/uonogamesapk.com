@@ -19,12 +19,17 @@ export default function AppDetail() {
   
   const identifier = slug || id;
 
-  // Safeguard: Redirect if identifier is invalid or undefined
-  useEffect(() => {
-    if (!identifier || identifier === "undefined" || identifier === "null") {
-      navigate("/", { replace: true });
-    }
-  }, [identifier, navigate]);
+  // Immediate safeguard at the top level
+  if (!identifier || identifier === "undefined" || identifier === "null") {
+    return (
+      <div className="app-shell flex min-h-screen flex-col items-center justify-center bg-white p-4 text-center">
+        <p className="text-base font-bold text-[#111111] mb-2">Invalid Game Link</p>
+        <RippleButton onClick={() => navigate("/")} className="rounded-full bg-[#FFC107] px-6 py-2.5 text-xs font-semibold text-[#111111]">
+          Go to Home
+        </RippleButton>
+      </div>
+    );
+  }
 
   const cachedData = typeof window !== "undefined" ? localStorage.getItem("yono_apps_perm_cache") : null;
   const parsedCache = useMemo(() => {
@@ -55,8 +60,6 @@ export default function AppDetail() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (!identifier || identifier === "undefined" || identifier === "null") return;
-
     let isMounted = true;
     setLoading(true);
 

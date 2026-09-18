@@ -108,7 +108,7 @@ export default function AppDetail() {
           </div>
           <div className="min-w-0 flex-1">
             <h1 className="font-display text-lg font-extrabold leading-tight text-[#111111]">{app.name}</h1>
-            <p className="mt-0.5 text-xs font-medium text-[#777777]">{app.developer || "Uonogamesapk"}</p>
+            <p className="mt-0.5 text-xs font-medium text-[#777777]">newyono.games</p>
             <div className="mt-2 flex items-center gap-2">
               <div className="flex items-center gap-0.5 rounded-full bg-[#FFF8E1] px-2 py-0.5">
                 <Star className="h-3.5 w-3.5 fill-[#FFC107] text-[#FFC107]" />
@@ -172,7 +172,7 @@ export default function AppDetail() {
           <p className="mt-2 text-center text-[11px] text-[#777777]">🔒 Safe & virus-scanned • 500,013 downloads</p>
         </div>
 
-        {/* 1. NEW POSITION: YOU MAY ALSO LIKE */}
+        {/* YOU MAY ALSO LIKE */}
         {similarApps.length > 0 && (
           <div className="rounded-[24px] border border-[#E5E7EB] bg-white p-5 shadow-sm space-y-4">
             <div className="flex items-center gap-2">
@@ -192,7 +192,23 @@ export default function AppDetail() {
           </div>
         )}
 
-        {/* 2. ABOUT THE GAME (Moved Below) */}
+        {/* GAME-SPECIFIC SEO SECTION */}
+        <div className="rounded-[24px] border border-[#E5E7EB] bg-white p-5 shadow-sm space-y-4">
+          <h2 className="font-display text-base font-bold text-[#111111] flex items-center gap-2">
+            <Zap className="h-5 w-5 text-[#FFC107] fill-[#FFC107]" /> About {app.name} on newyono.games
+          </h2>
+          <p className="text-xs leading-relaxed text-[#555555]">
+            Download {app.name} v{app.version || "1.0.0"} safely from newyono.games. Experience fast withdrawals, a massive ₹501 welcome bonus, and secure gaming in 2026. Get the latest updated APK version with optimized performance.
+          </p>
+          <div className="flex flex-wrap gap-1.5 pt-1">
+            <span className="rounded-full border border-[#E5E7EB] bg-[#FAFAFA] px-3 py-1 text-[11px] font-medium text-[#555555]">#{app.name} APK Download</span>
+            <span className="rounded-full border border-[#E5E7EB] bg-[#FAFAFA] px-3 py-1 text-[11px] font-medium text-[#555555]">#{app.name} ₹501 Bonus</span>
+            <span className="rounded-full border border-[#E5E7EB] bg-[#FAFAFA] px-3 py-1 text-[11px] font-medium text-[#555555]">#{app.name} 2026 Latest Version</span>
+            <span className="rounded-full border border-[#E5E7EB] bg-[#FAFAFA] px-3 py-1 text-[11px] font-medium text-[#555555]">Real Cash {app.name} App</span>
+          </div>
+        </div>
+
+        {/* ABOUT THE GAME */}
         <div className="rounded-[24px] border border-[#E5E7EB] bg-white p-5 shadow-sm space-y-4">
           <h2 className="font-display text-base font-bold text-[#111111] flex items-center gap-2">
             <Zap className="h-5 w-5 text-[#FFC107] fill-[#FFC107]" /> About the Game
@@ -237,7 +253,7 @@ export default function AppDetail() {
             <div className="flex justify-between border-b border-[#F1F1F1] pb-2"><span className="text-[#777777]">Size</span><span className="font-medium text-[#111111]">{app.size || "45 MB"}</span></div>
             <div className="flex justify-between border-b border-[#F1F1F1] pb-2"><span className="text-[#777777]">Category</span><span className="font-medium text-[#111111]">{app.category || "Games"}</span></div>
             <div className="flex justify-between border-b border-[#F1F1F1] pb-2"><span className="text-[#777777]">Requires</span><span className="font-medium text-[#111111]">Android 5.0+</span></div>
-            <div className="flex justify-between pb-1"><span className="text-[#777777]">Developer</span><span className="font-medium text-[#111111]">{app.developer || "Uonogamesapk"}</span></div>
+            <div className="flex justify-between pb-1"><span className="text-[#777777]">Developer</span><span className="font-medium text-[#111111]">newyono.games</span></div>
           </div>
         </div>
 

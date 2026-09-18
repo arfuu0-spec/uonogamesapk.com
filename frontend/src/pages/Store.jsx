@@ -447,10 +447,10 @@ export default function Store() {
               </section>
             )}
 
-            {/* Render other enabled sections using finalOrder (excluding FAQ/Legal to prevent duplication) */}
-            {finalOrder.map((id) => (id !== "faq" && id !== "legal") ? renderers[id] : null).filter(Boolean)}
+            {/* Render other enabled sections using finalOrder (excluding reviews, faq, and legal to prevent duplication) */}
+            {finalOrder.map((id) => (id !== "reviews" && id !== "faq" && id !== "legal") ? renderers[id] : null).filter(Boolean)}
 
-            {/* WHAT USERS SAY */}
+            {/* WHAT USERS SAY (Single Instance) */}
             {isDefaultView && en("reviews") && <ReviewsSection key="reviews" />}
 
             {/* ABOUT THE GAME DESCRIPTION (₹501 BONUS) PLACED DIRECTLY BELOW WHAT USERS SAY */}
@@ -496,7 +496,7 @@ export default function Store() {
               </section>
             )}
 
-            {/* SINGLE INSTANCE OF FAQ AND LEGAL AT THE BOTTOM */}
+            {/* SINGLE INSTANCE OF WINNERS, ADS, FAQ AND LEGAL AT THE BOTTOM */}
             {isDefaultView && en("winners") && <RedeemBox />}
             {isDefaultView && AdSlot && <AdSlot ads={settings?.ads} />}
             {isDefaultView && en("faq") && <FaqSection key="faq" />}

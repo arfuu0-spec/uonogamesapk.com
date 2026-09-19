@@ -128,7 +128,7 @@ export default function AppDetail() {
       } catch (e) {
         if (allCachedApps.length > 0 && isMounted) {
           const targetApp = initialApp || allCachedApps[0] || fallbackApp;
-          setApp({ ...targetApp, version: "v2026 Latest" });
+          setApp({ ...targetApp, version: "2026 Latest" });
           setSimilarApps(getOrderedSimilarApps(allCachedApps, targetApp.id));
         }
       }

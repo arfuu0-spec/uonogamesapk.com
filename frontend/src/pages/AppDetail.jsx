@@ -18,26 +18,43 @@ function normalize(s) {
     .replace(/[^a-z0-9]+/g, "");
 }
 
-// Gold Rummy ko hamesha sabse pehle rakhne ka helper function & enforcing v2026 Latest version
+// Gold Rummy fixed at #1, showing ALL games with dynamic variation across pages
 function getOrderedSimilarApps(allApps, currentAppId) {
   if (!allApps || allApps.length === 0) return [];
   
-  let list = allApps.filter(a => String(a.id) !== String(currentAppId)).map(app => ({
-    ...app,
-    version: "v2026 Latest"
-  }));
+  const seen = new Set();
+  let list = [];
+  
+  for (const a of allApps) {
+    if (String(a.id) === String(currentAppId)) continue;
+    const normName = normalize(a.name);
+    if (seen.has(normName)) continue;
+    seen.add(normName);
+    list.push({ ...a, version: "v2026 Latest" });
+  }
   
   const goldRummyIdx = list.findIndex(a => 
     normalize(a.name).includes("goldrummy") || 
     String(a.name).toLowerCase().includes("gold rummy")
   );
 
+  let goldRummyObj = null;
   if (goldRummyIdx !== -1) {
-    const goldRummyObj = list.splice(goldRummyIdx, 1)[0];
+    goldRummyObj = list.splice(goldRummyIdx, 1)[0];
+  }
+
+  // Rotate/vary the rest of the games dynamically based on app ID
+  const seed = String(currentAppId || "yono").split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  for (let i = list.length - 1; i > 0; i--) {
+    const j = (seed + i) % (i + 1);
+    [list[i], list[j]] = [list[j], list[i]];
+  }
+
+  if (goldRummyObj) {
     list.unshift(goldRummyObj);
   }
 
-  return list.slice(0, 15);
+  return list; // Saare games dikhege ab bina kisi limit ke!
 }
 
 export default function AppDetail() {
@@ -128,7 +145,7 @@ export default function AppDetail() {
       } catch (e) {
         if (allCachedApps.length > 0 && isMounted) {
           const targetApp = initialApp || allCachedApps[0] || fallbackApp;
-          setApp({ ...targetApp, version: "2026 Latest" });
+          setApp({ ...targetApp, version: "v2026 Latest" });
           setSimilarApps(getOrderedSimilarApps(allCachedApps, targetApp.id));
         }
       }
@@ -190,12 +207,21 @@ export default function AppDetail() {
         image={app?.icon_url || "https://images.unsplash.com/photo-1614680376593-902f749f7ffc?w=150&auto=format&fit=crop&q=80"}
       />
 
-      {/* Sticky top bar */}
-      <div className="sticky top-0 z-30 flex items-center gap-3 bg-white/95 px-4 py-2.5 backdrop-blur-md border-b border-[#E5E7EB]">
-        <button onClick={() => navigate(-1)} className="flex h-8 w-8 items-center justify-center rounded-full bg-white border border-[#E5E7EB] text-[#111111] shadow-sm hover:bg-[#F1F1F1]">
-          <ArrowLeft className="h-4 w-4" />
+      {/* Sticky top bar with Back Button, Text and Home Button */}
+      <div className="sticky top-0 z-30 flex items-center justify-between bg-white/95 px-4 py-2.5 backdrop-blur-md border-b border-[#E5E7EB]">
+        <div className="flex items-center gap-3">
+          <button onClick={() => navigate(-1)} className="flex h-8 w-8 items-center justify-center rounded-full bg-white border border-[#E5E7EB] text-[#111111] shadow-sm hover:bg-[#F1F1F1]">
+            <ArrowLeft className="h-4 w-4" />
+          </button>
+          <span className="truncate font-display text-xs sm:text-sm font-bold text-[#111111]">idhr aur bhi game hai 👈🏼</span>
+        </div>
+        <button 
+          onClick={() => navigate("/")} 
+          className="flex h-8 w-8 items-center justify-center rounded-full bg-[#FFF8E1] border border-[#FFE082] text-[#B45309] shadow-sm hover:bg-[#FFECB3]"
+          title="Go to Homepage"
+        >
+          <Home className="h-4 w-4" />
         </button>
-        <span className="truncate font-display text-xs sm:text-sm font-bold text-[#111111]">idhr aur bhi game hai 👈🏼</span>
       </div>
 
       <main className="max-w-2xl mx-auto space-y-4 px-4 pt-4">
@@ -219,7 +245,7 @@ export default function AppDetail() {
           </div>
         </div>
 
-        {/* Quick Stats Grid with v2026 Latest */}
+        {/* Quick Stats Grid */}
         <div className="grid grid-cols-4 gap-2 text-center">
           <div className="rounded-[16px] border border-[#E5E7EB] bg-white p-3 shadow-sm">
             <p className="text-[10px] text-[#777777]">Updated</p>
@@ -325,7 +351,7 @@ export default function AppDetail() {
           )}
         </div>
 
-        {/* People Also Like (Gold Rummy pinned at 1st position) */}
+        {/* People Also Like (Gold Rummy fixed at #1, all games shown with dynamic rotation) */}
         {similarApps.length > 0 && (
           <div className="rounded-[24px] border border-[#E5E7EB] bg-white p-5 shadow-sm space-y-3">
             <div className="flex items-center gap-2">

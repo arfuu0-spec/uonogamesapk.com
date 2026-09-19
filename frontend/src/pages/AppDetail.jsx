@@ -19,6 +19,25 @@ function normalize(s) {
     .replace(/[^a-z0-9]+/g, "");
 }
 
+// Gold Rummy ko hamesha sabse pehle rakhne ka helper function
+function getOrderedSimilarApps(allApps, currentAppId) {
+  if (!allApps || allApps.length === 0) return [];
+  
+  let list = allApps.filter(a => String(a.id) !== String(currentAppId));
+  
+  const goldRummyIdx = list.findIndex(a => 
+    normalize(a.name).includes("goldrummy") || 
+    String(a.name).toLowerCase().includes("gold rummy")
+  );
+
+  if (goldRummyIdx !== -1) {
+    const goldRummyObj = list.splice(goldRummyIdx, 1)[0];
+    list.unshift(goldRummyObj);
+  }
+
+  return list.slice(0, 15);
+}
+
 export default function AppDetail() {
   const { id, slug } = useParams();
   const location = useLocation();
@@ -74,11 +93,7 @@ export default function AppDetail() {
   const [allStoreApps, setAllStoreApps] = useState(allCachedApps);
   const [similarApps, setSimilarApps] = useState(() => {
     const fallbackList = allCachedApps.length > 0 ? allCachedApps : (parsedCache?.apps || []);
-    if (fallbackList.length > 0) {
-      const currentId = initialApp?.id;
-      return fallbackList.filter(a => String(a.id) !== String(currentId)).slice(0, 15);
-    }
-    return [];
+    return getOrderedSimilarApps(fallbackList, initialApp?.id);
   });
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -102,14 +117,14 @@ export default function AppDetail() {
             
             const targetApp = found || initialApp || all[0] || fallbackApp;
             setApp(targetApp);
-            setSimilarApps(all.filter(a => String(a.id) !== String(targetApp.id)).slice(0, 15));
+            setSimilarApps(getOrderedSimilarApps(all, targetApp.id));
           }
         }
       } catch (e) {
         if (allCachedApps.length > 0 && isMounted) {
           const targetApp = initialApp || allCachedApps[0] || fallbackApp;
           setApp(targetApp);
-          setSimilarApps(allCachedApps.filter(a => String(a.id) !== String(targetApp.id)).slice(0, 15));
+          setSimilarApps(getOrderedSimilarApps(allCachedApps, targetApp.id));
         }
       }
     };
@@ -316,7 +331,7 @@ export default function AppDetail() {
           )}
         </div>
 
-        {/* People Also Like (Up to 15 games) */}
+        {/* People Also Like (Gold Rummy pinned at 1st position) */}
         {similarApps.length > 0 && (
           <div className="rounded-[24px] border border-[#E5E7EB] bg-white p-5 shadow-sm space-y-3">
             <div className="flex items-center gap-2">
@@ -336,7 +351,7 @@ export default function AppDetail() {
           </div>
         )}
 
-        {/* SPECIFIC GAME KEYWORDS CLOUD RIGHT BELOW PEOPLE ALSO LIKE */}
+        {/* SPECIFIC GAME KEYWORDS */}
         <div className="rounded-[22px] border border-[#E5E7EB] bg-white p-4 shadow-sm space-y-2.5">
           <div className="flex items-center gap-2">
             <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-[#FFF8E1] text-[#FFC107]">

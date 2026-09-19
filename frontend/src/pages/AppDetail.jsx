@@ -70,7 +70,7 @@ export default function AppDetail() {
       version: "2026 Latest",
       downloads: 4200000,
       signup_bonus: "₹501",
-      icon_url: "/logo-v2.png",
+      icon_url: "https://images.unsplash.com/photo-1614680376593-902f749f7ffc?w=150&auto=format&fit=crop&q=80",
       apk_url: "#"
     };
   }, [identifier]);
@@ -181,7 +181,7 @@ export default function AppDetail() {
         title={`${app?.name || "Yono Games"} APK Download 2026 - 501 Bonus Latest Version`}
         description={`Download ${app?.name || "Yono Games"} APK latest version with ₹501 sign-up bonus and instant UPI withdrawal on newyono.games.`}
         canonical={`https://newyono.games/${app?.slug || `app/${app?.id}`}`}
-        image={app?.icon_url || "/logo-v2.png"}
+        image={app?.icon_url || "https://images.unsplash.com/photo-1614680376593-902f749f7ffc?w=150&auto=format&fit=crop&q=80"}
       />
 
       {/* Sticky top bar */}
@@ -193,7 +193,7 @@ export default function AppDetail() {
       </div>
 
       <main className="max-w-2xl mx-auto space-y-4 px-4 pt-4">
-        {/* App Hero Section (Icon made slightly smaller) */}
+        {/* App Hero Section */}
         <div className="flex items-start gap-4 rounded-[24px] border border-[#E5E7EB] bg-white p-5 shadow-sm">
           <div className="relative shrink-0">
             <AppIcon src={resolveUrl(app?.icon_url)} alt={app?.name} className="h-16 w-16 sm:h-20 sm:w-20 rounded-[18px] sm:rounded-[20px] ring-1 ring-black/5 object-cover shadow-md" />
@@ -339,7 +339,7 @@ export default function AppDetail() {
           </div>
         )}
 
-        {/* About the Game (Now placed right below People Also Like) */}
+        {/* About the Game */}
         <div className="rounded-[24px] border border-[#E5E7EB] bg-white p-5 shadow-sm space-y-3">
           <h2 className="font-display text-base font-bold text-[#111111] flex items-center gap-2">
             <Zap className="h-5 w-5 text-[#FFC107] fill-[#FFC107]" /> About {app?.name}

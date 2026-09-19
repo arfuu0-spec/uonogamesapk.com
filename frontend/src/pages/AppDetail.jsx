@@ -187,11 +187,12 @@ export default function AppDetail() {
 
       <Header />
 
+      {/* Sticky top bar with custom text requested by user */}
       <div className="sticky top-[52px] sm:top-[57px] z-30 flex items-center gap-3 bg-white/95 px-4 py-2.5 backdrop-blur-md border-b border-[#E5E7EB]">
         <button onClick={() => navigate(-1)} className="flex h-8 w-8 items-center justify-center rounded-full bg-white border border-[#E5E7EB] text-[#111111] shadow-sm hover:bg-[#F1F1F1]">
           <ArrowLeft className="h-4 w-4" />
         </button>
-        <span className="truncate font-display text-xs sm:text-sm font-bold text-[#111111]">{app?.name || "Yono Game"}</span>
+        <span className="truncate font-display text-xs sm:text-sm font-bold text-[#111111]">idhr aur bhi game hai 👈🏼</span>
       </div>
 
       <main className="max-w-2xl mx-auto space-y-4 px-4 pt-4">

@@ -6,7 +6,6 @@ import api, { API, resolveUrl } from "@/lib/api";
 import SEOHead from "@/components/SEOHead";
 import AppIcon from "@/components/AppIcon";
 import RippleButton from "@/components/RippleButton";
-import Header from "@/components/Header";
 import SiteFooter from "@/components/SiteFooter";
 import FaqSection from "@/components/FaqSection";
 import AppCard from "@/components/AppCard";
@@ -185,10 +184,8 @@ export default function AppDetail() {
         image={app?.icon_url || "/logo-v2.png"}
       />
 
-      <Header />
-
       {/* Sticky top bar with custom text requested by user */}
-      <div className="sticky top-[52px] sm:top-[57px] z-30 flex items-center gap-3 bg-white/95 px-4 py-2.5 backdrop-blur-md border-b border-[#E5E7EB]">
+      <div className="sticky top-0 z-30 flex items-center gap-3 bg-white/95 px-4 py-2.5 backdrop-blur-md border-b border-[#E5E7EB]">
         <button onClick={() => navigate(-1)} className="flex h-8 w-8 items-center justify-center rounded-full bg-white border border-[#E5E7EB] text-[#111111] shadow-sm hover:bg-[#F1F1F1]">
           <ArrowLeft className="h-4 w-4" />
         </button>

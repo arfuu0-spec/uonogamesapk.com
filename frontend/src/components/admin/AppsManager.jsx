@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Plus, Pencil, Trash2, Star, BadgeCheck, Crown, Upload, Loader2, Package, Gift, ArrowUpDown, Pin } from "lucide-react";
+import { Plus, Pencil, Trash2, Star, BadgeCheck, Crown, Upload, Loader2, Package, Gift, ArrowUpDown, Pin, Search } from "lucide-react";
 import { toast } from "sonner";
 import api, { resolveUrl } from "@/lib/api";
 import { useSettings } from "@/context/SettingsContext";
@@ -89,6 +89,7 @@ export default function AppsManager({ featuredOnly = false }) {
   const { settings } = useSettings();
   const categories = settings?.categories?.length ? settings.categories : ["Games", "Puzzle", "Simulation", "Tools", "Social", "Entertainment"];
   const [apps, setApps] = useState([]);
+  const [allExistingApps, setAllExistingApps] = useState([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState(EMPTY);
@@ -100,7 +101,9 @@ export default function AppsManager({ featuredOnly = false }) {
   const fetchApps = async () => {
     try {
       const { data } = await api.get("/apps", { params: { include_hidden: true } });
-      let list = [...data.featured, ...data.apps];
+      const combined = [...(data.featured || []), ...(data.apps || [])];
+      setAllExistingApps(combined);
+      let list = combined;
       if (featuredOnly) list = list.filter((a) => a.featured);
       setApps(list);
     } finally { setLoading(false); }
@@ -111,7 +114,7 @@ export default function AppsManager({ featuredOnly = false }) {
   }, [featuredOnly]);
 
   const setField = (k, v) => setForm((f) => ({ ...f, [k]: v }));
-  const openNew = () => { setForm({ ...EMPTY, featured: featuredOnly }); setEditingId(null); setOpen(true); };
+  const openNew = () => { setForm({ ...EMPTY, featured: featuredOnly, featured_order: featuredOnly ? 1 : null }); setEditingId(null); setOpen(true); };
   const openEdit = (a) => { 
     setForm({ 
       ...EMPTY, 
@@ -122,6 +125,22 @@ export default function AppsManager({ featuredOnly = false }) {
     }); 
     setEditingId(a.id); 
     setOpen(true); 
+  };
+
+  // 🟢 Quick select existing app so no need to refill details manually when pinning!
+  const handleSelectExistingApp = (appId) => {
+    const found = allExistingApps.find(a => String(a.id) === String(appId));
+    if (!found) return;
+    setForm(prev => ({
+      ...prev,
+      ...found,
+      featured: true,
+      featured_order: prev.featured_order || 1,
+      features: Array.isArray(found.features) ? found.features : [],
+      permissions: Array.isArray(found.permissions) ? found.permissions : [],
+      screenshots: Array.isArray(found.screenshots) ? found.screenshots : []
+    }));
+    toast.success(`Loaded details for: ${found.name}`);
   };
 
   const save = async () => {
@@ -139,7 +158,7 @@ export default function AppsManager({ featuredOnly = false }) {
     try {
       if (editingId) await api.put(`/admin/apps/${editingId}`, payload);
       else await api.post("/admin/apps", payload);
-      toast.success(editingId ? "App updated" : "App created");
+      toast.success(editingId ? "App updated" : "App created & pinned");
       setOpen(false); 
       fetchApps();
     } catch (err) {
@@ -214,8 +233,21 @@ export default function AppsManager({ featuredOnly = false }) {
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-h-[90vh] max-w-[460px] overflow-y-auto rounded-[22px]">
-          <DialogHeader><DialogTitle>{editingId ? "Edit App" : "Add New App"}</DialogTitle><DialogDescription className="text-xs text-[#777777]">Upload an icon and APK, or paste URLs.</DialogDescription></DialogHeader>
+          <DialogHeader><DialogTitle>{editingId ? "Edit App" : "Add / Pin App"}</DialogTitle><DialogDescription className="text-xs text-[#777777]">Select an existing game below to quick-fill, or fill details manually.</DialogDescription></DialogHeader>
           <div className="space-y-4 py-2">
+            {!editingId && allExistingApps.length > 0 && (
+              <div className="rounded-2xl border border-[#FFC107]/40 bg-[#FFFBEB] p-3 space-y-1.5">
+                <Label className="text-xs font-bold text-[#B45309]">⚡ Quick-Select Existing Game</Label>
+                <Select onValueChange={handleSelectExistingApp}>
+                  <SelectTrigger className="rounded-xl bg-white"><SelectValue placeholder="Choose from existing games..." /></SelectTrigger>
+                  <SelectContent>
+                    {allExistingApps.map((item) => (
+                      <SelectItem key={item.id} value={String(item.id)}>{item.name} (v{item.version})</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
             <div className="space-y-1.5"><Label className="text-xs font-semibold text-[#555555]">App Name</Label><Input data-testid="form-name" value={form.name} onChange={(e) => setField("name", e.target.value)} className="rounded-xl" /></div>
             <div className="rounded-2xl border border-[#FFE082] bg-[#FFFBEB] p-3">
               <p className="mb-2 flex items-center gap-1.5 text-xs font-bold text-[#B45309]"><Gift className="h-3.5 w-3.5" /> Rummy Rewards (shown on the app)</p>
@@ -280,7 +312,7 @@ export default function AppsManager({ featuredOnly = false }) {
           </div>
           <DialogFooter className="flex-row gap-2">
             <button onClick={() => setOpen(false)} className="flex-1 rounded-full border border-[#E5E7EB] py-2.5 text-sm font-medium text-[#555555]">Cancel</button>
-            <RippleButton onClick={save} disabled={saving} data-testid="save-app-btn" className="flex flex-1 items-center justify-center gap-2 rounded-full bg-[#FFC107] py-2.5 text-sm font-bold text-[#111111] disabled:opacity-60">{saving && <Loader2 className="h-4 w-4 animate-spin" />}{editingId ? "Update" : "Create"}</RippleButton>
+            <RippleButton onClick={save} disabled={saving} data-testid="save-app-btn" className="flex flex-1 items-center justify-center gap-2 rounded-full bg-[#FFC107] py-2.5 text-sm font-bold text-[#111111] disabled:opacity-60">{saving && <Loader2 className="h-4 w-4 animate-spin" />}{editingId ? "Update" : "Create & Pin"}</RippleButton>
           </DialogFooter>
         </DialogContent>
       </Dialog>

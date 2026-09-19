@@ -64,7 +64,7 @@ export default function Store() {
         localStorage.setItem("yono_apps_perm_cache", JSON.stringify(res.data));
       }
     } catch (e) {
-      // Silent fail for lightning fast performance
+      // Silent fail
     }
   };
 
@@ -174,7 +174,7 @@ export default function Store() {
         </div>
       )}
 
-      {/* Sticky Clean Search Bar */}
+      {/* Sticky Clean Search Bar & Categories */}
       <div className="sticky top-0 z-30 bg-[#FAFAFA]/95 px-4 py-3 backdrop-blur-md border-b border-[#E5E7EB]">
         <div className="relative">
           <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#777777]" />
@@ -208,7 +208,7 @@ export default function Store() {
       </div>
 
       <main className="max-w-2xl mx-auto space-y-4 px-4 pt-4">
-        {/* Top 3 Trending Games Podium */}
+        {/* Top 3 Trending Games Rich Modern Design */}
         {isDefaultView && (
           <section className="space-y-3">
             <div className="flex items-center gap-2 px-1">
@@ -226,21 +226,37 @@ export default function Store() {
                     <div
                       key={app.id}
                       onClick={() => navigate(`/${app.slug || app.id}`, { state: { app } })}
-                      className="flex cursor-pointer items-center gap-3.5 rounded-[20px] border border-[#E5E7EB] bg-white p-3.5 shadow-sm hover:border-[#FFC107] transition-all"
+                      className="relative flex cursor-pointer items-center gap-3.5 rounded-[22px] border border-[#E5E7EB] bg-white p-4 shadow-sm hover:border-[#FFC107] transition-all"
                     >
-                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#FFC107] text-xs font-black text-[#111111]">
+                      {/* Rank Badge */}
+                      <span className="absolute -left-2.5 -top-2.5 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-[#FFC107] text-xs font-black text-[#111111] shadow-md border-2 border-white">
                         {idx + 1}
                       </span>
-                      <AppIcon src={resolveUrl(app.icon_url)} alt={app.name} className="h-14 w-14 rounded-xl object-cover shadow-sm shrink-0" />
+                      
+                      <AppIcon src={resolveUrl(app.icon_url)} alt={app.name} className="h-16 w-16 rounded-[18px] object-cover shadow-sm shrink-0 ring-1 ring-black/5" />
+                      
                       <div className="min-w-0 flex-1">
-                        <h3 className="font-display text-sm font-bold text-[#111111] truncate">{app.name}</h3>
-                        <p className="text-xs text-[#777777]">⭐ {app.rating?.toFixed(1) || "4.8"} • ₹501 Bonus</p>
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-display text-sm font-extrabold text-[#111111] truncate">{app.name}</h3>
+                          <span className="rounded-full bg-red-100 px-1.5 py-0.5 text-[9px] font-bold text-red-600">HOT</span>
+                        </div>
+                        <p className="text-xs text-[#777777] mt-0.5">v2026 Latest • {app.size || "45 MB"}</p>
+                        <div className="flex items-center gap-2 mt-1 flex-wrap">
+                          <span className="text-[11px] font-bold text-amber-600">⭐ {app.rating?.toFixed(1) || "4.8"}</span>
+                          <span className="text-[11px] text-[#555555]">👥 {app.downloads ? `${(app.downloads / 1000).toFixed(1)}K+` : "4.2M+"} players</span>
+                        </div>
+                        <div className="mt-1.5 flex items-center gap-1.5">
+                          <span className="inline-flex items-center gap-1 rounded-full bg-[#FFF8E1] px-2 py-0.5 text-[10px] font-bold text-[#B45309] border border-[#FFE082]">
+                            🎁 Bonus ₹501
+                          </span>
+                        </div>
                       </div>
+
                       <RippleButton
                         onClick={(e) => { e.stopPropagation(); handleDownload(app); }}
-                        className="shrink-0 rounded-full bg-[#FFC107] px-4 py-2 text-xs font-bold text-[#111111] shadow-sm hover:bg-[#FFB300]"
+                        className="shrink-0 flex items-center gap-1 rounded-full bg-[#FFC107] px-4 py-2.5 text-xs font-bold text-[#111111] shadow-sm hover:bg-[#FFB300]"
                       >
-                        Download
+                        <Download className="h-3.5 w-3.5" /> Download
                       </RippleButton>
                     </div>
                   ))}

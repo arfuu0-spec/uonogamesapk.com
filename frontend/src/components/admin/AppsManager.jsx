@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Plus, Pencil, Trash2, Star, BadgeCheck, Crown, Upload, Loader2, Package, Gift, ArrowUpDown, Pin, Search } from "lucide-react";
+import { Plus, Pencil, Trash2, Star, BadgeCheck, Crown, Upload, Loader2, Package, Gift, ArrowUpDown, Pin, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import api, { resolveUrl } from "@/lib/api";
 import { useSettings } from "@/context/SettingsContext";
@@ -21,7 +21,7 @@ const EMPTY = {
   verified: true, category: "Games",
   description: "India's most trusted rummy & gaming platform. Play Points Rummy, Pool Rummy and Deals Rummy, join real-cash tournaments and win big. Enjoy instant withdrawals, 100% safe & secure gameplay, 24/7 support and exciting daily bonuses.",
   icon_url: "", apk_url: "",
-  featured: false, featured_order: null, developer: "Uonogamesapk", package_name: "",
+  featured: false, featured_order: 1, developer: "Uonogamesapk", package_name: "",
   min_android: "Android 5.0+",
   whats_new: "Performance improvements, new tournaments and a smoother, faster gaming experience.",
   badge: "Hot", trending: true,
@@ -53,19 +53,9 @@ function FileUpload({ label, testId, accept, value, onUploaded, isImage }) {
       const kind = isImage ? "image" : "auto";
       const { data } = await api.post(`/admin/upload?kind=${kind}`, fd);
       onUploaded(data.url);
-      const savings = data.storage === "emergent" ? "" : " (fallback storage)";
-      toast.success(`${label} uploaded${savings}`);
+      toast.success(`${label} uploaded successfully`);
     } catch (err) {
-      const status = err?.response?.status;
-      const detail = err?.response?.data?.detail || `${label} upload failed. Please try again.`;
-      const msg = status === 401
-        ? "Session expired — please log in again"
-        : status === 413
-          ? "File is too large."
-          : status === 415
-            ? detail
-            : detail;
-      toast.error(msg);
+      toast.error("Upload failed. Please try again.");
     } finally {
       setUploading(false);
       e.target.value = "";
@@ -114,11 +104,19 @@ export default function AppsManager({ featuredOnly = false }) {
   }, [featuredOnly]);
 
   const setField = (k, v) => setForm((f) => ({ ...f, [k]: v }));
-  const openNew = () => { setForm({ ...EMPTY, featured: featuredOnly, featured_order: featuredOnly ? 1 : null }); setEditingId(null); setOpen(true); };
+  
+  const openNew = () => { 
+    setForm({ ...EMPTY, featured: true, featured_order: 1 }); 
+    setEditingId(null); 
+    setOpen(true); 
+  };
+
   const openEdit = (a) => { 
     setForm({ 
       ...EMPTY, 
       ...a, 
+      featured: true,
+      featured_order: a.featured_order || 1,
       features: Array.isArray(a.features) ? a.features : [],
       permissions: Array.isArray(a.permissions) ? a.permissions : [],
       screenshots: Array.isArray(a.screenshots) ? a.screenshots : []
@@ -127,7 +125,7 @@ export default function AppsManager({ featuredOnly = false }) {
     setOpen(true); 
   };
 
-  // 🟢 Quick select existing app so no need to refill details manually when pinning!
+  // Quick select existing app to auto-fill details for pinning
   const handleSelectExistingApp = (appId) => {
     const found = allExistingApps.find(a => String(a.id) === String(appId));
     if (!found) return;
@@ -140,7 +138,7 @@ export default function AppsManager({ featuredOnly = false }) {
       permissions: Array.isArray(found.permissions) ? found.permissions : [],
       screenshots: Array.isArray(found.screenshots) ? found.screenshots : []
     }));
-    toast.success(`Loaded details for: ${found.name}`);
+    toast.success(`Loaded: ${found.name}`);
   };
 
   const save = async () => {
@@ -150,7 +148,8 @@ export default function AppsManager({ featuredOnly = false }) {
       ...form, 
       rating: parseFloat(form.rating) || 0, 
       downloads: parseInt(form.downloads) || 0,
-      featured_order: form.featured ? (parseInt(form.featured_order) || 1) : null,
+      featured: true,
+      featured_order: parseInt(form.featured_order) || 1,
       features: Array.isArray(form.features) ? form.features : [],
       permissions: Array.isArray(form.permissions) ? form.permissions : [],
       screenshots: Array.isArray(form.screenshots) ? form.screenshots : [],
@@ -158,7 +157,7 @@ export default function AppsManager({ featuredOnly = false }) {
     try {
       if (editingId) await api.put(`/admin/apps/${editingId}`, payload);
       else await api.post("/admin/apps", payload);
-      toast.success(editingId ? "App updated" : "App created & pinned");
+      toast.success("Game pinned successfully!");
       setOpen(false); 
       fetchApps();
     } catch (err) {
@@ -182,7 +181,7 @@ export default function AppsManager({ featuredOnly = false }) {
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-2">
         <RippleButton onClick={openNew} data-testid="add-app-btn" className="flex items-center gap-2 rounded-full bg-gradient-to-r from-[#FFC107] to-[#FFB300] px-5 py-2.5 text-sm font-bold text-[#111111] shadow-[0_8px_20px_rgba(255,193,7,0.45)]">
-          <Plus className="h-4 w-4" /> Add {featuredOnly ? "Featured " : ""}App
+          <Plus className="h-4 w-4" /> Pin Game to Top (#1, #2, #3)
         </RippleButton>
         {apps.length > 1 && (
           <button
@@ -233,86 +232,54 @@ export default function AppsManager({ featuredOnly = false }) {
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-h-[90vh] max-w-[460px] overflow-y-auto rounded-[22px]">
-          <DialogHeader><DialogTitle>{editingId ? "Edit App" : "Add / Pin App"}</DialogTitle><DialogDescription className="text-xs text-[#777777]">Select an existing game below to quick-fill, or fill details manually.</DialogDescription></DialogHeader>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2"><Sparkles className="h-5 w-5 text-[#FFC107]" /> Pin Game to Top 3</DialogTitle>
+            <DialogDescription className="text-xs text-[#777777]">Choose an existing game and select its position (#1, #2, or #3).</DialogDescription>
+          </DialogHeader>
           <div className="space-y-4 py-2">
-            {!editingId && allExistingApps.length > 0 && (
-              <div className="rounded-2xl border border-[#FFC107]/40 bg-[#FFFBEB] p-3 space-y-1.5">
-                <Label className="text-xs font-bold text-[#B45309]">⚡ Quick-Select Existing Game</Label>
-                <Select onValueChange={handleSelectExistingApp}>
-                  <SelectTrigger className="rounded-xl bg-white"><SelectValue placeholder="Choose from existing games..." /></SelectTrigger>
-                  <SelectContent>
-                    {allExistingApps.map((item) => (
-                      <SelectItem key={item.id} value={String(item.id)}>{item.name} (v{item.version})</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
-            <div className="space-y-1.5"><Label className="text-xs font-semibold text-[#555555]">App Name</Label><Input data-testid="form-name" value={form.name} onChange={(e) => setField("name", e.target.value)} className="rounded-xl" /></div>
+            {/* PROMINENT EXISTING GAME SELECTOR */}
+            <div className="rounded-2xl border-2 border-[#FFC107] bg-[#FFFBEB] p-3.5 space-y-2">
+              <Label className="text-xs font-bold text-[#B45309]">⚡ Select Game From Database</Label>
+              <Select onValueChange={handleSelectExistingApp}>
+                <SelectTrigger className="rounded-xl bg-white border-[#FFE082]"><SelectValue placeholder="-- Tap here to choose an existing game --" /></SelectTrigger>
+                <SelectContent>
+                  {allExistingApps.map((item) => (
+                    <SelectItem key={item.id} value={String(item.id)}>{item.name} (v{item.version})</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-1.5"><Label className="text-xs font-semibold text-[#555555]">Selected Game Name</Label><Input data-testid="form-name" value={form.name} onChange={(e) => setField("name", e.target.value)} className="rounded-xl" /></div>
+            
+            <div className="rounded-2xl border border-[#FFC107] bg-[#FFF8E1] p-3 space-y-2">
+              <Label className="text-xs font-bold text-[#B45309]">🎯 Choose Pin Position on Homepage</Label>
+              <Select value={String(form.featured_order || 1)} onValueChange={(v) => setField("featured_order", parseInt(v))}>
+                <SelectTrigger data-testid="form-featured-order" className="rounded-xl bg-white"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="1">#1 Position (Large Spotlight Card)</SelectItem>
+                  <SelectItem value="2">#2 Position (Side-by-side)</SelectItem>
+                  <SelectItem value="3">#3 Position (Side-by-side)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
             <div className="rounded-2xl border border-[#FFE082] bg-[#FFFBEB] p-3">
-              <p className="mb-2 flex items-center gap-1.5 text-xs font-bold text-[#B45309]"><Gift className="h-3.5 w-3.5" /> Rummy Rewards (shown on the app)</p>
+              <p className="mb-2 flex items-center gap-1.5 text-xs font-bold text-[#B45309]"><Gift className="h-3.5 w-3.5" /> Rummy Rewards</p>
               <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1.5"><Label className="text-xs font-semibold text-[#555555]">Sign-up Bonus</Label><Input data-testid="form-signup-bonus" value={form.signup_bonus} onChange={(e) => setField("signup_bonus", e.target.value)} placeholder="e.g. ₹51" className="rounded-xl bg-white" /></div>
+                <div className="space-y-1.5"><Label className="text-xs font-semibold text-[#555555]">Sign-up Bonus</Label><Input data-testid="form-signup-bonus" value={form.signup_bonus} onChange={(e) => setField("signup_bonus", e.target.value)} placeholder="e.g. ₹501" className="rounded-xl bg-white" /></div>
                 <div className="space-y-1.5"><Label className="text-xs font-semibold text-[#555555]">Min. Withdraw</Label><Input data-testid="form-min-withdraw" value={form.min_withdraw} onChange={(e) => setField("min_withdraw", e.target.value)} placeholder="e.g. ₹100" className="rounded-xl bg-white" /></div>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1.5"><Label className="text-xs font-semibold text-[#555555]">Version</Label><Input data-testid="form-version" value={form.version} onChange={(e) => setField("version", e.target.value)} className="rounded-xl" /></div>
-              <div className="space-y-1.5"><Label className="text-xs font-semibold text-[#555555]">Size</Label><Input data-testid="form-size" value={form.size} onChange={(e) => setField("size", e.target.value)} className="rounded-xl" /></div>
+
+            <div className="grid grid-cols-2 gap-3 hidden">
+              <div className="space-y-1.5"><Label className="text-xs font-semibold text-[#555555]">Version</Label><Input value={form.version} onChange={(e) => setField("version", e.target.value)} className="rounded-xl" /></div>
+              <div className="space-y-1.5"><Label className="text-xs font-semibold text-[#555555]">Size</Label><Input value={form.size} onChange={(e) => setField("size", e.target.value)} className="rounded-xl" /></div>
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1.5"><Label className="text-xs font-semibold text-[#555555]">Rating</Label><Input data-testid="form-rating" type="number" step="0.1" value={form.rating} onChange={(e) => setField("rating", e.target.value)} className="rounded-xl" /></div>
-              <div className="space-y-1.5"><Label className="text-xs font-semibold text-[#555555]">Downloads</Label><Input data-testid="form-downloads" type="number" value={form.downloads} onChange={(e) => setField("downloads", e.target.value)} className="rounded-xl" /></div>
-            </div>
-            <div className="space-y-1.5"><Label className="text-xs font-semibold text-[#555555]">Category</Label>
-              <Select value={form.category} onValueChange={(v) => setField("category", v)}><SelectTrigger data-testid="form-category" className="rounded-xl"><SelectValue /></SelectTrigger><SelectContent>{categories.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent></Select>
-            </div>
-            <div className="space-y-1.5"><Label className="text-xs font-semibold text-[#555555]">Description</Label><Textarea data-testid="form-description" value={form.description} onChange={(e) => setField("description", e.target.value)} rows={2} className="rounded-xl" /></div>
-            <FileUpload label="App Icon" testId="upload-icon" accept="image/*" value={form.icon_url} isImage onUploaded={(u) => setField("icon_url", u)} />
-            <div className="space-y-1.5"><Label className="text-xs font-semibold text-[#555555]">Icon URL</Label><Input data-testid="form-icon-url" value={form.icon_url} onChange={(e) => setField("icon_url", e.target.value)} className="rounded-xl text-xs" /></div>
-            <FileUpload label="APK File" testId="upload-apk" accept=".apk" value={form.apk_url} onUploaded={(u) => setField("apk_url", u)} />
-            <div className="space-y-1.5"><Label className="text-xs font-semibold text-[#555555]">APK URL</Label><Input data-testid="form-apk-url" value={form.apk_url} onChange={(e) => setField("apk_url", e.target.value)} className="rounded-xl text-xs" /></div>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1.5"><Label className="text-xs font-semibold text-[#555555]">Developer</Label><Input data-testid="form-developer" value={form.developer} onChange={(e) => setField("developer", e.target.value)} className="rounded-xl" /></div>
-              <div className="space-y-1.5"><Label className="text-xs font-semibold text-[#555555]">Min Android</Label><Input data-testid="form-min-android" value={form.min_android} onChange={(e) => setField("min_android", e.target.value)} className="rounded-xl" /></div>
-            </div>
-            <div className="space-y-1.5"><Label className="text-xs font-semibold text-[#555555]">Package Name</Label><Input data-testid="form-package" value={form.package_name} onChange={(e) => setField("package_name", e.target.value)} className="rounded-xl text-xs" /></div>
-            <div className="space-y-1.5"><Label className="text-xs font-semibold text-[#555555]">What&apos;s New</Label><Textarea data-testid="form-whats-new" value={form.whats_new} onChange={(e) => setField("whats_new", e.target.value)} rows={2} className="rounded-xl" /></div>
-            <div className="space-y-1.5"><Label className="text-xs font-semibold text-[#555555]">Badge / Tag</Label>
-              <Select value={form.badge} onValueChange={(v) => setField("badge", v)}><SelectTrigger data-testid="form-badge" className="rounded-xl"><SelectValue /></SelectTrigger><SelectContent>{BADGES.map((b) => <SelectItem key={b} value={b}>{b}</SelectItem>)}</SelectContent></Select>
-            </div>
-            <div className="space-y-1.5"><Label className="text-xs font-semibold text-[#555555]">Features (comma separated)</Label><Textarea data-testid="form-features" value={Array.isArray(form.features) ? form.features.join(", ") : ""} onChange={(e) => setField("features", e.target.value.split(",").map((x) => x.trim()).filter(Boolean))} rows={2} className="rounded-xl" /></div>
-            <div className="space-y-1.5"><Label className="text-xs font-semibold text-[#555555]">Requirements</Label><Input data-testid="form-requirements" value={form.requirements} onChange={(e) => setField("requirements", e.target.value)} className="rounded-xl" /></div>
-            <div className="space-y-1.5"><Label className="text-xs font-semibold text-[#555555]">Permissions (comma separated)</Label><Textarea data-testid="form-permissions" value={Array.isArray(form.permissions) ? form.permissions.join(", ") : ""} onChange={(e) => setField("permissions", e.target.value.split(",").map((x) => x.trim()).filter(Boolean))} rows={2} className="rounded-xl" /></div>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="flex items-center justify-between rounded-xl bg-[#FFF3ED] px-3 py-2.5"><Label className="text-xs font-semibold text-[#FF6B35]">Trending</Label><Switch data-testid="form-trending" checked={form.trending} onCheckedChange={(v) => setField("trending", v)} /></div>
-              <div className="flex items-center justify-between rounded-xl bg-[#F8F9FA] px-3 py-2.5"><Label className="text-xs font-semibold text-[#555555]">Hidden</Label><Switch data-testid="form-hidden" checked={form.hidden} onCheckedChange={(v) => setField("hidden", v)} /></div>
-            </div>
-            <div className="flex items-center justify-between rounded-xl bg-[#F8F9FA] px-3 py-2.5"><Label className="text-xs font-semibold text-[#555555]">Verified Badge</Label><Switch data-testid="form-verified" checked={form.verified} onCheckedChange={(v) => setField("verified", v)} /></div>
-            <div className="flex items-center justify-between rounded-xl bg-[#FFF8E1] px-3 py-2.5"><Label className="text-xs font-semibold text-[#FFB300]">Featured (Pinned)</Label><Switch data-testid="form-featured" checked={form.featured} onCheckedChange={(v) => setField("featured", v)} /></div>
-            {form.featured && (
-              <div className="space-y-1.5"><Label className="text-xs font-semibold text-[#555555]">Featured Position</Label>
-                <Select value={String(form.featured_order || 1)} onValueChange={(v) => setField("featured_order", parseInt(v))}><SelectTrigger data-testid="form-featured-order" className="rounded-xl"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="1">#1 (Large)</SelectItem><SelectItem value="2">#2</SelectItem><SelectItem value="3">#3</SelectItem></SelectContent></Select>
-              </div>
-            )}
-            <div className="rounded-2xl border border-[#DBEAFE] bg-[#F0F9FF] p-3 space-y-3">
-              <p className="text-xs font-bold text-[#0369A1]">SEO & Page Settings</p>
-              <div className="space-y-1.5"><Label className="text-xs font-semibold text-[#555555]">Slug (page URL)</Label><Input data-testid="form-slug" value={form.slug} onChange={(e) => setField("slug", e.target.value)} placeholder="auto from name, e.g. max-rummy" className="rounded-xl bg-white text-xs" /><p className="text-[10px] text-[#999999]">Page will be: uonogamesapk.com/{form.slug || "your-slug"}</p></div>
-              <div className="space-y-1.5"><Label className="text-xs font-semibold text-[#555555]">SEO Title</Label><Input data-testid="form-seo-title" value={form.seo_title} onChange={(e) => setField("seo_title", e.target.value)} placeholder="Max Rummy - Download APK & Get ₹51 Bonus" className="rounded-xl bg-white" /></div>
-              <div className="space-y-1.5"><Label className="text-xs font-semibold text-[#555555]">Meta Description</Label><Textarea data-testid="form-meta-description" value={form.meta_description} onChange={(e) => setField("meta_description", e.target.value)} rows={2} placeholder="Short description for Google search results (max ~160 chars)" className="rounded-xl bg-white" /></div>
-              <div className="space-y-1.5"><Label className="text-xs font-semibold text-[#555555]">Keywords (comma separated)</Label><Input data-testid="form-keywords" value={form.keywords} onChange={(e) => setField("keywords", e.target.value)} placeholder="rummy apk, max rummy, teen patti" className="rounded-xl bg-white text-xs" /></div>
-              <div className="space-y-1.5"><Label className="text-xs font-semibold text-[#555555]">Focus Keyword</Label><Input data-testid="form-focus-keyword" value={form.focus_keyword} onChange={(e) => setField("focus_keyword", e.target.value)} placeholder="Max Rummy APK Download" className="rounded-xl bg-white text-xs" /></div>
-              <div className="space-y-1.5"><Label className="text-xs font-semibold text-[#555555]">OG Image URL (optional)</Label><Input data-testid="form-og-image" value={form.og_image} onChange={(e) => setField("og_image", e.target.value)} placeholder="Uses app icon if left empty" className="rounded-xl bg-white text-xs" /></div>
-              <label className="flex items-center gap-2 rounded-xl bg-white/60 px-3 py-2">
-                <input type="checkbox" data-testid="form-noindex" checked={!!form.noindex} onChange={(e) => setField("noindex", e.target.checked)} className="h-4 w-4" />
-                <span className="text-xs font-semibold text-[#555]">Noindex this page (hide from Google)</span>
-              </label>
-            </div>
-            <div className="space-y-1.5"><Label className="text-xs font-semibold text-[#555555]">Screenshot URLs (comma separated)</Label><Textarea data-testid="form-screenshots" value={Array.isArray(form.screenshots) ? form.screenshots.join(", ") : ""} onChange={(e) => setField("screenshots", e.target.value.split(",").map((x) => x.trim()).filter(Boolean))} rows={2} placeholder="Paste uploaded screenshot URLs, comma separated" className="rounded-xl text-xs" /></div>
           </div>
           <DialogFooter className="flex-row gap-2">
             <button onClick={() => setOpen(false)} className="flex-1 rounded-full border border-[#E5E7EB] py-2.5 text-sm font-medium text-[#555555]">Cancel</button>
-            <RippleButton onClick={save} disabled={saving} data-testid="save-app-btn" className="flex flex-1 items-center justify-center gap-2 rounded-full bg-[#FFC107] py-2.5 text-sm font-bold text-[#111111] disabled:opacity-60">{saving && <Loader2 className="h-4 w-4 animate-spin" />}{editingId ? "Update" : "Create & Pin"}</RippleButton>
+            <RippleButton onClick={save} disabled={saving} data-testid="save-app-btn" className="flex flex-1 items-center justify-center gap-2 rounded-full bg-[#FFC107] py-2.5 text-sm font-bold text-[#111111] disabled:opacity-60">{saving && <Loader2 className="h-4 w-4 animate-spin" />}Save & Pin</RippleButton>
           </DialogFooter>
         </DialogContent>
       </Dialog>

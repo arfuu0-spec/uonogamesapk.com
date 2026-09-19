@@ -93,6 +93,20 @@ export default function Store() {
     }));
   }, [data, parsedCache]);
 
+  // Specific Top 3 Games Pinned: #1 Rummy Ludo, #2 Ind Rummy, #3 Gold Rummy
+  const top3 = useMemo(() => {
+    const list = allAppsList;
+    if (list.length === 0) return [];
+
+    const findByName = (keyword) => list.find(a => normalize(a.name).includes(normalize(keyword)));
+
+    const rummyLudo = findByName("rummy ludo") || list[0];
+    const indRummy = findByName("ind rummy") || list[1] || list[0];
+    const goldRummy = findByName("gold rummy") || list[2] || list[0];
+
+    return [rummyLudo, indRummy, goldRummy].filter(Boolean);
+  }, [allAppsList]);
+
   const handleKeywordClick = (kw) => {
     const cleanKw = kw.replace(/apk|download|2026|app|online|india|game|games/gi, "").trim();
     const matchedApp = allAppsList.find(a => normalize(a.name).includes(normalize(cleanKw)) || normalize(cleanKw).includes(normalize(a.name)));
@@ -213,7 +227,7 @@ export default function Store() {
       </div>
 
       <main className="max-w-2xl mx-auto space-y-4 px-4 pt-4">
-        {/* Top 3 Trending Games: #1 Spotlight & #2, #3 Side-by-Side with full details */}
+        {/* Top 3 Trending Games: Rummy Ludo (#1), Ind Rummy (#2), Gold Rummy (#3) */}
         {isDefaultView && (
           <section className="space-y-3.5">
             <div className="flex items-center gap-2 px-1">
@@ -223,14 +237,13 @@ export default function Store() {
               <h2 className="font-display text-base font-black text-[#111111]">Top 3 Trending Games</h2>
             </div>
             {(() => {
-              const top3 = allAppsList.slice(0, 3);
               if (top3.length === 0) return null;
               const first = top3[0];
               const second = top3[1];
               const third = top3[2];
               return (
                 <div className="space-y-3">
-                  {/* #1 Elite Main Spotlight Game Card */}
+                  {/* #1 Rummy Ludo Main Spotlight Game Card */}
                   {first && (
                     <div
                       onClick={() => navigate(`/${first.slug || first.id}`, { state: { app: first } })}
@@ -265,7 +278,7 @@ export default function Store() {
                     </div>
                   )}
 
-                  {/* #2 and #3 Side-by-Side Grid Cards with Full Details */}
+                  {/* #2 Ind Rummy & #3 Gold Rummy Side-by-Side Grid Cards */}
                   <div className="grid grid-cols-2 gap-3">
                     {[second, third].map((app, idx) => {
                       if (!app) return null;

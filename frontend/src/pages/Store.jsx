@@ -83,29 +83,29 @@ export default function Store() {
     }
   };
 
-  // Ensure all apps display version as "2026 Latest" and proper size
+  // Ensure all apps display version as "v2026 Latest" and proper size
   const allAppsList = useMemo(() => {
     const rawList = data?.apps || parsedCache?.apps || data?.featured || parsedCache?.featured || [];
     return rawList.map(app => ({
       ...app,
-      version: "2026 Latest",
+      version: "v2026 Latest",
       size: app.size || "45 MB"
     }));
   }, [data, parsedCache]);
 
-  // Specific Top 3 Games Pinned: #1 Rummy Ludo, #2 Ind Rummy, #3 Gold Rummy
+  // DYNAMIC TOP 3: Admin panel ke featured/trending list se control hoga
   const top3 = useMemo(() => {
-    const list = allAppsList;
-    if (list.length === 0) return [];
-
-    const findByName = (keyword) => list.find(a => normalize(a.name).includes(normalize(keyword)));
-
-    const rummyLudo = findByName("rummy ludo") || list[0];
-    const indRummy = findByName("ind rummy") || list[1] || list[0];
-    const goldRummy = findByName("gold rummy") || list[2] || list[0];
-
-    return [rummyLudo, indRummy, goldRummy].filter(Boolean);
-  }, [allAppsList]);
+    const featuredList = data?.featured || parsedCache?.featured || [];
+    if (featuredList.length > 0) {
+      return featuredList.slice(0, 3).map(app => ({
+        ...app,
+        version: "v2026 Latest",
+        size: app.size || "45 MB"
+      }));
+    }
+    // Fallback agar featured list khali ho toh top 3 apps utha lega
+    return allAppsList.slice(0, 3);
+  }, [data, parsedCache, allAppsList]);
 
   const handleKeywordClick = (kw) => {
     const cleanKw = kw.replace(/apk|download|2026|app|online|india|game|games/gi, "").trim();
@@ -227,7 +227,7 @@ export default function Store() {
       </div>
 
       <main className="max-w-2xl mx-auto space-y-4 px-4 pt-4">
-        {/* Top 3 Trending Games: Rummy Ludo (#1), Ind Rummy (#2), Gold Rummy (#3) */}
+        {/* Top 3 Trending Games (Controlled via Admin Panel Featured List) */}
         {isDefaultView && (
           <section className="space-y-3.5">
             <div className="flex items-center gap-2 px-1">
@@ -243,7 +243,7 @@ export default function Store() {
               const third = top3[2];
               return (
                 <div className="space-y-3">
-                  {/* #1 Rummy Ludo Main Spotlight Game Card */}
+                  {/* #1 Main Spotlight Game Card */}
                   {first && (
                     <div
                       onClick={() => navigate(`/${first.slug || first.id}`, { state: { app: first } })}
@@ -258,7 +258,7 @@ export default function Store() {
                           <h3 className="font-display text-sm sm:text-base font-extrabold text-[#111111] truncate">{first.name}</h3>
                           <span className="rounded-full bg-red-100 px-1.5 py-0.5 text-[9px] font-bold text-red-600">HOT</span>
                         </div>
-                        <p className="text-xs text-[#777777] mt-0.5">2026 Latest • {first.size}</p>
+                        <p className="text-xs text-[#777777] mt-0.5">v2026 Latest • {first.size}</p>
                         <div className="flex items-center gap-2 mt-1 flex-wrap">
                           <span className="text-xs font-bold text-amber-600">⭐ {first.rating?.toFixed(1) || "4.8"}</span>
                           <span className="text-[11px] text-[#555555]">👥 4.2M+ players</span>
@@ -278,7 +278,7 @@ export default function Store() {
                     </div>
                   )}
 
-                  {/* #2 Ind Rummy & #3 Gold Rummy Side-by-Side Grid Cards */}
+                  {/* #2 & #3 Side-by-Side Grid Cards */}
                   <div className="grid grid-cols-2 gap-3">
                     {[second, third].map((app, idx) => {
                       if (!app) return null;
@@ -300,7 +300,7 @@ export default function Store() {
                             <div className="min-w-0 flex-1">
                               <h4 className="font-display text-xs font-bold text-[#111111] truncate">{app.name}</h4>
                               <p className="text-[10px] text-[#777777] mt-0.5">⭐ {app.rating?.toFixed(1) || "4.8"}</p>
-                              <p className="text-[10px] text-[#555555]">2026 Latest</p>
+                              <p className="text-[10px] text-[#555555]">v2026 Latest</p>
                             </div>
                           </div>
                           <div className="mb-2.5 space-y-1">

@@ -84,9 +84,9 @@ export default function Store() {
   };
 
   const allAppsList = useMemo(() => {
-    if (!data) return [];
-    return [...(data.apps || [])];
-  }, [data]);
+    const rawList = data?.apps || parsedCache?.apps || [];
+    return [...rawList];
+  }, [data, parsedCache]);
 
   const handleKeywordClick = (kw) => {
     const cleanKw = kw.replace(/apk|download|2026|app|online|india|game|games/gi, "").trim();
@@ -101,19 +101,20 @@ export default function Store() {
   };
 
   const categories = useMemo(() => {
-    if (!data) return ["All"];
+    const rawList = data?.apps || parsedCache?.apps || [];
+    if (rawList.length === 0) return ["All"];
     const set = new Set();
-    [...(data.apps || [])].forEach((a) => a.category && set.add(a.category));
+    rawList.forEach((a) => a.category && set.add(a.category));
     return ["All", ...Array.from(set)];
-  }, [data]);
+  }, [data, parsedCache]);
 
   const deferredSearch = useDeferredValue(search);
 
   const filtered = useMemo(() => {
-    if (!data) return [];
+    const rawApps = data?.apps || parsedCache?.apps || [];
     const q = normalize(deferredSearch);
     const hasFilter = category !== "All" || q;
-    let list = hasFilter ? [...(data.apps || [])] : [...(data.apps || [])];
+    let list = hasFilter ? [...rawApps] : [...rawApps];
     if (category !== "All") list = list.filter((a) => a.category === category);
 
     if (q) {
@@ -138,7 +139,7 @@ export default function Store() {
     else if (sort === "rating") list.sort((a, b) => (b.rating || 0) - (a.rating || 0));
     else if (sort === "newest") list.sort((a, b) => (b.created_at || "").localeCompare(a.created_at || ""));
     return list;
-  }, [data, category, deferredSearch, sort]);
+  }, [data, parsedCache, category, deferredSearch, sort]);
 
   const isDefaultView = !search.trim() && category === "All";
   const hero = settings?.hero || {};
@@ -217,7 +218,7 @@ export default function Store() {
               <h2 className="font-display text-base font-black text-[#111111]">Top 3 Trending Games</h2>
             </div>
             {(() => {
-              const top3 = (data?.featured || data?.apps || []).slice(0, 3);
+              const top3 = (data?.featured || parsedCache?.featured || data?.apps || parsedCache?.apps || []).slice(0, 3);
               if (top3.length === 0) return null;
               return (
                 <div className="space-y-3">
@@ -269,8 +270,17 @@ export default function Store() {
           </div>
 
           {filtered.length === 0 ? (
-            <div className="rounded-[20px] border border-dashed border-[#E5E7EB] bg-white py-8 text-center text-xs text-[#777777]">
-              No apps found
+            <div className="space-y-2.5">
+              {[1, 2, 3, 4, 5].map((n) => (
+                <div key={n} className="flex items-center gap-3.5 rounded-[20px] border border-[#E5E7EB] bg-white p-3.5 animate-pulse">
+                  <div className="h-14 w-14 rounded-xl bg-gray-200 shrink-0"></div>
+                  <div className="flex-1 space-y-2">
+                    <div className="h-4 bg-gray-200 rounded w-1/3"></div>
+                    <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                  </div>
+                  <div className="h-9 w-20 bg-gray-200 rounded-full"></div>
+                </div>
+              ))}
             </div>
           ) : (
             <div className="space-y-2.5">

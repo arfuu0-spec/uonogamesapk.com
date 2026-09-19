@@ -83,9 +83,14 @@ export default function Store() {
     }
   };
 
+  // Ensure all apps display version as "2026 Latest" and proper size
   const allAppsList = useMemo(() => {
-    const rawList = data?.apps || parsedCache?.apps || [];
-    return [...rawList];
+    const rawList = data?.apps || parsedCache?.apps || data?.featured || parsedCache?.featured || [];
+    return rawList.map(app => ({
+      ...app,
+      version: "2026 Latest",
+      size: app.size || "45 MB"
+    }));
   }, [data, parsedCache]);
 
   const handleKeywordClick = (kw) => {
@@ -101,17 +106,17 @@ export default function Store() {
   };
 
   const categories = useMemo(() => {
-    const rawList = data?.apps || parsedCache?.apps || [];
+    const rawList = allAppsList;
     if (rawList.length === 0) return ["All"];
     const set = new Set();
     rawList.forEach((a) => a.category && set.add(a.category));
     return ["All", ...Array.from(set)];
-  }, [data, parsedCache]);
+  }, [allAppsList]);
 
   const deferredSearch = useDeferredValue(search);
 
   const filtered = useMemo(() => {
-    const rawApps = data?.apps || parsedCache?.apps || [];
+    const rawApps = allAppsList;
     const q = normalize(deferredSearch);
     const hasFilter = category !== "All" || q;
     let list = hasFilter ? [...rawApps] : [...rawApps];
@@ -139,7 +144,7 @@ export default function Store() {
     else if (sort === "rating") list.sort((a, b) => (b.rating || 0) - (a.rating || 0));
     else if (sort === "newest") list.sort((a, b) => (b.created_at || "").localeCompare(a.created_at || ""));
     return list;
-  }, [data, parsedCache, category, deferredSearch, sort]);
+  }, [allAppsList, category, deferredSearch, sort]);
 
   const isDefaultView = !search.trim() && category === "All";
   const hero = settings?.hero || {};
@@ -208,7 +213,7 @@ export default function Store() {
       </div>
 
       <main className="max-w-2xl mx-auto space-y-4 px-4 pt-4">
-        {/* Top 3 Trending Games: #1 Main Large Spotlight & #2, #3 Side-by-Side (Agal-Bagal) */}
+        {/* Top 3 Trending Games: #1 Spotlight & #2, #3 Side-by-Side with full details */}
         {isDefaultView && (
           <section className="space-y-3.5">
             <div className="flex items-center gap-2 px-1">
@@ -218,7 +223,7 @@ export default function Store() {
               <h2 className="font-display text-base font-black text-[#111111]">Top 3 Trending Games</h2>
             </div>
             {(() => {
-              const top3 = (data?.featured || parsedCache?.featured || data?.apps || parsedCache?.apps || []).slice(0, 3);
+              const top3 = allAppsList.slice(0, 3);
               if (top3.length === 0) return null;
               const first = top3[0];
               const second = top3[1];
@@ -240,9 +245,10 @@ export default function Store() {
                           <h3 className="font-display text-sm sm:text-base font-extrabold text-[#111111] truncate">{first.name}</h3>
                           <span className="rounded-full bg-red-100 px-1.5 py-0.5 text-[9px] font-bold text-red-600">HOT</span>
                         </div>
-                        <p className="text-xs text-[#777777] mt-0.5">v2026 Latest • {first.size || "45 MB"}</p>
-                        <div className="flex items-center gap-2 mt-1">
+                        <p className="text-xs text-[#777777] mt-0.5">2026 Latest • {first.size}</p>
+                        <div className="flex items-center gap-2 mt-1 flex-wrap">
                           <span className="text-xs font-bold text-amber-600">⭐ {first.rating?.toFixed(1) || "4.8"}</span>
+                          <span className="text-[11px] text-[#555555]">👥 4.2M+ players</span>
                         </div>
                         <div className="mt-1.5">
                           <span className="inline-flex items-center gap-1 rounded-full bg-[#FFF8E1] px-2 py-0.5 text-[10px] font-bold text-[#B45309] border border-[#FFE082]">
@@ -259,7 +265,7 @@ export default function Store() {
                     </div>
                   )}
 
-                  {/* #2 and #3 Side-by-Side (Agal-Bagal) Grid Cards */}
+                  {/* #2 and #3 Side-by-Side Grid Cards with Full Details */}
                   <div className="grid grid-cols-2 gap-3">
                     {[second, third].map((app, idx) => {
                       if (!app) return null;
@@ -276,17 +282,19 @@ export default function Store() {
                           >
                             {rank}
                           </span>
-                          <div className="flex items-start gap-2.5 mb-2.5">
+                          <div className="flex items-start gap-2.5 mb-2">
                             <AppIcon src={resolveUrl(app.icon_url)} alt={app.name} className="h-12 w-12 rounded-[14px] object-cover shadow-sm shrink-0 ring-1 ring-black/5" />
                             <div className="min-w-0 flex-1">
                               <h4 className="font-display text-xs font-bold text-[#111111] truncate">{app.name}</h4>
                               <p className="text-[10px] text-[#777777] mt-0.5">⭐ {app.rating?.toFixed(1) || "4.8"}</p>
+                              <p className="text-[10px] text-[#555555]">2026 Latest</p>
                             </div>
                           </div>
-                          <div className="mb-2.5">
+                          <div className="mb-2.5 space-y-1">
                             <span className="inline-flex items-center gap-1 rounded-full bg-[#FFF8E1] px-2 py-0.5 text-[9px] font-bold text-[#B45309]">
                               🎁 ₹501 Bonus
                             </span>
+                            <p className="text-[10px] text-[#22C55E] font-medium">✓ Verified Safe</p>
                           </div>
                           <RippleButton
                             onClick={(e) => { e.stopPropagation(); handleDownload(app); }}

@@ -13,6 +13,11 @@ export const AppCard = ({ app, index = 0, onDownload }) => {
   // RANKING NUMBER (1, 2, 3...) FOR EVERY CARD
   const rankNumber = index + 1;
 
+  const handleClick = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    navigate(`/${app.slug || `app/${app.id}`}`, { state: { app } });
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
@@ -20,7 +25,8 @@ export const AppCard = ({ app, index = 0, onDownload }) => {
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.4, delay: Math.min(index * 0.05, 0.4), ease: [0.22, 1, 0.36, 1] }}
       whileHover={{ y: -3 }}
-      onClick={() => navigate(`/${app.slug || `app/${app.id}`}`, { state: { app } })}
+      whileTap={{ scale: 0.98 }}
+      onClick={handleClick}
       data-testid={`app-card-${app.id}`}
       className="group relative flex cursor-pointer items-center gap-4 rounded-[22px] border border-[#E5E7EB] bg-white p-4 shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-shadow duration-300 hover:shadow-[0_18px_36px_rgba(0,0,0,0.09)] overflow-visible"
     >

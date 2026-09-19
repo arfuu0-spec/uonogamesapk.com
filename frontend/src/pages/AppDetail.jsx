@@ -6,6 +6,7 @@ import api, { API, resolveUrl } from "@/lib/api";
 import SEOHead from "@/components/SEOHead";
 import AppIcon from "@/components/AppIcon";
 import RippleButton from "@/components/RippleButton";
+import Header from "@/components/Header";
 import SiteFooter from "@/components/SiteFooter";
 import FaqSection from "@/components/FaqSection";
 import AppCard from "@/components/AppCard";
@@ -70,7 +71,7 @@ export default function AppDetail() {
       version: "2026 Latest",
       downloads: 4200000,
       signup_bonus: "₹501",
-      icon_url: "https://images.unsplash.com/photo-1614680376593-902f749f7ffc?w=150&auto=format&fit=crop&q=80",
+      icon_url: "/logo-v2.png",
       apk_url: "#"
     };
   }, [identifier]);
@@ -181,11 +182,13 @@ export default function AppDetail() {
         title={`${app?.name || "Yono Games"} APK Download 2026 - 501 Bonus Latest Version`}
         description={`Download ${app?.name || "Yono Games"} APK latest version with ₹501 sign-up bonus and instant UPI withdrawal on newyono.games.`}
         canonical={`https://newyono.games/${app?.slug || `app/${app?.id}`}`}
-        image={app?.icon_url || "https://images.unsplash.com/photo-1614680376593-902f749f7ffc?w=150&auto=format&fit=crop&q=80"}
+        image={app?.icon_url || "/logo-v2.png"}
       />
 
-      {/* Sticky top bar */}
-      <div className="sticky top-0 z-30 flex items-center gap-3 bg-white/95 px-4 py-2.5 backdrop-blur-md border-b border-[#E5E7EB]">
+      <Header />
+
+      {/* Sticky top bar with custom text requested by user */}
+      <div className="sticky top-[52px] sm:top-[57px] z-30 flex items-center gap-3 bg-white/95 px-4 py-2.5 backdrop-blur-md border-b border-[#E5E7EB]">
         <button onClick={() => navigate(-1)} className="flex h-8 w-8 items-center justify-center rounded-full bg-white border border-[#E5E7EB] text-[#111111] shadow-sm hover:bg-[#F1F1F1]">
           <ArrowLeft className="h-4 w-4" />
         </button>
@@ -196,7 +199,7 @@ export default function AppDetail() {
         {/* App Hero Section */}
         <div className="flex items-start gap-4 rounded-[24px] border border-[#E5E7EB] bg-white p-5 shadow-sm">
           <div className="relative shrink-0">
-            <AppIcon src={resolveUrl(app?.icon_url)} alt={app?.name} className="h-16 w-16 sm:h-20 sm:w-20 rounded-[18px] sm:rounded-[20px] ring-1 ring-black/5 object-cover shadow-md" />
+            <AppIcon src={resolveUrl(app?.icon_url)} alt={app?.name} className="h-20 w-20 sm:h-24 sm:w-24 rounded-[22px] ring-1 ring-black/5 object-cover shadow-md" />
           </div>
           <div className="min-w-0 flex-1">
             <h1 className="font-display text-lg sm:text-xl font-extrabold leading-tight text-[#111111]">{app?.name}</h1>
@@ -267,8 +270,18 @@ export default function AppDetail() {
           <p className="mt-2 text-center text-xs text-[#777777]">🔒 100% Virus Free • Verified Secure Download</p>
         </div>
 
-        {/* SEARCH BAR */}
-        <div className="relative pt-1">
+        {/* About the Game */}
+        <div className="rounded-[24px] border border-[#E5E7EB] bg-white p-5 shadow-sm space-y-3">
+          <h2 className="font-display text-base font-bold text-[#111111] flex items-center gap-2">
+            <Zap className="h-5 w-5 text-[#FFC107] fill-[#FFC107]" /> About {app?.name}
+          </h2>
+          <p className="text-sm leading-relaxed text-[#555555]">
+            {app?.description || `${app?.name} is an ultimate card and slot gaming platform offering smooth 60 FPS performance, secure UPI cashouts, and an instant ₹501 sign-up bonus for all new players in 2026.`}
+          </p>
+        </div>
+
+        {/* SEARCH BAR RIGHT BELOW ABOUT THE GAME */}
+        <div className="relative">
           <form onSubmit={handleSearchSubmit} className="relative">
             <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#777777]" />
             <Input
@@ -338,16 +351,6 @@ export default function AppDetail() {
             </div>
           </div>
         )}
-
-        {/* About the Game */}
-        <div className="rounded-[24px] border border-[#E5E7EB] bg-white p-5 shadow-sm space-y-3">
-          <h2 className="font-display text-base font-bold text-[#111111] flex items-center gap-2">
-            <Zap className="h-5 w-5 text-[#FFC107] fill-[#FFC107]" /> About {app?.name}
-          </h2>
-          <p className="text-sm leading-relaxed text-[#555555]">
-            {app?.description || `${app?.name} is an ultimate card and slot gaming platform offering smooth 60 FPS performance, secure UPI cashouts, and an instant ₹501 sign-up bonus for all new players in 2026.`}
-          </p>
-        </div>
 
         {/* SPECIFIC GAME KEYWORDS */}
         <div className="rounded-[22px] border border-[#E5E7EB] bg-white p-4 shadow-sm space-y-2.5">

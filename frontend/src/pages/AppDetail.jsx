@@ -18,11 +18,14 @@ function normalize(s) {
     .replace(/[^a-z0-9]+/g, "");
 }
 
-// Gold Rummy ko hamesha sabse pehle rakhne ka helper function
+// Gold Rummy ko hamesha sabse pehle rakhne ka helper function & enforcing v2026 Latest version
 function getOrderedSimilarApps(allApps, currentAppId) {
   if (!allApps || allApps.length === 0) return [];
   
-  let list = allApps.filter(a => String(a.id) !== String(currentAppId));
+  let list = allApps.filter(a => String(a.id) !== String(currentAppId)).map(app => ({
+    ...app,
+    version: "v2026 Latest"
+  }));
   
   const goldRummyIdx = list.findIndex(a => 
     normalize(a.name).includes("goldrummy") || 
@@ -56,7 +59,8 @@ export default function AppDetail() {
 
   const allCachedApps = useMemo(() => {
     if (!parsedCache) return [];
-    return [...(parsedCache.apps || []), ...(parsedCache.featured || []), ...(parsedCache.trending || [])];
+    const combined = [...(parsedCache.apps || []), ...(parsedCache.featured || []), ...(parsedCache.trending || [])];
+    return combined.map(app => ({ ...app, version: "v2026 Latest" }));
   }, [parsedCache]);
 
   const fallbackApp = useMemo(() => {
@@ -67,7 +71,7 @@ export default function AppDetail() {
       slug: identifier,
       rating: 4.8,
       size: "45 MB",
-      version: "2026 Latest",
+      version: "v2026 Latest",
       downloads: 4200000,
       signup_bonus: "₹501",
       icon_url: "https://images.unsplash.com/photo-1614680376593-902f749f7ffc?w=150&auto=format&fit=crop&q=80",
@@ -76,14 +80,14 @@ export default function AppDetail() {
   }, [identifier]);
 
   const initialApp = useMemo(() => {
-    if (location.state?.app) return location.state.app;
+    if (location.state?.app) return { ...location.state.app, version: "v2026 Latest" };
     if (allCachedApps.length > 0 && identifier && identifier !== "undefined") {
       const found = allCachedApps.find(a => 
         String(a.id) === String(identifier) || 
         a.slug === identifier || 
         normalize(a.name) === normalize(identifier)
       );
-      if (found) return found;
+      if (found) return { ...found, version: "v2026 Latest" };
     }
     return allCachedApps[0] || fallbackApp;
   }, [location.state, allCachedApps, identifier, fallbackApp]);
@@ -105,7 +109,9 @@ export default function AppDetail() {
       try {
         const res = await api.get("/apps?limit=100");
         if (res.data && isMounted) {
-          const all = [...(res.data.featured || []), ...(res.data.apps || []), ...(res.data.trending || [])];
+          const rawAll = [...(res.data.featured || []), ...(res.data.apps || []), ...(res.data.trending || [])];
+          const all = rawAll.map(a => ({ ...a, version: "v2026 Latest" }));
+          
           setAllStoreApps(all);
           localStorage.setItem("yono_apps_perm_cache", JSON.stringify(res.data));
 
@@ -115,14 +121,14 @@ export default function AppDetail() {
               : null;
             
             const targetApp = found || initialApp || all[0] || fallbackApp;
-            setApp(targetApp);
+            setApp({ ...targetApp, version: "v2026 Latest" });
             setSimilarApps(getOrderedSimilarApps(all, targetApp.id));
           }
         }
       } catch (e) {
         if (allCachedApps.length > 0 && isMounted) {
           const targetApp = initialApp || allCachedApps[0] || fallbackApp;
-          setApp(targetApp);
+          setApp({ ...targetApp, version: "v2026 Latest" });
           setSimilarApps(getOrderedSimilarApps(allCachedApps, targetApp.id));
         }
       }
@@ -184,7 +190,7 @@ export default function AppDetail() {
         image={app?.icon_url || "https://images.unsplash.com/photo-1614680376593-902f749f7ffc?w=150&auto=format&fit=crop&q=80"}
       />
 
-      {/* Sticky top bar with custom text requested by user */}
+      {/* Sticky top bar */}
       <div className="sticky top-0 z-30 flex items-center gap-3 bg-white/95 px-4 py-2.5 backdrop-blur-md border-b border-[#E5E7EB]">
         <button onClick={() => navigate(-1)} className="flex h-8 w-8 items-center justify-center rounded-full bg-white border border-[#E5E7EB] text-[#111111] shadow-sm hover:bg-[#F1F1F1]">
           <ArrowLeft className="h-4 w-4" />
@@ -193,7 +199,7 @@ export default function AppDetail() {
       </div>
 
       <main className="max-w-2xl mx-auto space-y-4 px-4 pt-4">
-        {/* App Hero Section (Compact Icon) */}
+        {/* App Hero Section */}
         <div className="flex items-start gap-4 rounded-[24px] border border-[#E5E7EB] bg-white p-5 shadow-sm">
           <div className="relative shrink-0">
             <AppIcon src={resolveUrl(app?.icon_url)} alt={app?.name} className="h-16 w-16 sm:h-20 sm:w-20 rounded-[18px] sm:rounded-[20px] ring-1 ring-black/5 object-cover shadow-md" />
@@ -213,7 +219,7 @@ export default function AppDetail() {
           </div>
         </div>
 
-        {/* Quick Stats Grid */}
+        {/* Quick Stats Grid with v2026 Latest */}
         <div className="grid grid-cols-4 gap-2 text-center">
           <div className="rounded-[16px] border border-[#E5E7EB] bg-white p-3 shadow-sm">
             <p className="text-[10px] text-[#777777]">Updated</p>
@@ -225,7 +231,7 @@ export default function AppDetail() {
           </div>
           <div className="rounded-[16px] border border-[#E5E7EB] bg-white p-3 shadow-sm">
             <p className="text-[10px] text-[#777777]">Version</p>
-            <p className="mt-0.5 font-display text-xs font-bold text-[#111111]">2026 Latest</p>
+            <p className="mt-0.5 font-display text-xs font-bold text-[#111111]">v2026 Latest</p>
           </div>
           <div className="rounded-[16px] border border-[#E5E7EB] bg-white p-3 shadow-sm">
             <p className="text-[10px] text-[#777777]">Platform</p>
@@ -333,13 +339,13 @@ export default function AppDetail() {
             </div>
             <div className="space-y-3 pt-1">
               {similarApps.map((simApp, idx) => (
-                <AppCard key={simApp.id} app={simApp} index={idx} onDownload={handleDownload} />
+                <AppCard key={simApp.id} app={{ ...simApp, version: "v2026 Latest" }} index={idx} onDownload={handleDownload} />
               ))}
             </div>
           </div>
         )}
 
-        {/* About the Game (Placed right below People Also Like) */}
+        {/* About the Game */}
         <div className="rounded-[24px] border border-[#E5E7EB] bg-white p-5 shadow-sm space-y-3">
           <h2 className="font-display text-base font-bold text-[#111111] flex items-center gap-2">
             <Zap className="h-5 w-5 text-[#FFC107] fill-[#FFC107]" /> About {app?.name}

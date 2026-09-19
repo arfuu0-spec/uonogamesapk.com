@@ -76,7 +76,7 @@ export default function AppDetail() {
     const fallbackList = allCachedApps.length > 0 ? allCachedApps : (parsedCache?.apps || []);
     if (fallbackList.length > 0) {
       const currentId = initialApp?.id;
-      return fallbackList.filter(a => String(a.id) !== String(currentId)).slice(0, 6);
+      return fallbackList.filter(a => String(a.id) !== String(currentId)).slice(0, 15);
     }
     return [];
   });
@@ -102,14 +102,14 @@ export default function AppDetail() {
             
             const targetApp = found || initialApp || all[0] || fallbackApp;
             setApp(targetApp);
-            setSimilarApps(all.filter(a => String(a.id) !== String(targetApp.id)).slice(0, 6));
+            setSimilarApps(all.filter(a => String(a.id) !== String(targetApp.id)).slice(0, 15));
           }
         }
       } catch (e) {
         if (allCachedApps.length > 0 && isMounted) {
           const targetApp = initialApp || allCachedApps[0] || fallbackApp;
           setApp(targetApp);
-          setSimilarApps(allCachedApps.filter(a => String(a.id) !== String(targetApp.id)).slice(0, 6));
+          setSimilarApps(allCachedApps.filter(a => String(a.id) !== String(targetApp.id)).slice(0, 15));
         }
       }
     };
@@ -140,6 +140,27 @@ export default function AppDetail() {
     }
   };
 
+  const handleKeywordClick = (kw) => {
+    const cleanKw = kw.replace(/apk|download|2026|app|online|india|game|games/gi, "").trim();
+    navigate(`/?search=${encodeURIComponent(cleanKw)}`);
+  };
+
+  const gameKeywords = useMemo(() => {
+    const name = app?.name || "Game";
+    return [
+      `${name} APK Download`,
+      `${name} Latest Version 2026`,
+      `${name} Sign Up Bonus 501`,
+      `${name} Instant UPI Withdrawal`,
+      `${name} Mod APK`,
+      `${name} Online Play`,
+      `${name} Real Cash App`,
+      `All Yono Games List`,
+      `${name} Gold Rummy`,
+      `${name} Free Chips`
+    ];
+  }, [app]);
+
   return (
     <div className="app-shell pb-10 bg-[#FAFAFA] text-[#111111] min-h-screen">
       <SEOHead
@@ -151,7 +172,6 @@ export default function AppDetail() {
 
       <Header />
 
-      {/* Breadcrumb / Back Bar */}
       <div className="sticky top-[52px] sm:top-[57px] z-30 flex items-center gap-3 bg-white/95 px-4 py-2.5 backdrop-blur-md border-b border-[#E5E7EB]">
         <button onClick={() => navigate(-1)} className="flex h-8 w-8 items-center justify-center rounded-full bg-white border border-[#E5E7EB] text-[#111111] shadow-sm hover:bg-[#F1F1F1]">
           <ArrowLeft className="h-4 w-4" />
@@ -244,7 +264,59 @@ export default function AppDetail() {
           </p>
         </div>
 
-        {/* People Also Like (Clean 6 items list) */}
+        {/* SEARCH BAR RIGHT BELOW ABOUT THE GAME */}
+        <div className="relative">
+          <form onSubmit={handleSearchSubmit} className="relative">
+            <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#777777]" />
+            <Input
+              type="search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={`Search other games like ${app?.name}...`}
+              className="h-11 rounded-full border-[#E5E7EB] bg-white pl-10 pr-10 text-base shadow-[0_4px_14px_rgba(0,0,0,0.03)] focus-visible:ring-[#FFC107]"
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery("")}
+                className="absolute right-3 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full bg-[#F1F1F1] text-[#777777] hover:bg-[#E5E7EB]"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            )}
+          </form>
+
+          {searchQuery.trim() && (
+            <div className="absolute left-0 right-0 top-full mt-2 z-50 max-h-60 overflow-y-auto rounded-2xl border border-[#E5E7EB] bg-white shadow-xl p-2 space-y-1">
+              {(() => {
+                const q = searchQuery.toLowerCase();
+                const sourceList = allStoreApps.length > 0 ? allStoreApps : (parsedCache?.apps || similarApps);
+                const matched = sourceList.filter(a => a.name.toLowerCase().includes(q)).slice(0, 6);
+                if (matched.length === 0) {
+                  return <div className="p-3 text-center text-xs text-[#777777]">No games found</div>;
+                }
+                return matched.map(item => (
+                  <div
+                    key={item.id}
+                    onClick={() => {
+                      setSearchQuery("");
+                      navigate(`/${item.slug || item.id}`, { state: { app: item } });
+                    }}
+                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[#FFF8E1] cursor-pointer transition-colors"
+                  >
+                    <AppIcon src={resolveUrl(item.icon_url)} alt={item.name} className="h-10 w-10 rounded-xl object-cover shadow-sm" />
+                    <div className="min-w-0 flex-1">
+                      <p className="font-display text-xs font-bold text-[#111111] truncate">{item.name}</p>
+                      <p className="text-[10px] text-[#777777]">⭐ {item.rating?.toFixed(1) || "4.8"} • v2026 Latest</p>
+                    </div>
+                  </div>
+                ));
+              })()}
+            </div>
+          )}
+        </div>
+
+        {/* People Also Like (Up to 15 games) */}
         {similarApps.length > 0 && (
           <div className="rounded-[24px] border border-[#E5E7EB] bg-white p-5 shadow-sm space-y-3">
             <div className="flex items-center gap-2">
@@ -252,8 +324,8 @@ export default function AppDetail() {
                 <Sparkles className="h-4 w-4 fill-[#FFC107]" />
               </span>
               <div>
-                <h2 className="font-display text-sm font-bold text-[#111111]">People Also Like</h2>
-                <p className="text-[10px] text-[#888888]">More trending games with ₹501 bonus</p>
+                <h2 className="font-display text-sm font-bold text-[#111111]">People Also Like (More Games)</h2>
+                <p className="text-[10px] text-[#888888]">Top trending gaming apps with ₹501 bonus</p>
               </div>
             </div>
             <div className="space-y-3 pt-1">
@@ -263,6 +335,30 @@ export default function AppDetail() {
             </div>
           </div>
         )}
+
+        {/* SPECIFIC GAME KEYWORDS CLOUD RIGHT BELOW PEOPLE ALSO LIKE */}
+        <div className="rounded-[22px] border border-[#E5E7EB] bg-white p-4 shadow-sm space-y-2.5">
+          <div className="flex items-center gap-2">
+            <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-[#FFF8E1] text-[#FFC107]">
+              <Flame className="h-4 w-4 fill-[#FFC107]" />
+            </span>
+            <div>
+              <h3 className="font-display text-xs sm:text-sm font-bold text-[#111111]">Keywords For {app?.name}</h3>
+              <p className="text-[9px] sm:text-[10px] text-[#888888]">Popular search tags for this specific game</p>
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-1.5 pt-1">
+            {gameKeywords.map((kw, i) => (
+              <button
+                key={i}
+                onClick={() => handleKeywordClick(kw)}
+                className="rounded-full border border-[#E5E7EB] bg-[#FAFAFA] px-3 py-1 text-[10px] sm:text-[11px] font-medium text-[#555555] hover:bg-[#FFF8E1] hover:border-[#FFE082] hover:text-[#B45309] transition-colors text-left cursor-pointer"
+              >
+                #{kw}
+              </button>
+            ))}
+          </div>
+        </div>
 
         <FaqSection />
       </main>

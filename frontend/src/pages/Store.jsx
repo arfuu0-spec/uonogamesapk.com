@@ -208,9 +208,9 @@ export default function Store() {
       </div>
 
       <main className="max-w-2xl mx-auto space-y-4 px-4 pt-4">
-        {/* Top 3 Trending Games Rich Modern Design */}
+        {/* Top 3 Trending Games: #1 Main Large Spotlight & #2, #3 Side-by-Side (Agal-Bagal) */}
         {isDefaultView && (
-          <section className="space-y-3">
+          <section className="space-y-3.5">
             <div className="flex items-center gap-2 px-1">
               <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-gradient-to-r from-[#FFC107] to-[#FF8F00] text-white shadow-sm">
                 <Trophy className="h-4 w-4" />
@@ -220,46 +220,84 @@ export default function Store() {
             {(() => {
               const top3 = (data?.featured || parsedCache?.featured || data?.apps || parsedCache?.apps || []).slice(0, 3);
               if (top3.length === 0) return null;
+              const first = top3[0];
+              const second = top3[1];
+              const third = top3[2];
               return (
                 <div className="space-y-3">
-                  {top3.map((app, idx) => (
+                  {/* #1 Elite Main Spotlight Game Card */}
+                  {first && (
                     <div
-                      key={app.id}
-                      onClick={() => navigate(`/${app.slug || app.id}`, { state: { app } })}
-                      className="relative flex cursor-pointer items-center gap-3.5 rounded-[22px] border border-[#E5E7EB] bg-white p-4 shadow-sm hover:border-[#FFC107] transition-all"
+                      onClick={() => navigate(`/${first.slug || first.id}`, { state: { app: first } })}
+                      className="group relative flex cursor-pointer items-center gap-4 rounded-[24px] border-2 border-[#FFC107] bg-gradient-to-r from-[#FFFDE7] via-white to-white p-4.5 shadow-md hover:scale-[1.01] transition-all"
                     >
-                      {/* Rank Badge */}
-                      <span className="absolute -left-2.5 -top-2.5 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-[#FFC107] text-xs font-black text-[#111111] shadow-md border-2 border-white">
-                        {idx + 1}
+                      <span className="absolute -left-2.5 -top-2.5 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-r from-[#FFC107] to-[#FF8F00] text-xs font-black text-[#111111] shadow-md border-2 border-white">
+                        1
                       </span>
-                      
-                      <AppIcon src={resolveUrl(app.icon_url)} alt={app.name} className="h-16 w-16 rounded-[18px] object-cover shadow-sm shrink-0 ring-1 ring-black/5" />
-                      
+                      <AppIcon src={resolveUrl(first.icon_url)} alt={first.name} className="h-16 w-16 sm:h-20 sm:w-20 rounded-[20px] object-cover shadow-md shrink-0 ring-1 ring-black/5" />
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2">
-                          <h3 className="font-display text-sm font-extrabold text-[#111111] truncate">{app.name}</h3>
+                          <h3 className="font-display text-sm sm:text-base font-extrabold text-[#111111] truncate">{first.name}</h3>
                           <span className="rounded-full bg-red-100 px-1.5 py-0.5 text-[9px] font-bold text-red-600">HOT</span>
                         </div>
-                        <p className="text-xs text-[#777777] mt-0.5">v2026 Latest • {app.size || "45 MB"}</p>
-                        <div className="flex items-center gap-2 mt-1 flex-wrap">
-                          <span className="text-[11px] font-bold text-amber-600">⭐ {app.rating?.toFixed(1) || "4.8"}</span>
-                          <span className="text-[11px] text-[#555555]">👥 {app.downloads ? `${(app.downloads / 1000).toFixed(1)}K+` : "4.2M+"} players</span>
+                        <p className="text-xs text-[#777777] mt-0.5">v2026 Latest • {first.size || "45 MB"}</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-xs font-bold text-amber-600">⭐ {first.rating?.toFixed(1) || "4.8"}</span>
                         </div>
-                        <div className="mt-1.5 flex items-center gap-1.5">
+                        <div className="mt-1.5">
                           <span className="inline-flex items-center gap-1 rounded-full bg-[#FFF8E1] px-2 py-0.5 text-[10px] font-bold text-[#B45309] border border-[#FFE082]">
                             🎁 Bonus ₹501
                           </span>
                         </div>
                       </div>
-
                       <RippleButton
-                        onClick={(e) => { e.stopPropagation(); handleDownload(app); }}
-                        className="shrink-0 flex items-center gap-1 rounded-full bg-[#FFC107] px-4 py-2.5 text-xs font-bold text-[#111111] shadow-sm hover:bg-[#FFB300]"
+                        onClick={(e) => { e.stopPropagation(); handleDownload(first); }}
+                        className="shrink-0 flex items-center gap-1.5 rounded-full bg-[#FFC107] px-4 py-3 text-xs font-bold text-[#111111] shadow-sm hover:bg-[#FFB300]"
                       >
                         <Download className="h-3.5 w-3.5" /> Download
                       </RippleButton>
                     </div>
-                  ))}
+                  )}
+
+                  {/* #2 and #3 Side-by-Side (Agal-Bagal) Grid Cards */}
+                  <div className="grid grid-cols-2 gap-3">
+                    {[second, third].map((app, idx) => {
+                      if (!app) return null;
+                      const rank = idx + 2;
+                      return (
+                        <div
+                          key={app.id}
+                          onClick={() => navigate(`/${app.slug || app.id}`, { state: { app } })}
+                          className="relative flex flex-col cursor-pointer rounded-[20px] border border-[#E5E7EB] bg-white p-3.5 shadow-sm hover:border-[#FFC107] transition-all"
+                        >
+                          <span 
+                            className="absolute -left-2 -top-2 z-10 flex h-6 w-6 items-center justify-center rounded-full text-xs font-black text-white shadow-md border-2 border-white"
+                            style={{ backgroundColor: rank === 2 ? "#64748B" : "#D97706" }}
+                          >
+                            {rank}
+                          </span>
+                          <div className="flex items-start gap-2.5 mb-2.5">
+                            <AppIcon src={resolveUrl(app.icon_url)} alt={app.name} className="h-12 w-12 rounded-[14px] object-cover shadow-sm shrink-0 ring-1 ring-black/5" />
+                            <div className="min-w-0 flex-1">
+                              <h4 className="font-display text-xs font-bold text-[#111111] truncate">{app.name}</h4>
+                              <p className="text-[10px] text-[#777777] mt-0.5">⭐ {app.rating?.toFixed(1) || "4.8"}</p>
+                            </div>
+                          </div>
+                          <div className="mb-2.5">
+                            <span className="inline-flex items-center gap-1 rounded-full bg-[#FFF8E1] px-2 py-0.5 text-[9px] font-bold text-[#B45309]">
+                              🎁 ₹501 Bonus
+                            </span>
+                          </div>
+                          <RippleButton
+                            onClick={(e) => { e.stopPropagation(); handleDownload(app); }}
+                            className="w-full mt-auto flex items-center justify-center gap-1 rounded-full bg-[#FFC107] py-2 text-[11px] font-bold text-[#111111] shadow-sm hover:bg-[#FFB300]"
+                          >
+                            <Download className="h-3 w-3" /> Download
+                          </RippleButton>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               );
             })()}

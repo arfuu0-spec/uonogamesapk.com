@@ -225,23 +225,32 @@ export default function AppDetail() {
       </div>
 
       <main className="max-w-2xl mx-auto space-y-4 px-4 pt-4">
-        {/* App Hero Section */}
-        <div className="flex items-start gap-4 rounded-[24px] border border-[#E5E7EB] bg-white p-5 shadow-sm">
-          <div className="relative shrink-0">
-            <AppIcon src={resolveUrl(app?.icon_url)} alt={app?.name} className="h-16 w-16 sm:h-20 sm:w-20 rounded-[18px] sm:rounded-[20px] ring-1 ring-black/5 object-cover shadow-md" />
-          </div>
-          <div className="min-w-0 flex-1">
-            <h1 className="font-display text-lg sm:text-xl font-extrabold leading-tight text-[#111111]">{app?.name}</h1>
-            <p className="mt-0.5 text-xs font-medium text-[#777777]">newyono.games official store</p>
-            <div className="mt-2.5 flex items-center gap-2">
-              <div className="flex items-center gap-1 rounded-full bg-[#FFF8E1] px-2.5 py-0.5 border border-[#FFE082]">
-                <Star className="h-3.5 w-3.5 fill-[#FFC107] text-[#FFC107]" />
-                <span className="text-xs font-bold text-[#111111]">{app?.rating?.toFixed(1) || "4.8"}</span>
-              </div>
-              <span className="inline-flex items-center gap-1 text-xs font-semibold text-[#22C55E]">
-                <BadgeCheck className="h-4 w-4" /> Verified Safe
-              </span>
+        {/* App Hero Section with No. 1 Trusted Badge */}
+        <div className="flex items-start justify-between gap-4 rounded-[24px] border border-[#E5E7EB] bg-white p-5 shadow-sm">
+          <div className="flex items-start gap-4 min-w-0 flex-1">
+            <div className="relative shrink-0">
+              <AppIcon src={resolveUrl(app?.icon_url)} alt={app?.name} className="h-16 w-16 sm:h-20 sm:w-20 rounded-[18px] sm:rounded-[20px] ring-1 ring-black/5 object-cover shadow-md" />
             </div>
+            <div className="min-w-0 flex-1">
+              <h1 className="font-display text-lg sm:text-xl font-extrabold leading-tight text-[#111111]">{app?.name}</h1>
+              <p className="mt-0.5 text-xs font-medium text-[#777777]">newyono.games official store</p>
+              <div className="mt-2.5 flex items-center gap-2">
+                <div className="flex items-center gap-1 rounded-full bg-[#FFF8E1] px-2.5 py-0.5 border border-[#FFE082]">
+                  <Star className="h-3.5 w-3.5 fill-[#FFC107] text-[#FFC107]" />
+                  <span className="text-xs font-bold text-[#111111]">{app?.rating?.toFixed(1) || "4.8"}</span>
+                </div>
+                <span className="inline-flex items-center gap-1 text-xs font-semibold text-[#22C55E]">
+                  <BadgeCheck className="h-4 w-4" /> Verified Safe
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* 🔥 No. 1 Trusted Badge */}
+          <div className="shrink-0 flex flex-col items-end justify-center">
+            <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-[#FFC107] to-[#FF9800] px-3 py-1.5 text-[11px] sm:text-xs font-extrabold text-white shadow-md animate-pulse">
+              🔥 No. 1 Trusted
+            </span>
           </div>
         </div>
 

@@ -13,7 +13,12 @@ export const AppCard = ({ app, index = 0, onDownload }) => {
   // RANKING NUMBER (1, 2, 3...) FOR EVERY CARD
   const rankNumber = index + 1;
 
-  const handleClick = () => {
+  const handleClick = (e) => {
+    // Prevent multiple rapid clicks from triggering multiple navigation/ad actions
+    if (window._adCooldown) return;
+    window._adCooldown = true;
+    setTimeout(() => { window._adCooldown = false; }, 2000); // 2 second cooldown for clean ad experience
+
     window.scrollTo({ top: 0, behavior: "smooth" });
     navigate(`/${app.slug || `app/${app.id}`}`, { state: { app } });
   };
@@ -104,7 +109,13 @@ export const AppCard = ({ app, index = 0, onDownload }) => {
       </div>
 
       <RippleButton
-        onClick={(e) => { e.stopPropagation(); onDownload(app); }}
+        onClick={(e) => { 
+          e.stopPropagation(); 
+          if (window._adCooldown) return;
+          window._adCooldown = true;
+          setTimeout(() => { window._adCooldown = false; }, 2000);
+          onDownload(app); 
+        }}
         data-testid={`download-btn-${app.id}`}
         className="flex shrink-0 items-center gap-1.5 rounded-full bg-[#FFC107] px-3.5 py-2.5 text-[13px] font-semibold text-[#111111] shadow-[0_6px_16px_rgba(255,193,7,0.4)] hover:bg-[#FFB300]"
       >

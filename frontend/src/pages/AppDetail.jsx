@@ -225,7 +225,7 @@ export default function AppDetail() {
       </div>
 
       <main className="max-w-2xl mx-auto space-y-4 px-4 pt-4">
-        {/* App Hero Section with No. 1 Trusted Badge */}
+        {/* App Hero Section with Badges */}
         <div className="flex items-start justify-between gap-4 rounded-[24px] border border-[#E5E7EB] bg-white p-5 shadow-sm">
           <div className="flex items-start gap-4 min-w-0 flex-1">
             <div className="relative shrink-0">
@@ -246,10 +246,16 @@ export default function AppDetail() {
             </div>
           </div>
 
-          {/* 🔥 No. 1 Trusted Badge */}
-          <div className="shrink-0 flex flex-col items-end justify-center">
-            <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-[#FFC107] to-[#FF9800] px-3 py-1.5 text-[11px] sm:text-xs font-extrabold text-white shadow-md animate-pulse">
+          {/* Right Side Badges: No. 1 Trusted, 🔞+ Only, 🤯 Unlimited Trick */}
+          <div className="shrink-0 flex flex-col items-end gap-1.5 justify-center">
+            <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-[#FFC107] to-[#FF9800] px-3 py-1 text-[11px] font-extrabold text-white shadow-md animate-pulse">
               🔥 No. 1 Trusted
+            </span>
+            <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2.5 py-0.5 text-[10px] font-bold text-red-600 border border-red-200">
+              🔞+ Only
+            </span>
+            <span className="inline-flex items-center gap-1 rounded-full bg-purple-100 px-2.5 py-0.5 text-[10px] font-bold text-purple-700 border border-purple-200">
+              🤯 Unlimited Trick
             </span>
           </div>
         </div>

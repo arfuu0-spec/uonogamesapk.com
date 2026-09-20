@@ -29,7 +29,7 @@ const EMPTY = {
   features: ["Real Cash Games", "Instant Withdrawal", "24/7 Support", "100% Safe & Secure", "Daily Bonus", "Refer & Earn"],
   requirements: "Android 5.0 and above, 100 MB free space, active internet connection",
   permissions: ["Storage", "Network access", "Phone state"],
-  signup_bonus: "₹51", min_withdraw: "₹100",
+  signup_bonus: "₹501", min_withdraw: "₹100",
   slug: "", seo_title: "", meta_description: "", keywords: "",
   focus_keyword: "", og_image: "", noindex: false, faq_items: [],
   screenshots: [],

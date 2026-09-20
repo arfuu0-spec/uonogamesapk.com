@@ -125,7 +125,6 @@ export default function AppsManager({ featuredOnly = false }) {
     setOpen(true); 
   };
 
-  // Quick select existing app to auto-fill details for pinning
   const handleSelectExistingApp = (appId) => {
     const found = allExistingApps.find(a => String(a.id) === String(appId));
     if (!found) return;
@@ -157,7 +156,7 @@ export default function AppsManager({ featuredOnly = false }) {
     try {
       if (editingId) await api.put(`/admin/apps/${editingId}`, payload);
       else await api.post("/admin/apps", payload);
-      toast.success("Game pinned successfully!");
+      toast.success("Game saved & pinned successfully!");
       setOpen(false); 
       fetchApps();
     } catch (err) {
@@ -233,8 +232,8 @@ export default function AppsManager({ featuredOnly = false }) {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-h-[90vh] max-w-[460px] overflow-y-auto rounded-[22px]">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2"><Sparkles className="h-5 w-5 text-[#FFC107]" /> Pin Game to Top 3</DialogTitle>
-            <DialogDescription className="text-xs text-[#777777]">Choose an existing game and select its position (#1, #2, or #3).</DialogDescription>
+            <DialogTitle className="flex items-center gap-2"><Sparkles className="h-5 w-5 text-[#FFC107]" /> Pin Game & Details</DialogTitle>
+            <DialogDescription className="text-xs text-[#777777]">Choose an existing game or upload brand icons/APK directly.</DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-2">
             {/* PROMINENT EXISTING GAME SELECTOR */}
@@ -252,6 +251,12 @@ export default function AppsManager({ featuredOnly = false }) {
 
             <div className="space-y-1.5"><Label className="text-xs font-semibold text-[#555555]">Selected Game Name</Label><Input data-testid="form-name" value={form.name} onChange={(e) => setField("name", e.target.value)} className="rounded-xl" /></div>
             
+            {/* DIRECT FILE UPLOADS FOR APP ICON & APK */}
+            <div className="grid grid-cols-1 gap-3">
+              <FileUpload label="App Icon Image" testId="upload-icon-btn" accept="image/*" value={form.icon_url} onUploaded={(url) => setField("icon_url", url)} isImage={true} />
+              <FileUpload label="APK File" testId="upload-apk-btn" accept=".apk" value={form.apk_url} onUploaded={(url) => setField("apk_url", url)} isImage={false} />
+            </div>
+
             <div className="rounded-2xl border border-[#FFC107] bg-[#FFF8E1] p-3 space-y-2">
               <Label className="text-xs font-bold text-[#B45309]">🎯 Choose Pin Position on Homepage</Label>
               <Select value={String(form.featured_order || 1)} onValueChange={(v) => setField("featured_order", parseInt(v))}>
@@ -270,11 +275,6 @@ export default function AppsManager({ featuredOnly = false }) {
                 <div className="space-y-1.5"><Label className="text-xs font-semibold text-[#555555]">Sign-up Bonus</Label><Input data-testid="form-signup-bonus" value={form.signup_bonus} onChange={(e) => setField("signup_bonus", e.target.value)} placeholder="e.g. ₹501" className="rounded-xl bg-white" /></div>
                 <div className="space-y-1.5"><Label className="text-xs font-semibold text-[#555555]">Min. Withdraw</Label><Input data-testid="form-min-withdraw" value={form.min_withdraw} onChange={(e) => setField("min_withdraw", e.target.value)} placeholder="e.g. ₹100" className="rounded-xl bg-white" /></div>
               </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3 hidden">
-              <div className="space-y-1.5"><Label className="text-xs font-semibold text-[#555555]">Version</Label><Input value={form.version} onChange={(e) => setField("version", e.target.value)} className="rounded-xl" /></div>
-              <div className="space-y-1.5"><Label className="text-xs font-semibold text-[#555555]">Size</Label><Input value={form.size} onChange={(e) => setField("size", e.target.value)} className="rounded-xl" /></div>
             </div>
           </div>
           <DialogFooter className="flex-row gap-2">

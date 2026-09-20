@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { toast } from "sonner";
 import api from "@/lib/api";
 import { PageHeader, Card } from "@/components/admin/adminUI";
-import { Loader2, Plus, Trash2, ExternalLink, Edit3, X, Save } from "lucide-react";
+import { Loader2, Plus, Trash2, ExternalLink, Edit3, X, Save, Upload } from "lucide-react";
 
 class SafeBoundary extends React.Component {
   constructor(props) { super(props); this.state = { error: null }; }
@@ -25,6 +25,8 @@ function ApksPageInner() {
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingApp, setEditingApp] = useState(null);
+  const [uploadingIcon, setUploadingIcon] = useState(false);
+  const [uploadingApk, setUploadingApk] = useState(false);
 
   // Form state for Add/Edit
   const [formData, setFormData] = useState({
@@ -103,6 +105,42 @@ function ApksPageInner() {
       downloads: 500000
     });
     setShowAddModal(true);
+  };
+
+  const handleIconUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingIcon(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const { data } = await api.post("/admin/upload?kind=image", fd);
+      setFormData(prev => ({ ...prev, icon_url: data.url }));
+      toast.success("Icon uploaded successfully!");
+    } catch (err) {
+      toast.error("Icon upload failed");
+    } finally {
+      setUploadingIcon(false);
+      e.target.value = "";
+    }
+  };
+
+  const handleApkUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingApk(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const { data } = await api.post("/admin/upload?kind=auto", fd);
+      setFormData(prev => ({ ...prev, apk_url: data.url }));
+      toast.success("APK uploaded successfully!");
+    } catch (err) {
+      toast.error("APK upload failed");
+    } finally {
+      setUploadingApk(false);
+      e.target.value = "";
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -272,23 +310,37 @@ function ApksPageInner() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block font-medium mb-1 text-gray-700">Icon Image URL</label>
-                  <input 
-                    type="text" 
-                    value={formData.icon_url} 
-                    onChange={(e) => setFormData({...formData, icon_url: e.target.value})}
-                    className="w-full border rounded-lg p-2 text-xs" 
-                    placeholder="https://..."
-                  />
+                  <div className="flex gap-2 items-center">
+                    <input 
+                      type="text" 
+                      value={formData.icon_url} 
+                      onChange={(e) => setFormData({...formData, icon_url: e.target.value})}
+                      className="w-full border rounded-lg p-2 text-xs" 
+                      placeholder="https://..."
+                    />
+                    <label className="px-3 py-2 bg-gray-100 hover:bg-gray-200 border rounded-lg text-xs font-semibold cursor-pointer flex items-center gap-1 shrink-0">
+                      {uploadingIcon ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Upload className="w-3.5 h-3.5" />}
+                      <span>{uploadingIcon ? "Uploading..." : "Upload"}</span>
+                      <input type="file" accept="image/*" className="hidden" onChange={handleIconUpload} disabled={uploadingIcon} />
+                    </label>
+                  </div>
                 </div>
                 <div>
                   <label className="block font-medium mb-1 text-gray-700">Real APK Download Link</label>
-                  <input 
-                    type="text" 
-                    value={formData.apk_url} 
-                    onChange={(e) => setFormData({...formData, apk_url: e.target.value})}
-                    className="w-full border rounded-lg p-2 text-xs" 
-                    placeholder="https://... or /api/uploads/..."
-                  />
+                  <div className="flex gap-2 items-center">
+                    <input 
+                      type="text" 
+                      value={formData.apk_url} 
+                      onChange={(e) => setFormData({...formData, apk_url: e.target.value})}
+                      className="w-full border rounded-lg p-2 text-xs" 
+                      placeholder="https://... or /api/uploads/..."
+                    />
+                    <label className="px-3 py-2 bg-gray-100 hover:bg-gray-200 border rounded-lg text-xs font-semibold cursor-pointer flex items-center gap-1 shrink-0">
+                      {uploadingApk ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Upload className="w-3.5 h-3.5" />}
+                      <span>{uploadingApk ? "Uploading..." : "Upload"}</span>
+                      <input type="file" accept=".apk" className="hidden" onChange={handleApkUpload} disabled={uploadingApk} />
+                    </label>
+                  </div>
                 </div>
               </div>
 

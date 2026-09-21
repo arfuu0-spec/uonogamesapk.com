@@ -29,8 +29,8 @@ export function canonicalize(input) {
 }
 
 export default function SEOHead({ title, description, image, canonical }) {
-  const seoTitle = title ? `${title} | ${SITE_NAME}` : SITE_NAME;
-  const seoDescription = description || "Play amazing games on YOWO GAMES.";
+  const seoTitle = title ? `${title} | ${SITE_NAME}` : `YONO GAMES 2026: Official APK Download | ₹501 Bonus & Real Cash Games`;
+  const seoDescription = description || "Download official Yono Games APK 2026. Explore 100+ trusted Rummy, Teen Patti & Slot apps with ₹501 free sign-up bonus, khelo or jeeto laakho cash, and instant UPI withdrawals.";
   const seoImage = image ? absUrl(image) : DEFAULT_OG;
   const seoCanonical = canonical ? canonicalize(canonical) : SITE_URL;
 
